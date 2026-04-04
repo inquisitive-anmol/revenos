@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { BadRequestError } from '@/errors/AppError';
+import { handleEmailReply } from "../services/webhook.service";
 import logger from '@/config/logger';
 
 const router = Router();
@@ -34,6 +35,20 @@ router.post('/:provider', (req: Request, res: Response) => {
 
   // TODO: Route to provider-specific handler
   res.status(200).json({ success: true, received: true });
+});
+
+// from resend
+// POST /api/v1/webhooks/email/reply
+router.post("/email/reply", async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+    console.log("[Webhook] Email reply received:", JSON.stringify(payload));
+    await handleEmailReply(payload);
+    res.status(200).json({ received: true });
+  } catch (error: any) {
+    console.error("[Webhook] Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;

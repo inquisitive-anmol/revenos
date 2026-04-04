@@ -1,5 +1,5 @@
 {
-  "name": "@revenos/agents",
+  "name": "@revenos/email",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -17,8 +17,6 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
-    "zod": "^4.3.6",
-    "@revenos/ai-sdk": "*",
-    "@revenos/email": "*"
+    "resend": "^6.10.0"
   }
 }

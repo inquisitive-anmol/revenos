@@ -8,6 +8,7 @@ import {
   getCampaignHandler,
   updateCampaignHandler,
   prospectCampaignHandler,
+  qualifyCampaignHandler,
 } from '@/controllers/campaigns.controller';
 
 const router = Router();
@@ -66,6 +67,14 @@ router.post(
     body: ProspectCampaignSchema,
   }),
   asyncHandler(prospectCampaignHandler)
+);
+
+router.post(
+  '/:id/qualify/:leadId',
+  validate({
+    params: z.object({ id: z.string(), leadId: z.string() }),
+  }),
+  asyncHandler(qualifyCampaignHandler)
 );
 
 export default router;

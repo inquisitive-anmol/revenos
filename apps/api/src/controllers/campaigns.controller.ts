@@ -5,6 +5,8 @@ import {
   getCampaignById,
   updateCampaignStatus,
 } from '@/services/campaign.service';
+import { triggerProspector } from '@/services/prospect.service';
+import { triggerQualifier } from '@/services/qualify.service';
 import { created, ok, parsePagination } from '@/utils/response';
 import { NotFoundError } from '@/errors/AppError';
 import logger from '@/config/logger';
@@ -59,8 +61,6 @@ export const updateCampaignHandler = async (req: Request, res: Response) => {
   return ok(res, { campaign });
 };
 
-import { triggerProspector } from '@/services/prospect.service';
-
 export const prospectCampaignHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
   const { id } = req.params;
@@ -76,6 +76,23 @@ export const prospectCampaignHandler = async (req: Request, res: Response) => {
       message: 'Prospector agent started',
       jobId: result.jobId,
       leadsQueued: result.leadsQueued,
+    },
+  });
+};
+
+export const qualifyCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id: campaignId, leadId } = req.params;
+
+  logger.info({ workspaceId, campaignId, leadId }, 'Triggering qualifier agent');
+
+  const result = await triggerQualifier(workspaceId, campaignId, leadId);
+
+  return res.status(202).json({
+    success: true,
+    data: {
+      message: 'Qualifier agent started',
+      jobId: result.jobId,
     },
   });
 };
