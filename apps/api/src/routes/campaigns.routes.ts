@@ -1,31 +1,46 @@
 import { Router } from 'express';
+import { z } from 'zod';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { validate } from '@/middleware/validate.middleware';
+import {
+  listCampaignsHandler,
+  createCampaignHandler,
+  getCampaignHandler,
+  updateCampaignHandler,
+} from '@/controllers/campaigns.controller';
 
 const router = Router();
 
-// GET    /api/v1/campaigns       — list campaigns
-// POST   /api/v1/campaigns       — create campaign
-// GET    /api/v1/campaigns/:id   — get campaign by ID
-// PATCH  /api/v1/campaigns/:id   — update campaign
-// DELETE /api/v1/campaigns/:id   — delete campaign
-
-router.get('/', (_req, res) => {
-  res.json({ success: true, data: [], meta: { page: 1, limit: 20, total: 0, totalPages: 0 } });
+const CreateCampaignSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  icpDescription: z.string().min(10, 'ICP description must be at least 10 characters'),
 });
 
-router.post('/', (_req, res) => {
-  res.status(201).json({ success: true, data: null });
+const UpdateCampaignSchema = z.object({
+  status: z.enum(['draft', 'active', 'paused', 'completed']),
 });
 
-router.get('/:id', (req, res) => {
-  res.json({ success: true, data: { id: req.params['id'] } });
-});
+router.get('/', asyncHandler(listCampaignsHandler));
 
-router.patch('/:id', (req, res) => {
-  res.json({ success: true, data: { id: req.params['id'] } });
-});
+router.post(
+  '/',
+  validate({ body: CreateCampaignSchema }),
+  asyncHandler(createCampaignHandler)
+);
 
-router.delete('/:id', (_req, res) => {
-  res.status(204).send();
-});
+router.get(
+  '/:id',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(getCampaignHandler)
+);
+
+router.patch(
+  '/:id',
+  validate({
+    params: z.object({ id: z.string() }),
+    body: UpdateCampaignSchema,
+  }),
+  asyncHandler(updateCampaignHandler)
+);
 
 export default router;

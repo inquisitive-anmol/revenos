@@ -1,31 +1,46 @@
 import { Router } from 'express';
+import { z } from 'zod';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { validate } from '@/middleware/validate.middleware';
+import {
+  listLeadsHandler,
+  getLeadHandler,
+  takeoverLeadHandler,
+  handbackLeadHandler,
+} from '@/controllers/leads.controller';
 
 const router = Router();
 
-// GET    /api/v1/leads       — list leads (paginated)
-// POST   /api/v1/leads       — create lead
-// GET    /api/v1/leads/:id   — get lead by ID
-// PATCH  /api/v1/leads/:id   — update lead
-// DELETE /api/v1/leads/:id   — delete lead
-
-router.get('/', (_req, res) => {
-  res.json({ success: true, data: [], meta: { page: 1, limit: 20, total: 0, totalPages: 0 } });
+const ListLeadsQuerySchema = z.object({
+  status: z.string().optional(),
+  campaignId: z.string().optional(),
+  score_gte: z.string().optional(), // querystring comes as string
+  page: z.string().optional(),
+  limit: z.string().optional(),
 });
 
-router.post('/', (_req, res) => {
-  res.status(201).json({ success: true, data: null });
-});
+router.get(
+  '/',
+  validate({ query: ListLeadsQuerySchema }),
+  asyncHandler(listLeadsHandler)
+);
 
-router.get('/:id', (req, res) => {
-  res.json({ success: true, data: { id: req.params['id'] } });
-});
+router.get(
+  '/:id',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(getLeadHandler)
+);
 
-router.patch('/:id', (req, res) => {
-  res.json({ success: true, data: { id: req.params['id'] } });
-});
+router.patch(
+  '/:id/takeover',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(takeoverLeadHandler)
+);
 
-router.delete('/:id', (_req, res) => {
-  res.status(204).send();
-});
+router.patch(
+  '/:id/handback',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(handbackLeadHandler)
+);
 
 export default router;

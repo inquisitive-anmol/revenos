@@ -1,0 +1,22 @@
+src/plugins/tenancy.plugin.ts(7,7): error TS2349: This expression is not callable.
+  Type 'SaveOptions' has no call signatures.
+src/plugins/tenancy.plugin.ts(9,5): error TS2349: This expression is not callable.
+  Type 'SaveOptions' has no call signatures.
+src/plugins/tenancy.plugin.ts(16,7): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(16,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/plugins/tenancy.plugin.ts(18,5): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(18,5): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/plugins/tenancy.plugin.ts(25,7): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(25,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/plugins/tenancy.plugin.ts(27,5): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(27,5): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/plugins/tenancy.plugin.ts(34,7): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(34,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/plugins/tenancy.plugin.ts(36,5): error TS2349: This expression is not callable.
+  Type 'Record<string, any>' has no call signatures.
+src/plugins/tenancy.plugin.ts(36,5): error TS2722: Cannot invoke an object which is possibly 'undefined'.
