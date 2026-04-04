@@ -7,6 +7,7 @@ import {
   createCampaignHandler,
   getCampaignHandler,
   updateCampaignHandler,
+  prospectCampaignHandler,
 } from '@/controllers/campaigns.controller';
 
 const router = Router();
@@ -18,6 +19,21 @@ const CreateCampaignSchema = z.object({
 
 const UpdateCampaignSchema = z.object({
   status: z.enum(['draft', 'active', 'paused', 'completed']),
+});
+
+const ProspectCampaignSchema = z.object({
+  leads: z.array(
+    z.object({
+      email: z.string().email(),
+      firstName: z.string(),
+      lastName: z.string(),
+      company: z.string(),
+      title: z.string(),
+      linkedinUrl: z.string().url().optional(),
+      companySize: z.number().optional(),
+      industry: z.string().optional(),
+    })
+  ).min(1, 'leads array is required and must not be empty'),
 });
 
 router.get('/', asyncHandler(listCampaignsHandler));
@@ -41,6 +57,15 @@ router.patch(
     body: UpdateCampaignSchema,
   }),
   asyncHandler(updateCampaignHandler)
+);
+
+router.post(
+  '/:id/prospect',
+  validate({
+    params: z.object({ id: z.string() }),
+    body: ProspectCampaignSchema,
+  }),
+  asyncHandler(prospectCampaignHandler)
 );
 
 export default router;

@@ -34,6 +34,16 @@ async function bootstrap(): Promise<void> {
     process.exit(1);
   }
 
+  // ── 4.5. MongoDB connection ──────────────────────────────────────────────
+  try {
+    const mongoose = require('mongoose');
+    await mongoose.connect(env.DATABASE_URL);
+    logger.info('MongoDB: connection established');
+  } catch (err) {
+    logger.fatal({ err }, 'MongoDB: failed to connect on startup');
+    process.exit(1);
+  }
+
   // ── 5. Start server ────────────────────────────────────────────────────
   server.listen(env.PORT, () => {
     logger.info(

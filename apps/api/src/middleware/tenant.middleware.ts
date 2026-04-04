@@ -26,7 +26,12 @@ export function tenantGuard(
   const auth = getAuth(req);
   const tenantIdFromClaims = auth.orgId ?? undefined;
 
-  const tenantId = tenantIdFromHeader ?? tenantIdFromClaims;
+  let tenantId = tenantIdFromHeader ?? tenantIdFromClaims;
+
+  // Development bypass
+  if (process.env.NODE_ENV !== 'production' && !tenantId) {
+    tenantId = process.env.DEV_WORKSPACE_ID || 'dev-workspace';
+  }
 
   if (!tenantId) {
     throw new BadRequestError(

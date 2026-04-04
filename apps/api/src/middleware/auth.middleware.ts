@@ -22,6 +22,13 @@ export function requireAuthGuard(
   next: NextFunction,
 ): void {
   const auth = getAuth(req);
+
+  // Development bypass
+  if (process.env.NODE_ENV !== 'production' && !auth.userId) {
+    req.user = { ...auth, userId: 'dev-user' } as any;
+    return next();
+  }
+
   if (!auth.userId) {
     throw new UnauthorizedError('Authentication required');
   }

@@ -58,3 +58,24 @@ export const updateCampaignHandler = async (req: Request, res: Response) => {
 
   return ok(res, { campaign });
 };
+
+import { triggerProspector } from '@/services/prospect.service';
+
+export const prospectCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+  const { leads } = req.body;
+
+  logger.info({ workspaceId, campaignId: id, leadsCount: leads.length }, 'Triggering prospector agent');
+
+  const result = await triggerProspector(workspaceId, id, leads);
+
+  return res.status(202).json({
+    success: true,
+    data: {
+      message: 'Prospector agent started',
+      jobId: result.jobId,
+      leadsQueued: result.leadsQueued,
+    },
+  });
+};
