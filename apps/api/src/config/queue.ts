@@ -11,5 +11,6 @@ const connection = new Redis(process.env.REDIS_URL!, {
 
 export const prospectorQueue = new Queue("prospector", { connection });
 export const qualifierQueue = new Queue("qualifier", { connection });
+export const bookerQueue = new Queue("booker", { connection });
 
 console.log("Queues initialized");

@@ -5,3 +5,5 @@ export * from "./prospector/ProspectorAgent";
 export * from "./prospector/prospector.schema";
 export * from "./qualifier/QualifierAgent";
 export * from "./qualifier/qualifier.schema";
+export * from "./booker/BookerAgent";
+export * from "./booker/booker.schema";

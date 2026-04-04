@@ -19,8 +19,9 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
-    "bullmq": "^5.73.0",
     "@revenos/agents": "*",
-    "@revenos/db": "*"
+    "@revenos/db": "*",
+    "bullmq": "^5.73.0",
+    "nylas": "^8.0.5"
   }
 }
