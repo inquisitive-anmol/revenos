@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>SalesForge AI - Agent Builder</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-3 shrink-0">
+<div class="flex items-center gap-4">
+<div class="text-primary">
+<svg class="size-8" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold tracking-tight">SalesForge AI</h2>
+</div>
+<div class="flex flex-1 justify-center max-w-xl mx-auto">
+<nav class="flex items-center gap-8">
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-semibold border-b-2 border-primary py-4 -mb-4" href="#">Agents</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Leads</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold px-4 py-2 transition-all">
+<span>Deploy Agents</span>
+</button>
+<div class="bg-slate-200 dark:bg-slate-800 rounded-full size-9 flex items-center justify-center overflow-hidden border border-slate-300 dark:border-slate-700">
+<img alt="User" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA36ptciVmD9zY7FnRqX0L1xURnwNAzHbWKgw0MqJMKriFxcRSs4zK7m8t80zFnc-9xIqYJJXojdVzY67OiWfShXtNJazru_IQYl5yTzfynE_wLQK4GJU80oYmgsk-gE3wZLUZ--BJJ-wzHyd8OtRXltJ1fGbWFUVKQ2de00WAEjREJmDfUZIoJykp5YKJp6vzfhfPl658rPDLR-zeuXEwKLSfY5ilShf0Z2u9skcXVBRSc6LvvmFj1U0wXbm5L04kATUYA0aNNIjA"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Palette Sidebar -->
+<aside class="w-80 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col p-5 gap-6 overflow-y-auto">
+<div>
+<h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Builder Palette</h3>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg bg-primary text-white text-sm font-bold py-3 mb-4 shadow-sm hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+                    Add Agent
+                </button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Campaign Goal</label>
+<div class="relative">
+<input class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary px-3 py-3" type="text" value="Book 20 qualified meetings per month"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Templates</label>
+<select class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary px-3 py-3">
+<option>B2B SaaS Outreach</option>
+<option>Real Estate Lead Gen</option>
+<option>LinkedIn Retargeting</option>
+</select>
+</div>
+</div>
+<hr class="border-slate-200 dark:border-slate-800"/>
+<div class="flex flex-col gap-2">
+<p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-1">Node Types</p>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 cursor-grab hover:bg-white dark:hover:bg-slate-800 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">person_search</span>
+<span class="text-[10px] mt-1 font-medium">Prospector</span>
+</div>
+<div class="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 cursor-grab hover:bg-white dark:hover:bg-slate-800 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">verified</span>
+<span class="text-[10px] mt-1 font-medium">Qualifier</span>
+</div>
+<div class="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 cursor-grab hover:bg-white dark:hover:bg-slate-800 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">calendar_today</span>
+<span class="text-[10px] mt-1 font-medium">Booker</span>
+</div>
+<div class="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 cursor-grab hover:bg-white dark:hover:bg-slate-800 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">mail</span>
+<span class="text-[10px] mt-1 font-medium">Messenger</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas Area -->
+<main class="flex-1 relative bg-background-light dark:bg-background-dark overflow-hidden flex flex-col">
+<!-- Canvas Grid Background -->
+<div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.1]" style="background-image: radial-gradient(#3c83f6 1px, transparent 1px); background-size: 24px 24px;"></div>
+<div class="relative flex-1 p-10 overflow-auto">
+<!-- Canvas Area -->
+<div class="min-w-[1200px] min-h-[800px] relative">
+<!-- Node: Prospector Agent -->
+<div class="absolute top-20 left-20 w-64 bg-white dark:bg-slate-900 rounded-xl shadow-xl border-l-4 border-emerald-500 overflow-hidden group hover:ring-2 hover:ring-primary/20 transition-all cursor-move">
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[10px] font-bold text-emerald-500 uppercase flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-emerald-500"></span> ACTIVE
+                                </span>
+<span class="material-symbols-outlined text-slate-400 text-sm">more_vert</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600">
+<span class="material-symbols-outlined">person_search</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Prospector Agent</h4>
+<p class="text-xs text-slate-500">Scanning LinkedIn Leads</p>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-slate-400">Processed Today</span>
+<span class="font-bold">142</span>
+</div>
+</div>
+<!-- Out Port -->
+<div class="absolute -right-2 top-1/2 -translate-y-1/2 size-4 bg-primary rounded-full border-2 border-white dark:border-slate-900 z-10"></div>
+</div>
+<!-- Flow Arrow 1 -->
+<svg class="absolute top-[148px] left-[344px] w-[140px] h-[40px]" fill="none">
+<path class="dark:stroke-slate-700" d="M0 20 H120 M120 20 L112 14 M120 20 L112 26" stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="2"></path>
+<text class="text-[10px] fill-slate-400 dark:fill-slate-500 font-medium" x="45" y="15">New Lead</text>
+</svg>
+<!-- Node: Qualifier Agent -->
+<div class="absolute top-20 left-[480px] w-64 bg-white dark:bg-slate-900 rounded-xl shadow-xl border-l-4 border-emerald-500 overflow-hidden group hover:ring-2 hover:ring-primary/20 transition-all cursor-move">
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[10px] font-bold text-emerald-500 uppercase flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-emerald-500"></span> ACTIVE
+                                </span>
+<span class="material-symbols-outlined text-slate-400 text-sm">more_vert</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Qualifier Agent</h4>
+<p class="text-xs text-slate-500">Intent Analysis v2</p>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-slate-400">Handoff Success</span>
+<span class="font-bold">28%</span>
+</div>
+</div>
+<!-- Ports -->
+<div class="absolute -left-2 top-1/2 -translate-y-1/2 size-4 bg-primary rounded-full border-2 border-white dark:border-slate-900 z-10"></div>
+<div class="absolute -right-2 top-1/2 -translate-y-1/2 size-4 bg-primary rounded-full border-2 border-white dark:border-slate-900 z-10"></div>
+</div>
+<!-- Flow Arrow 2 -->
+<svg class="absolute top-[148px] left-[736px] w-[140px] h-[40px]" fill="none">
+<path class="dark:stroke-slate-700" d="M0 20 H120 M120 20 L112 14 M120 20 L112 26" stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="2"></path>
+<text class="text-[10px] fill-slate-400 dark:fill-slate-500 font-medium" x="45" y="15">Qualified</text>
+</svg>
+<!-- Node: Booker Agent -->
+<div class="absolute top-20 left-[880px] w-64 bg-white dark:bg-slate-900 rounded-xl shadow-xl border-l-4 border-slate-300 dark:border-slate-700 overflow-hidden group opacity-80 hover:ring-2 hover:ring-primary/20 transition-all cursor-move">
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-slate-400"></span> PAUSED
+                                </span>
+<span class="material-symbols-outlined text-slate-400 text-sm">more_vert</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Booker Agent</h4>
+<p class="text-xs text-slate-500">Calendly Automation</p>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-slate-400">Last Active</span>
+<span class="font-bold">2 days ago</span>
+</div>
+</div>
+<!-- In Port -->
+<div class="absolute -left-2 top-1/2 -translate-y-1/2 size-4 bg-slate-300 dark:bg-slate-700 rounded-full border-2 border-white dark:border-slate-900 z-10"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Toolbar -->
+<footer class="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-8 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+<span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Flow Online
+                    </div>
+<span class="text-slate-400 text-xs">Last saved 4 mins ago</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-base">save</span>
+                        Save Draft
+                    </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-base">science</span>
+                        Test with Sample Leads
+                    </button>
+<div class="w-px h-8 bg-slate-200 dark:bg-slate-800 mx-1"></div>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+                        Run Agents
+                    </button>
+</div>
+</footer>
+</main>
+</div>
+</div>
+</body></html>

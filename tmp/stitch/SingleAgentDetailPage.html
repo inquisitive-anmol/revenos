@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SalesForge AI - Agent Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#101722",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-6 py-4 bg-white dark:bg-slate-900">
+<div class="flex items-center gap-4">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">SalesForge AI</h2>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="bg-primary/10 rounded-full p-1 border border-primary/20">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User profile avatar illustration" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_K6exrc-HxOOFmz7H1cGin2cuZDtKP85zeSwK9UCJm2bZOdH0kJgp0j0u5vV9eVhstKb72pdjXvC5tk3sLXamTVGtEfyII9-x7tnFzuw3EOpSGBmYnsljRRE5PyLAfiYjGpkk3eqTEV1I0DkzJ2-jPOo2IAdGOkHT_6Ca4olK2FGxM-f7wzdgg6SO3JvhdEheZmRsUe1rmq6171pm0b6A5Zwpl17OLxwnFZSJ6Ztn2Cy58VST5LIW9bQZrk9_kBEmbuQZYtJXGN0");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex flex-col max-w-7xl mx-auto w-full p-4 md:p-8 gap-8">
+<div class="flex flex-col gap-4">
+<a class="flex items-center gap-2 text-primary font-medium hover:underline text-sm" href="#">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+                        Back to Agents
+                    </a>
+<div class="flex flex-wrap items-center justify-between gap-6 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-5">
+<div class="bg-primary/10 p-4 rounded-xl">
+<span class="material-symbols-outlined text-primary text-4xl">automation</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-3">
+<h1 class="text-slate-900 dark:text-slate-100 text-2xl font-bold tracking-tight">Lead Qualifier Alpha</h1>
+<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Last deployed 2 hours ago • Version 2.4.1</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 mr-2">
+<button class="px-4 py-1.5 rounded-md text-sm font-bold bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100">Active</button>
+<button class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-500 dark:text-slate-400">Paused</button>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">edit</span>
+                                Edit Agent
+                            </button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Emails Sent</p>
+<span class="material-symbols-outlined text-slate-400 text-sm">mail</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold tracking-tight">1,284</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +12.4% vs last week
+                        </p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Replies Received</p>
+<span class="material-symbols-outlined text-slate-400 text-sm">reply</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold tracking-tight">342</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +5.2% vs last week
+                        </p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Qual. Rate %</p>
+<span class="material-symbols-outlined text-slate-400 text-sm">verified_user</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold tracking-tight">26.6%</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +2.1% vs last week
+                        </p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Booked Meetings</p>
+<span class="material-symbols-outlined text-slate-400 text-sm">event_available</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold tracking-tight">42</p>
+<p class="text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_down</span>
+                            -0.8% vs last week
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+<h3 class="text-slate-900 dark:text-slate-100 font-bold">Conversation History</h3>
+<div class="flex gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-9 pr-4 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs focus:ring-primary focus:border-primary" placeholder="Search leads..." type="text"/>
+</div>
+<button class="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-xs">filter_list</span>
+                                Filter
+                            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+<th class="px-6 py-3 font-semibold border-b border-slate-200 dark:border-slate-800">Date</th>
+<th class="px-6 py-3 font-semibold border-b border-slate-200 dark:border-slate-800">Lead</th>
+<th class="px-6 py-3 font-semibold border-b border-slate-200 dark:border-slate-800">Message Preview</th>
+<th class="px-6 py-3 font-semibold border-b border-slate-200 dark:border-slate-800 text-center">Action</th>
+<th class="px-6 py-3 font-semibold border-b border-slate-200 dark:border-slate-800 text-right">Operations</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap text-slate-500 dark:text-slate-400">Oct 24, 14:20</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">Sarah Jenkins</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">CTO at TechFlow</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 max-w-xs truncate">
+                                        "I'm interested in how your AI handles complex lead scoring... Can we chat?"
+                                    </td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">Replied</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-xs">person_alert</span>
+                                            Escalate to Human
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap text-slate-500 dark:text-slate-400">Oct 24, 11:05</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">Michael Ross</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">VP Sales at GigaCorp</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 max-w-xs truncate">
+                                        "Let's book a meeting for Thursday at 10 AM EST."
+                                    </td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Booked</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap text-slate-500 dark:text-slate-400">Oct 23, 16:45</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">Elena Rodriguez</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Founder at StealthStartup</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 max-w-xs truncate">
+                                        "Checking in if you saw my previous email regarding the pricing model."
+                                    </td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Sent</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm whitespace-nowrap text-slate-500 dark:text-slate-400">Oct 23, 09:12</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-slate-100">David Chen</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Marketing Lead at PixelScale</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 max-w-xs truncate">
+                                        "Wait, are you a bot? Some of these answers seem a bit too fast."
+                                    </td>
+<td class="px-6 py-4 text-center">
+<span class="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">Replied</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-xs">person_alert</span>
+                                            Escalate to Human
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Showing 1-10 of 342 replies</span>
+<div class="flex gap-1">
+<button class="p-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="px-2 py-1 rounded border border-primary bg-primary/10 text-primary text-xs font-bold">1</button>
+<button class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 text-xs hover:border-primary hover:text-primary transition-colors">2</button>
+<button class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 text-xs hover:border-primary hover:text-primary transition-colors">3</button>
+<button class="p-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SalesForge AI - Pipeline Board</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#101722",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .kanban-column { min-width: 320px; max-width: 320px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex flex-col h-screen">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-3 shrink-0">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">rocket_launch</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">SalesForge AI</h2>
+</div>
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search deals..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-slate-200 dark:border-slate-800 pr-4">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">Admin Account</p>
+</div>
+<img class="size-10 rounded-full border-2 border-white dark:border-slate-800 shadow-sm" data-alt="User profile avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCuQ_tKabuXv6TpYaFgDVrTve7KuCZNO5qtadDfBCOWvUdlnbTC4v4-BycrDJwJna5OIiovt8Zb_yc05WfJ1pVAluePbnB_MpYf0J5kIxrkd4k58LZny_KdfceIMOO-GvolchTmZ_0dX8NHypr0gP8vr_UE2m2MComToOP9gLTe-TUYgM9apvXI98VUdwrYGOJD63UU-y3r03Cx5UiC84J9MHNbNvtLJkln2QIm2H-6cMwhvH4Nvrj0DesMcUl-vWHu5LVWbC8ZwU"/>
+</div>
+</div>
+</header>
+<!-- Filters Sub-nav -->
+<div class="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">
+<div class="flex gap-3 overflow-x-auto hide-scrollbar">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-lg">person</span>
+                    Agent: All
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+                    Date: Last 30 Days
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                    High Confidence
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+<button class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-lg">add_box</span>
+                New Lead
+            </button>
+</div>
+<!-- Kanban Board Area -->
+<main class="flex-1 overflow-x-auto p-6 bg-background-light dark:bg-background-dark">
+<div class="flex gap-6 h-full min-w-max">
+<!-- Leads Column -->
+<div class="kanban-column flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest">Leads (4)</h3>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer">more_horiz</span>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto hide-scrollbar flex-1">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">Score: 42%</span>
+<span class="material-symbols-outlined text-slate-300">drag_indicator</span>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of Johnathan Miller" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2uZGaJ-s3BPAmBiZvsq7fSdc66YvwQH5Psrn2m7ElmWizoFscLYadKmaRwtGg8Yy2xzxzYpzYbNJlfTmJ093dSnAhEvyqrnmwla1Acq3yi-GaJ1oe9-MEEd7AI36gaJSwFAv6uMWZvY_TFr7J4cOfVBQ-cP76EF2AmGzRVvH-XTOxCIH_yyzVqyDeBfCjru99QLx2UDZFant5yON_wQLDYPzAxgefFTqRbxJuAmJQhMUYq2uLzoUzNVnZDTXCIwixKCgonOu0kKA"/>
+<div>
+<h4 class="text-sm font-bold">Johnathan Miller</h4>
+<p class="text-xs text-slate-500">Starlight Tech</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded italic">
+                                "Quick question about the tiered pricing model..."
+                            </p>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">Score: 88%</span>
+<span class="material-symbols-outlined text-slate-300">drag_indicator</span>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of Sarah Jenkins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYSzfSWSoa6y63GTsbdPqtYgFqY9MrfsdvYFD-mCo2IUm4dIRYStvq_T-9_RDS3sczXNXxQ7GZAY4sFC-R-b2GD7Y7hGnu3ytCOyMKHJt3alTIS42MFcF881dgj9nZpXAKMNILvdyBdOb67u6cwZB4Cyy-ZRNUe2jhQbxDcd9T25Az43hhGRFUipZOTgucV3ywHPKeot0dRndbdMXbKYATfpEHwVwgKwj9cKz1amKl0E5DaFJrzgwUvrOmH7633b6qMMcxVtKbR6s"/>
+<div>
+<h4 class="text-sm font-bold">Sarah Jenkins</h4>
+<p class="text-xs text-slate-500">Avenue Design</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded italic">
+                                "We're looking to scale our outbound efforts by Q3."
+                            </p>
+</div>
+</div>
+</div>
+<!-- Qualified Column -->
+<div class="kanban-column flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest">Qualified (2)</h3>
+<span class="material-symbols-outlined text-slate-400">more_horiz</span>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto hide-scrollbar flex-1">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">Score: 65%</span>
+<span class="material-symbols-outlined text-slate-300">drag_indicator</span>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of David Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT_p04VC0z4q1OFzjOVXoYsSUN2HLsLjoJ5e21ig6sd2rh181NO8NEEROOcKPUDrZTNAiXIiepMuAvI7O9cHlsuIh2R9KO6zmz23ffXPcDacHY6WmjGG3wM_dAc2LYdnP4ANEfup8rIsJNkAN_a6sizL1o2PrpxXo2v1Cp8R0ItxH1N8kga9lwctfdUKktkYKUk6j48VmAtzGdwxZV8Sc3fI2aQelEN-J-JRb5sJPg48gdFVx-VYg2Sgpqwptv_pFtDcDECY-eQGs"/>
+<div>
+<h4 class="text-sm font-bold">David Chen</h4>
+<p class="text-xs text-slate-500">Matrix Cloud</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded italic">
+                                "Can you confirm if your API supports GraphQL?"
+                            </p>
+</div>
+</div>
+</div>
+<!-- Interested Column -->
+<div class="kanban-column flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest">Interested (3)</h3>
+<span class="material-symbols-outlined text-slate-400">more_horiz</span>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto hide-scrollbar flex-1">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 border-l-4 border-l-primary hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">Score: 94%</span>
+<span class="material-symbols-outlined text-slate-300">drag_indicator</span>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of Maria Garcia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASzSoDzj4rI4emzC4wrNs-flZqa8jjxyBX9bBo9A8foizxIiOaxh7OiMnKu2oAt_xDozuyK0KqgO3hCDqwme7329SCIuAqpDzDiVCsYZ11GZ5gcBXlJLzUc_qnc1k5Q9c7-oRiEQVHQTX7Enbctc8GDF780_dYQNgXNYgHHJDLC5hRK67attQaLgVt348RWi_hmKhgjwijnw6fqjN3xLjRDXxMFhajC7l6fUuSwle_GjfvCRjpZHo4w-TrXY-BVl8XThKNVhBKkC0"/>
+<div>
+<h4 class="text-sm font-bold">Maria Garcia</h4>
+<p class="text-xs text-slate-500">Global FinTech</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded italic">
+                                "The team is very excited about the personalization features."
+                            </p>
+</div>
+</div>
+</div>
+<!-- Meetings Booked Column -->
+<div class="kanban-column flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest">Meetings Booked (5)</h3>
+<span class="material-symbols-outlined text-slate-400">more_horiz</span>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto hide-scrollbar flex-1">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow cursor-grab border-t-4 border-t-primary">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">Score: 98%</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-primary text-sm">calendar_month</span>
+<span class="material-symbols-outlined text-slate-300">drag_indicator</span>
+</div>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of Robert Wilson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAasZCxP7jyDEMp22c1DhD4TZhw3jG23LAPcFM8E2lZUmFJHr9UhPMFUaAuxrDviNiRX_aBQj94oj9CYImbnRmSTAnXvYi4ciEjjYNfuQVgxcu9yKDWRpetwKopNRG9TSmVW0AgTesRVJZTi0jkM8h7dHXsnj7-UFWS8nclfMaoj7p70zo51EOnL3JXKBt469oFwJ0j2_XHZN_2ElWGdspnDCO_20Qlw5Wwp_gZT2oICfvKdVf0394Kz3PwsQwhChtxR8lHzmNXlqU"/>
+<div>
+<h4 class="text-sm font-bold">Robert Wilson</h4>
+<p class="text-xs text-slate-500">Heavy Logix</p>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2 px-2 py-1.5 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-base">event_available</span>
+<p class="text-[11px] font-semibold text-primary">Demo scheduled: tomorrow at 2PM</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Closed Won/Lost Column -->
+<div class="kanban-column flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest">Closed Won/Lost (12)</h3>
+<span class="material-symbols-outlined text-slate-400">more_horiz</span>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto hide-scrollbar flex-1 opacity-70">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 grayscale hover:grayscale-0 transition-all cursor-grab">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Archived</span>
+<span class="material-symbols-outlined text-green-500 text-xl">check_circle</span>
+</div>
+<div class="flex gap-3 items-center mb-3">
+<img class="size-10 rounded-full" data-alt="Avatar of Emily Blunt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBulFUAgyVoS9GKTAYDOwy38MlmStozQRiqaQnXzkiPNDUd90MZ4scyVKyLzSSUlBQR4vTe77_pGGM3Ww8luMD9GOFG50eukiohpi08dQpdTnf3V09Uw_uWlD8vM6cmrC-g2SPFu9tU6eggm6pZG5r9dqVI1lPr15xGIwlAkws181oyjyKMmFlx8xVzM8867gsaPYJFvnJZvoH4sP-ulJnk_nyMQf5Hxt2rR3ACvpgYJ1e5Qrnff4atf9SEGziy23FsvU0MgdKdhbo"/>
+<div>
+<h4 class="text-sm font-bold">Emily Blunt</h4>
+<p class="text-xs text-slate-500">Creative Labs</p>
+</div>
+</div>
+<p class="text-xs text-slate-500 font-medium">Closed Won: $12,500/year</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

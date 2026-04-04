@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SalesForge AI - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .step-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">SalesForge AI</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<p class="text-xs text-slate-500 font-medium">Alex Thompson</p>
+<p class="text-[10px] text-slate-400">Pro Account</p>
+</div>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-800" data-alt="User profile avatar portrait">
+<img alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyHGjSJTTW8yfwZUCesk7swJ5h62QU-EoVja_eZUk4HEYAbxYFUeTwfBF_DEq_uF1ic6R5hj2yPOgy41IXKPMEtJj3Z_HSCAFCaBen6DrC-rKFUJBxM45O7fuUw1lEa-OPJ0fwvzx-5V-JnrwD7A4iqL2QpmCF12eVlOn2an06PXp7Rrjl77j_vVgv1AIvDYHM8m9YRBYBHvWtIbE2zLIMdmRkO8Iqw1BAJZYi6nCLARC5dKJNqT24w_kWp8gHoSFdGlnC-6gBUr8"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex items-center justify-center p-6">
+<div class="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 overflow-hidden">
+<!-- Progress Bar -->
+<div class="p-8 pb-0">
+<div class="flex justify-between items-end mb-4">
+<div>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Setup Wizard</span>
+<h2 class="text-2xl font-bold mt-1">Configure your Workspace</h2>
+</div>
+<div class="text-right">
+<span class="text-sm font-medium text-slate-500">Step 1 of 2</span>
+<div class="text-xs text-slate-400 font-medium">50% Complete</div>
+</div>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/2 transition-all duration-500"></div>
+</div>
+</div>
+<!-- Wizard Step 1 Content -->
+<div class="p-8 space-y-8">
+<div class="space-y-6">
+<!-- Company Name -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Company Name</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">corporate_fare</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. Acme Corporation" type="text"/>
+</div>
+</div>
+<!-- Industry Dropdown -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Industry</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">category</span>
+<select class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none">
+<option disabled="" selected="" value="">Select industry</option>
+<option value="tech">Technology &amp; IT</option>
+<option value="saas">SaaS / Software</option>
+<option value="healthcare">Healthcare</option>
+<option value="fintech">Fintech</option>
+<option value="ecommerce">E-commerce</option>
+<option value="marketing">Marketing &amp; Ads</option>
+</select>
+</div>
+</div>
+<!-- ICP Description -->
+<div class="space-y-2">
+<div class="flex justify-between">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Target ICP Description</label>
+<span class="text-[11px] text-slate-400 font-medium">AI will analyze this</span>
+</div>
+<textarea class="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" placeholder="Describe your Ideal Customer Profile (e.g. Mid-market CTOs in North America seeking cloud security solutions...)" rows="4"></textarea>
+</div>
+</div>
+<!-- Guidance Note -->
+<div class="flex gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+<span class="font-semibold text-slate-800 dark:text-slate-200">AI Tip:</span> Be specific about your target audience. The more detail you provide about their pain points, the more accurate your agent templates will be.
+                    </p>
+</div>
+</div>
+<!-- Footer Controls -->
+<div class="p-8 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<button class="px-6 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Back
+                </button>
+<div class="flex gap-3">
+<button class="px-8 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2">
+                        Next: Templates
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Step 2 Preview (Hidden or for logic later) -->
+<!-- Large Button for Step 2 included below as a reference/standalone element -->
+<div class="hidden max-w-2xl mx-auto w-full mb-20 px-6">
+<button class="w-full py-6 bg-primary text-white rounded-xl font-bold text-xl shadow-2xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1 transition-all flex items-center justify-center gap-4 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">bolt</span>
+            Generate AI Agent Templates
+            <span class="material-symbols-outlined text-2xl group-hover:translate-x-2 transition-transform">auto_mode</span>
+</button>
+</div>
+<footer class="py-8 text-center">
+<p class="text-xs text-slate-400 font-medium">© 2026 SalesForge AI. Powered by NeuralForge Engine.</p>
+</footer>
+</body></html>
