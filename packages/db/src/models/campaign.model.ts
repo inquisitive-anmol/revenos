@@ -8,6 +8,11 @@ export interface ICampaign extends Document {
   status: "draft" | "active" | "paused" | "completed";
   settings: {
     icpDescription: string;
+    industry: string;
+    companySize: string;
+    jobTitles: string;
+    problemToSolve: string;
+    goal: string;
     dailyEmailLimit: number;
     timezone: string;
   };
@@ -36,6 +41,11 @@ const CampaignSchema = new Schema<ICampaign>(
     },
     settings: {
       icpDescription: { type: String, required: true },
+      industry: { type: String },
+      companySize: { type: String },
+      jobTitles: { type: String },
+      problemToSolve: { type: String },
+      goal: { type: String, default: "Lead Generation" },
       dailyEmailLimit: { type: Number, default: 50 },
       timezone: { type: String, default: "UTC" },
     },

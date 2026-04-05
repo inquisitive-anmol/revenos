@@ -3,12 +3,30 @@ import { Campaign, ICampaign } from "@revenos/db";
 export const createCampaign = async (
   workspaceId: string,
   name: string,
-  icpDescription: string
+  icpDescription: string,
+  options?: {
+    industry?: string;
+    companySize?: string;
+    jobTitles?: string;
+    problemToSolve?: string;
+    goal?: string;
+    status?: string;
+  }
 ): Promise<ICampaign> => {
   return Campaign.create({
     workspaceId,
     name,
-    settings: { icpDescription },
+    status: options?.status || "draft",
+    settings: {
+      icpDescription,
+      industry: options?.industry,
+      companySize: options?.companySize,
+      jobTitles: options?.jobTitles,
+      problemToSolve: options?.problemToSolve,
+      goal: options?.goal || "Lead Generation",
+      dailyEmailLimit: 50,
+      timezone: "UTC",
+    },
   });
 };
 

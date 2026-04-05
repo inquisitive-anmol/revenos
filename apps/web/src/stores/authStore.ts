@@ -2,20 +2,27 @@ import { create } from 'zustand';
 
 interface AuthState {
   isAuthenticated: boolean;
-  isLoaded: boolean; // Sync with Clerk's loaded state
+  isLoading: boolean; // Sync with Clerk's loaded state
+  error: string | null;
+  pendingVerification: boolean;
   user: {
     id: string;
     email: string;
     fullName: string;
   } | null;
   setAuth: (payload: { isAuthenticated: boolean; user: AuthState['user'] }) => void;
-  setLoaded: (loaded: boolean) => void;
+  setLoading: (loaded: boolean) => void;
+  setError: (error: string | null) => void;
+  setPendingVerification: (status: boolean) => void;
   clearAuth: () => void;
+  reset: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
-  isLoaded: false,
+  isLoading: false,
+  error: null,
+  pendingVerification: false,
   user: null,
 
   setAuth: (payload) =>
@@ -24,14 +31,28 @@ export const useAuthStore = create<AuthState>((set) => ({
       user: payload.user,
     }),
 
-  setLoaded: (loaded) =>
+  setLoading: (loaded) =>
     set({
-      isLoaded: loaded,
+      isLoading: loaded,
     }),
+
+  setError: (error: string | null) =>
+    set({
+      error,
+    }),
+
+  setPendingVerification: (status) => set({ pendingVerification: status }),
 
   clearAuth: () =>
     set({
       isAuthenticated: false,
       user: null,
     }),
+
+  reset: () => set({ isLoading: false, error: null }),
+}));
+
+export const useUserStore = create((set) => ({
+  dbUser: null,
+  setDbUser: (data: any) => set({ dbUser: data }),
 }));

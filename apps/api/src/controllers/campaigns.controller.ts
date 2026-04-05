@@ -18,19 +18,33 @@ export const listCampaignsHandler = async (req: Request, res: Response) => {
   // In the future, pagination parameters could be passed down to the service
   // For now, service returns all and we can just pass them as payload
   const campaigns = await getCampaigns(workspaceId);
-  
+
   // Naive pagination meta setup for demonstration
   return ok(res, campaigns, { page, limit, total: campaigns.length, totalPages: Math.ceil(campaigns.length / limit) });
 };
 
 export const createCampaignHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
-  const { name, icpDescription } = req.body;
+  const {
+    name,
+    icpDescription,
+    industry,
+    companySize,
+    jobTitles,
+    problemToSolve,
+    goal,
+    status,
+  } = req.body;
 
   logger.info({ workspaceId, name }, 'Creating new campaign');
 
-  const campaign = await createCampaign(workspaceId, name, icpDescription);
-  
+  const campaign = await createCampaign(
+    workspaceId,
+    name,
+    icpDescription,
+    { industry, companySize, jobTitles, problemToSolve, goal, status }
+  );
+
   return created(res, { campaign });
 };
 

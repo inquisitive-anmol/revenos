@@ -52,7 +52,7 @@ router.get(
 );
 
 router.patch(
-  '/:id',
+  '/:id/status',
   validate({
     params: z.object({ id: z.string() }),
     body: UpdateCampaignSchema,
