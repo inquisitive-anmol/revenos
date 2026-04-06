@@ -147,6 +147,14 @@ yarn exec turbo link
 pnpm exec turbo link
 ```
 
+## Deploy comand(always use)
+
+```sh
+docker compose --env-file .env.production up -d --build
+
+```
+
+
 ## Useful Links
 
 Learn more about the power of Turborepo:
