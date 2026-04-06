@@ -16,6 +16,7 @@ WORKDIR /app
 COPY --from=builder /app/apps/workers/dist ./dist
 COPY --from=builder /app/apps/workers/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages ./packages
 
 EXPOSE 5002
 CMD ["node", "dist/index.js"]
