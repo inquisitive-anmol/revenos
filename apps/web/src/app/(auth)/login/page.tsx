@@ -8,7 +8,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const { isLoaded, signIn, setActive } = useSignIn();
-    const { isLoading, error, setLoading, setError, reset } = useAuthStore();
+    const { isLoading, setLoading, setError, reset } = useAuthStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

@@ -6,7 +6,7 @@ import { useAuthStore } from "../../../stores/authStore";
 export default function SignUpPage() {
     const { isLoaded, signUp, setActive } = useSignUp();
     const navigate = useNavigate();
-    const { isLoading, error, pendingVerification, setLoading, setError, setPendingVerification, reset } = useAuthStore();
+    const { isLoading, pendingVerification, setLoading, setError, setPendingVerification, reset } = useAuthStore();
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");

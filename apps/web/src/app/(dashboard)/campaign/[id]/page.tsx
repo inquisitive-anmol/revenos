@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useApi } from "../../../../lib/api";
-import { useCampaignStore, type Campaign } from "../../../../stores/campaign.store";
+import { useCampaignStore } from "../../../../stores/campaign.store";
 import { useLeads } from "../../../../hooks/useLeads";
 import { useLeadStore } from "../../../../stores/lead.store";
 
@@ -56,7 +56,7 @@ export default function CampaignDetailsPage() {
     setToggleLoading(true);
     try {
       const newStatus = activeCampaign.status === "active" ? "paused" : "active";
-      const res = await api.patch(`/api/v1/campaigns/${id}/status`, {
+      await api.patch(`/api/v1/campaigns/${id}/status`, {
         status: newStatus,
       });
       setActiveCampaign({ ...activeCampaign, status: newStatus });
