@@ -7,7 +7,7 @@ COPY apps/api ./apps/api
 COPY packages ./packages
 
 RUN npm install
-RUN npx turbo run build --filter=api
+RUN npx turbo run build --filter=@revenos/api
 
 FROM node:20-alpine AS runner
 WORKDIR /app
