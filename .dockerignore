@@ -1,0 +1,20 @@
+# ── Env files — never copy local dev secrets into images ─────────────────
+# VITE_* vars come from build args (docker-compose.yml → Dockerfile ARG/ENV)
+# API/workers vars come from env_file at container runtime (.env.production)
+**/.env
+**/.env.*
+
+# ── Dependencies — re-installed inside the image ──────────────────────────
+**/node_modules
+
+# ── Git history — not needed in image ────────────────────────────────────
+.git
+.gitignore
+
+# ── Local build artifacts ─────────────────────────────────────────────────
+**/dist
+
+# ── Misc ──────────────────────────────────────────────────────────────────
+.turbo
+**/*.log
+README.md
