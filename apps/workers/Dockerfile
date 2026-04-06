@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY turbo.json ./
+COPY tsconfig.base.json ./
 COPY apps/workers ./apps/workers
 COPY packages ./packages
 
