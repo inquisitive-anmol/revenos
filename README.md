@@ -152,6 +152,10 @@ pnpm exec turbo link
 ```sh
 docker compose --env-file .env.production up -d --build
 
+
+docker compose --env-file .env.production build --no-cache web
+docker compose --env-file .env.production up -d
+
 ```
 
 

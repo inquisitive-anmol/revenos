@@ -9,11 +9,6 @@ COPY packages ./packages
 
 RUN npm install
 
-# Inject env vars at build time
-ARG VITE_API_URL
-ARG VITE_CLERK_PUBLISHABLE_KEY
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
 
 RUN npx turbo run build --filter=web
 

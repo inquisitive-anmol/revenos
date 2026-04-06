@@ -38,11 +38,6 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-      args:
-        # docker-compose interpolates these from .env.production
-        # (passed via --env-file flag at runtime — see deploy command below)
-        VITE_API_URL: ${VITE_API_URL}
-        VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
     container_name: revenos_web
     restart: unless-stopped
     ports:
