@@ -5,6 +5,7 @@ import { useLeadStore, type Lead } from "../../../stores/lead.store";
 import { useMeetings } from "../../../hooks/useMeetings";
 import { useMeetingStore } from "../../../stores/meeting.store";
 import { useUser } from "@clerk/clerk-react";
+import { useApi } from "../../../lib/api";
 
 // Column definitions
 const COLUMNS: { id: Lead["status"]; label: string; color: string }[] = [
@@ -25,6 +26,8 @@ const getScoreBadge = (score: number) => {
 export default function PipelinePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [qualifyingId, setQualifyingId] = useState<string | null>(null);
+  const api = useApi();
 
   const { user } = useUser();
   const navigate = useNavigate();
@@ -93,9 +96,25 @@ export default function PipelinePage() {
     setDraggingId(null);
   };
 
+  const handleQualify = async (leadId: string, campaignId: string) => {
+    if (qualifyingId) return;
+    setQualifyingId(leadId);
+    try {
+      await api.post(
+        `/api/v1/campaigns/${campaignId}/qualify/${leadId}`
+      );
+      // Refresh leads after qualifying
+      await fetchLeads();
+    } catch (err: any) {
+      console.error("Failed to qualify lead:", err.message);
+    } finally {
+      setQualifyingId(null);
+    }
+  };
+
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-sans overflow-hidden">
-      
+
       {/* Top Header */}
       <header className="h-16 bg-surface border-b border-outline flex items-center justify-between px-6 flex-shrink-0 z-20">
         <div className="flex items-center gap-3">
@@ -223,9 +242,8 @@ export default function PipelinePage() {
 
                 {/* Drop Zone */}
                 <div
-                  className={`flex flex-col gap-4 flex-1 min-h-[200px] rounded-xl transition-colors ${
-                    draggingId ? "bg-primary-container/10 border-2 border-dashed border-primary/20" : ""
-                  }`}
+                  className={`flex flex-col gap-4 flex-1 min-h-[200px] rounded-xl transition-colors ${draggingId ? "bg-primary-container/10 border-2 border-dashed border-primary/20" : ""
+                    }`}
                 >
                   {/* Empty state */}
                   {colLeads.length === 0 && !loading && (
@@ -308,12 +326,30 @@ export default function PipelinePage() {
 
                         {/* Footer */}
                         <div className="flex items-center justify-between mt-3 pt-3 border-t border-outline">
-                          <span className="text-[10px] font-semibold text-secondary">
+                          <span className="text-[10px] font-semibold text-secondary truncate max-w-[140px]">
                             {lead.email}
                           </span>
-                          <span className={`w-2 h-2 rounded-full ${
-                            lead.humanControlled ? "bg-error" : "bg-green-500"
-                          }`}></span>
+                          <div className="flex items-center gap-2">
+                            {col.id === "prospecting" && !lead.humanControlled && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleQualify(lead._id, lead.campaignId);
+                                }}
+                                disabled={qualifyingId === lead._id}
+                                className="px-2.5 py-1 bg-primary text-white text-[10px] font-bold rounded-lg hover:bg-on-primary-fixed-variant active:scale-95 transition-all flex items-center gap-1 disabled:opacity-60"
+                              >
+                                {qualifyingId === lead._id ? (
+                                  <span className="material-symbols-outlined text-[12px] animate-spin">progress_activity</span>
+                                ) : (
+                                  <span className="material-symbols-outlined text-[12px]">send</span>
+                                )}
+                                {qualifyingId === lead._id ? "Sending..." : "Qualify"}
+                              </button>
+                            )}
+                            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${lead.humanControlled ? "bg-error" : "bg-green-500"
+                              }`}></span>
+                          </div>
                         </div>
                       </div>
                     );

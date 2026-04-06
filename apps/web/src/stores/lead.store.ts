@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export interface Lead {
+  industry: any;
   _id: string;
   workspaceId: string;
   campaignId: string;

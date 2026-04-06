@@ -1,9 +1,18 @@
 import { create } from "zustand";
 
+export interface MeetingLead {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: string;
+  title: string;
+}
+
 export interface Meeting {
   _id: string;
   workspaceId: string;
-  leadId: string;
+  leadId: string | MeetingLead;
   campaignId: string;
   calendarEventId?: string;
   scheduledAt: string;

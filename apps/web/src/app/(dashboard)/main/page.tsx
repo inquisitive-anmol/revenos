@@ -113,6 +113,10 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined text-[22px]">view_kanban</span>
               Leads
             </Link>
+            <Link to="/meetings" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
+              <span className="material-symbols-outlined text-[22px]">view_kanban</span>
+              Meetings
+            </Link>
             <Link to="/integrations" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
               <span className="material-symbols-outlined text-[22px]">extension</span>
               Integrations

@@ -13,6 +13,7 @@ import CampaignDetailsPage from "./app/(dashboard)/campaign/[id]/page";
 import CreateCampaignPage from "./app/(dashboard)/campaign/create/page";
 import LeadsPage from "./app/(dashboard)/lead/list/page";
 import LeadDetailsPage from "./app/(dashboard)/lead/[id]/page";
+import MeetingsPage from "./app/(dashboard)/meeting/list/page";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/leads/:id" element={<LeadDetailsPage />} />
         <Route path="/agents/:id" element={<AgentDetailPage />} />
         <Route path="/agents" element={<AgentBuilderPage />} />
+        <Route path="/meetings" element={<MeetingsPage />} />
       </Route>
     </Routes>
   );

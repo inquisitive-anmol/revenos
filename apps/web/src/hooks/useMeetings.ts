@@ -19,5 +19,16 @@ export const useMeetings = () => {
     }
   }, [api]);
 
-  return { fetchMeetings };
+  const updateOutcome = useCallback(
+    async (meetingId: string, outcome: string) => {
+      const res = await api.patch(
+        `/api/v1/meetings/${meetingId}/outcome`,
+        { outcome }
+      );
+      return res.data;
+    },
+    [api]
+  );
+
+  return { fetchMeetings, updateOutcome };
 };

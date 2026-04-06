@@ -8,6 +8,7 @@ import {
 import { ok, parsePagination } from '@/utils/response';
 import { NotFoundError } from '@/errors/AppError';
 import logger from '@/config/logger';
+import { EmailThread } from '@revenos/db';
 
 export const listLeadsHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
@@ -52,7 +53,7 @@ export const takeoverLeadHandler = async (req: Request, res: Response) => {
     throw new NotFoundError('Lead');
   }
 
-  return ok(res, { lead });
+  return ok(res, { data: lead });
 };
 
 export const handbackLeadHandler = async (req: Request, res: Response) => {
@@ -67,4 +68,16 @@ export const handbackLeadHandler = async (req: Request, res: Response) => {
   }
 
   return ok(res, { lead });
+};
+
+export const getLeadThreadsHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  const threads = await EmailThread.find({
+    leadId: id,
+    workspaceId,
+  }).sort({ createdAt: -1 });
+
+  return ok(res, threads);
 };

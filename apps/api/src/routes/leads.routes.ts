@@ -7,6 +7,7 @@ import {
   getLeadHandler,
   takeoverLeadHandler,
   handbackLeadHandler,
+  getLeadThreadsHandler,
 } from '@/controllers/leads.controller';
 
 const router = Router();
@@ -41,6 +42,13 @@ router.patch(
   '/:id/handback',
   validate({ params: z.object({ id: z.string() }) }),
   asyncHandler(handbackLeadHandler)
+);
+
+// GET /api/v1/leads/:id/threads
+router.get(
+  '/:id/threads',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(getLeadThreadsHandler)
 );
 
 export default router;
