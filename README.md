@@ -153,8 +153,20 @@ pnpm exec turbo link
 docker compose --env-file .env.production up -d --build
 
 
+# Stop and remove the web container
+docker compose --env-file .env.production stop web
+docker compose --env-file .env.production rm -f web
+
+# Remove the old web image completely
+docker rmi revenos-web
+
+# Verify your .env.production file exists and has the key
+cat apps/web/.env.production
+
+# Rebuild from zero and start
 docker compose --env-file .env.production build --no-cache web
-docker compose --env-file .env.production up -d
+docker compose --env-file .env.production up -d web
+
 
 ```
 

@@ -1,8 +1,9 @@
 # ── Env files — never copy local dev secrets into images ─────────────────
-# VITE_* vars come from build args (docker-compose.yml → Dockerfile ARG/ENV)
-# API/workers vars come from env_file at container runtime (.env.production)
+# Block all .env files by default...
 **/.env
 **/.env.*
+# ...except the web app's production env (VITE_* public vars that Vite reads at build time)
+!apps/web/.env.production
 
 # ── Dependencies — re-installed inside the image ──────────────────────────
 **/node_modules
