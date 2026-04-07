@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IAgent extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   type: "prospector" | "qualifier" | "booker";
   config: {
     icpDescription?: string;
@@ -23,8 +23,7 @@ export interface IAgent extends Document {
 const AgentSchema = new Schema<IAgent>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     type: {

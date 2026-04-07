@@ -3,7 +3,7 @@ import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IUser extends Document {
   clerkId: string;
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   role: "owner" | "admin" | "member";
   email: string;
   name: string;
@@ -15,8 +15,7 @@ const UserSchema = new Schema<IUser>(
   {
     clerkId: { type: String, required: true, unique: true },
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     role: {
