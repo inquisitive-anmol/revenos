@@ -12,8 +12,7 @@ const generateInviteToken = () => crypto.randomUUID();
 export const provisionWorkspaceForUser = async (
   clerkUserId: string,
   email: string,
-  firstName: string,
-  lastName: string,
+  username: string,
 ): Promise<IWorkspace> => {
   // Idempotent: if a workspace already exists for this Clerk user, return it
   const existing = await Workspace.findOne({ clerkOwnerId: clerkUserId });
@@ -22,10 +21,7 @@ export const provisionWorkspaceForUser = async (
     return existing;
   }
 
-  const finalFirstName = firstName || 'New';
-  const finalLastName = lastName || 'User';
-
-  const name = `${finalFirstName}'s Workspace`;
+  const name = `${username}'s Workspace`;
 
   const workspace = await Workspace.create({
     clerkOwnerId: clerkUserId,
@@ -36,7 +32,7 @@ export const provisionWorkspaceForUser = async (
   // Upsert User identity doc
   await User.findOneAndUpdate(
     { clerkId: clerkUserId },
-    { clerkId: clerkUserId, email, name: `${finalFirstName} ${finalLastName}`.trim() },
+    { clerkId: clerkUserId, email, name: username },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
 

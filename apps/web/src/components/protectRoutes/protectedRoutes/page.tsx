@@ -19,12 +19,9 @@ export default function ProtectedRoute() {
   }
 
   // 3. Show friendly spinner while syncing to DB / provisioning workspace
-  if (isSyncing || !isSynced) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        Setting up your account...
-      </div>
-    );
+  // 3. If workspaces already in store (from localStorage), skip the sync wait
+  if ((isSyncing || !isSynced) && workspaces.length === 0) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Setting up your account...</div>;
   }
 
   // 4. Sync failed — show error with a retry option

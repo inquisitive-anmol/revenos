@@ -156,6 +156,9 @@ export default function CampaignsPage() {
               <span className="material-symbols-outlined text-[22px]">alt_route</span>
               Pipeline
             </Link>
+            <Link to="/leads" className="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-on-surface hover:bg-surface rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>Leads
+            </Link>
             <Link to="/settings" className="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-on-surface hover:bg-surface rounded-lg transition-all font-semibold text-sm">
               <span className="material-symbols-outlined text-[22px]">settings</span>
               Settings

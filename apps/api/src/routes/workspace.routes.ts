@@ -17,7 +17,7 @@ router.get('/invite/:token', asyncHandler(getInviteInfoHandler));
 
 // ── Authenticated, no tenant context needed ───────────────────────────────────
 // These routes work BEFORE the user has a resolved workspace
-router.get('/mine', requireAuthGuard, asyncHandler(listWorkspacesHandler));
+router.get('/mine', asyncHandler(listWorkspacesHandler));
 router.post('/invite/:token/accept', requireAuthGuard, asyncHandler(acceptInviteHandler));
 
 // ── Authenticated + tenant-scoped ─────────────────────────────────────────────

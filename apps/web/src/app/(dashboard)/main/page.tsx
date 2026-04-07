@@ -73,7 +73,7 @@ export default function DashboardPage() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex font-sans overflow-hidden">
-      
+
       {/* Sidebar */}
       <aside className="w-64 bg-surface border-r border-outline flex flex-col justify-between flex-shrink-0 z-10">
         <div>
@@ -92,34 +92,24 @@ export default function DashboardPage() {
           </div>
 
           {/* Navigation */}
-          <nav className="px-4 py-6 space-y-1">
-            <Link to="/dashboard" className="flex items-center gap-3 px-3 py-2.5 bg-primary-container/50 text-primary font-semibold rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>grid_view</span>
-              Dashboard
+          <nav className="flex-1 px-4 space-y-1.5 mt-2 overflow-y-auto">
+            <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 bg-primary-container/50 text-primary  rounded-lg transition-all font-semibold text-sm shadow-sm">
+              <span className="material-symbols-outlined text-[22px]">grid_view</span>Dashboard
             </Link>
-            <Link to="/agents" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">smart_toy</span>
-              Agents
+            <Link to="/agents" className="flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]">smart_toy</span>Agents
             </Link>
-            <Link to="/pipeline" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">view_kanban</span>
-              Pipeline
+            <Link to="/campaigns" className="flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>campaign</span>Campaigns
             </Link>
-            <Link to="/campaigns" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">view_kanban</span>
-              Campaigns
+            <Link to="/pipeline" className="flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]">alt_route</span>Pipeline
             </Link>
-            <Link to="/leads" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">view_kanban</span>
-              Leads
+            <Link to="/leads" className="flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>Leads
             </Link>
-            <Link to="/meetings" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">view_kanban</span>
-              Meetings
-            </Link>
-            <Link to="/integrations" className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-medium hover:bg-surface-container-low hover:text-on-surface rounded-lg transition-colors">
-              <span className="material-symbols-outlined text-[22px]">extension</span>
-              Integrations
+            <Link to="/settings" className="flex items-center gap-3 px-4 py-3 text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-all font-semibold text-sm">
+              <span className="material-symbols-outlined text-[22px]">settings</span>Settings
             </Link>
           </nav>
         </div>
@@ -135,7 +125,7 @@ export default function DashboardPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        
+
         {/* Top Header */}
         <header className="h-20 bg-surface border-b border-outline flex items-center justify-between px-8 flex-shrink-0 z-10">
           {/* Search */}
@@ -158,7 +148,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>notifications</span>
               <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-error rounded-full border border-surface"></span>
             </button>
-            
+
             <div className="h-8 w-px bg-outline"></div>
 
             <button className="flex items-center gap-3 text-left group">
@@ -191,14 +181,14 @@ export default function DashboardPage() {
           )}
 
           <div className="max-w-7xl mx-auto space-y-6">
-            
+
             {/* KPI Cards Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              
+
               {/* Card 1 — Emails Sent */}
               <div className="bg-surface border border-outline rounded-xl p-5 shadow-sm flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-sm font-semibold text-secondary">Emails<br/>Sent</span>
+                  <span className="text-sm font-semibold text-secondary">Emails<br />Sent</span>
                   <div className="w-8 h-8 rounded-lg bg-primary-container text-primary flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">mail</span>
                   </div>
@@ -224,7 +214,7 @@ export default function DashboardPage() {
               {/* Card 2 — Reply Rate */}
               <div className="bg-surface border border-outline rounded-xl p-5 shadow-sm flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-sm font-semibold text-secondary">Reply<br/>Rate %</span>
+                  <span className="text-sm font-semibold text-secondary">Reply<br />Rate %</span>
                   <div className="w-8 h-8 rounded-lg bg-primary-container text-primary flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
                   </div>
@@ -243,7 +233,7 @@ export default function DashboardPage() {
               {/* Card 3 — Meetings Booked */}
               <div className="bg-surface border border-outline rounded-xl p-5 shadow-sm flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-sm font-semibold text-secondary">Meetings<br/>Booked</span>
+                  <span className="text-sm font-semibold text-secondary">Meetings<br />Booked</span>
                   <div className="w-8 h-8 rounded-lg bg-primary-container text-primary flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">event_available</span>
                   </div>
@@ -262,7 +252,7 @@ export default function DashboardPage() {
               {/* Card 4 — Total Leads */}
               <div className="bg-surface border border-outline rounded-xl p-5 shadow-sm flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-sm font-semibold text-secondary">Total<br/>Leads</span>
+                  <span className="text-sm font-semibold text-secondary">Total<br />Leads</span>
                   <div className="w-8 h-8 rounded-lg bg-primary-container text-primary flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">group</span>
                   </div>
@@ -281,7 +271,7 @@ export default function DashboardPage() {
 
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-              
+
               {/* Left Column — Live Activity Feed */}
               <div className="xl:col-span-2 bg-surface border border-outline rounded-xl shadow-sm overflow-hidden flex flex-col h-full min-h-[600px]">
                 <div className="px-6 py-5 border-b border-outline flex justify-between items-center">
@@ -290,7 +280,7 @@ export default function DashboardPage() {
                     Real-time
                   </span>
                 </div>
-                
+
                 <div className="flex-1 p-6 space-y-8">
                   {/* Activity items stay as-is — Socket.io will power these in a later step */}
                   <div className="flex gap-4">
@@ -361,13 +351,13 @@ export default function DashboardPage() {
 
               {/* Right Column */}
               <div className="flex flex-col gap-6">
-                
+
                 {/* Chart Card — placeholder, will wire with real data later */}
                 <div className="bg-surface border border-outline rounded-xl shadow-sm p-6">
                   <h2 className="text-base font-bold text-on-surface mb-6">Meetings over time</h2>
                   <div className="h-40 w-full flex items-end justify-between px-2 gap-2">
                     {/* Simple real bar chart from meetings data */}
-                    {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((day) => (
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
                       <div key={day} className="flex-1 flex flex-col items-center gap-1">
                         <div
                           className="w-full bg-primary/70 rounded-t-sm"
@@ -377,7 +367,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                   <div className="flex justify-between mt-4 text-[11px] font-semibold text-outline-variant uppercase">
-                    {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d => <span key={d}>{d}</span>)}
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => <span key={d}>{d}</span>)}
                   </div>
                 </div>
 
@@ -386,7 +376,7 @@ export default function DashboardPage() {
                   <div className="px-6 py-5 border-b border-outline">
                     <h2 className="text-base font-bold text-on-surface">Recent Leads</h2>
                   </div>
-                  
+
                   <div className="grid grid-cols-12 gap-2 px-6 py-3 border-b border-outline bg-surface-container-low text-xs font-semibold text-secondary uppercase tracking-wider">
                     <div className="col-span-6">Lead</div>
                     <div className="col-span-3 text-center">Status</div>

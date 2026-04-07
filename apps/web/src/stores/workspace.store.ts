@@ -55,6 +55,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
     {
       name: 'revenos-workspace', // localStorage key
       partialize: (state) => ({
+        workspaces: state.workspaces,
         activeWorkspaceId: state.activeWorkspaceId,
       }),
     }

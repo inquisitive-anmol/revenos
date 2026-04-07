@@ -5,13 +5,10 @@ import { getMeHandler } from '@/controllers/auth.controller';
 
 const router = Router();
 
-import { tenantGuard } from '@/middleware/tenant.middleware';
-
 /**
  * GET /api/v1/auth/me
- * Returns the MongoDB User document and active Workspace for the authenticated Clerk user.
- * Protected by tenantGuard which recursively auto-provisions if missing.
+ * No tenantGuard here — this route handles provisioning itself.
  */
-router.get('/me', requireAuthGuard, tenantGuard, asyncHandler(getMeHandler));
+router.get('/me', requireAuthGuard, asyncHandler(getMeHandler));
 
 export default router;
