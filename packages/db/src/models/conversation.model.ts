@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IConversation extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   leadId: mongoose.Types.ObjectId;
   agentId: mongoose.Types.ObjectId;
   messages: {
@@ -18,8 +18,7 @@ export interface IConversation extends Document {
 const ConversationSchema = new Schema<IConversation>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     leadId: {

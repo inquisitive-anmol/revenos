@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IAgentLog extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   agentId: mongoose.Types.ObjectId;
   campaignId: mongoose.Types.ObjectId;
   event: string;
@@ -13,8 +13,7 @@ export interface IAgentLog extends Document {
 const AgentLogSchema = new Schema<IAgentLog>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     agentId: {

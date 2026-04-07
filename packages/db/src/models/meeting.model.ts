@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IMeeting extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   leadId: mongoose.Types.ObjectId;
   campaignId: mongoose.Types.ObjectId;
   calendarEventId?: string;
@@ -14,8 +14,7 @@ export interface IMeeting extends Document {
 const MeetingSchema = new Schema<IMeeting>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     leadId: {

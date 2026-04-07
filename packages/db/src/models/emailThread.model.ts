@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface IEmailThread extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   leadId: mongoose.Types.ObjectId;
   campaignId: mongoose.Types.ObjectId;
   externalThreadId: string;
@@ -20,8 +20,7 @@ export interface IEmailThread extends Document {
 const EmailThreadSchema = new Schema<IEmailThread>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     leadId: {

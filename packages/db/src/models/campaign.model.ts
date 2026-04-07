@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface ICampaign extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   name: string;
   agentIds: mongoose.Types.ObjectId[];
   status: "draft" | "active" | "paused" | "completed";
@@ -28,8 +28,7 @@ export interface ICampaign extends Document {
 const CampaignSchema = new Schema<ICampaign>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     name: { type: String, required: true },

@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
 export interface ILead extends Document {
-  workspaceId: mongoose.Types.ObjectId;
+  workspaceId: string;
   campaignId: mongoose.Types.ObjectId;
   email: string;
   firstName: string;
@@ -30,8 +30,7 @@ export interface ILead extends Document {
 const LeadSchema = new Schema<ILead>(
   {
     workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
+      type: String,
       required: true,
     },
     campaignId: {
