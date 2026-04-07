@@ -4,6 +4,7 @@ import { tenantGuard } from '@/middleware/tenant.middleware';
 import {
   authRateLimiter,
   webhookRateLimiter,
+  generalRateLimiter,
 } from '@/middleware/rateLimit.middleware';
 import authRoutes from './auth.routes';
 import leadsRoutes from './leads.routes';
@@ -23,11 +24,11 @@ router.use('/auth', authRateLimiter, authRoutes);
 router.use('/webhooks', webhookRateLimiter, webhooksRoutes);
 
 // ── Protected (Clerk session + tenant context required) ───────────────────────
-router.use('/workspaces', requireAuthGuard, workspaceRoutes);
-router.use('/leads', requireAuthGuard, tenantGuard, leadsRoutes);
-router.use('/campaigns', requireAuthGuard, tenantGuard, campaignsRoutes);
-router.use('/agents', requireAuthGuard, tenantGuard, agentsRoutes);
-router.use('/analytics', requireAuthGuard, tenantGuard, analyticsRoutes);
-router.use('/meetings', requireAuthGuard, tenantGuard, meetingsRoutes);
+router.use('/workspaces', generalRateLimiter, requireAuthGuard, workspaceRoutes);
+router.use('/leads', generalRateLimiter, requireAuthGuard, tenantGuard, leadsRoutes);
+router.use('/campaigns', generalRateLimiter, requireAuthGuard, tenantGuard, campaignsRoutes);
+router.use('/agents', generalRateLimiter, requireAuthGuard, tenantGuard, agentsRoutes);
+router.use('/analytics', generalRateLimiter, requireAuthGuard, tenantGuard, analyticsRoutes);
+router.use('/meetings', generalRateLimiter, requireAuthGuard, tenantGuard, meetingsRoutes);
 
 export default router;

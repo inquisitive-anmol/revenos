@@ -72,7 +72,7 @@ export function createApp(): Express {
   app.use(clerkMiddleware());
 
   // ── 5. General rate limiter ───────────────────────────────────────────
-  app.use('/api', generalRateLimiter);
+  // app.use('/api', generalRateLimiter);
 
   // ── 6. Health endpoints (public, no rate limit) ───────────────────────
   app.get('/health', healthCheck);
