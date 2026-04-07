@@ -3,6 +3,7 @@ import gracefulShutdown from 'http-graceful-shutdown';
 import { createApp } from './app';
 import { attachSocketIO } from './socket/index';
 import { env, logger, redis } from './config/index';
+import { connectDatabase, disconnectDatabase } from './config/database';
 
 /**
  * Server bootstrap.
@@ -35,14 +36,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // ── 4.5. MongoDB connection ──────────────────────────────────────────────
-  try {
-    const mongoose = require('mongoose');
-    await mongoose.connect(env.DATABASE_URL);
-    logger.info('MongoDB: connection established');
-  } catch (err) {
-    logger.fatal({ err }, 'MongoDB: failed to connect on startup');
-    process.exit(1);
-  }
+  await connectDatabase();
 
   // ── 5. Start server ────────────────────────────────────────────────────
   server.listen(env.PORT, () => {
@@ -60,7 +54,7 @@ async function bootstrap(): Promise<void> {
     onShutdown: async () => {
       logger.info('Graceful shutdown: closing Redis connection...');
       await redis.quit();
-      // TODO: await db.$disconnect();  (once @revenos/db is set up)
+      await disconnectDatabase();
     },
     finally: () => {
       logger.info('Server shut down cleanly. Goodbye 👋');
