@@ -52,7 +52,23 @@ export const useAuthStore = create<AuthState>((set) => ({
   reset: () => set({ isLoading: false, error: null }),
 }));
 
-export const useUserStore = create((set) => ({
+export interface DbUser {
+  _id: string;
+  clerkId: string;
+  email: string;
+  name: string;
+  onboardingComplete: boolean;
+  createdAt: string;
+}
+
+interface UserStoreState {
+  dbUser: DbUser | null;
+  setDbUser: (data: DbUser | null) => void;
+  clearDbUser: () => void;
+}
+
+export const useUserStore = create<UserStoreState>((set) => ({
   dbUser: null,
-  setDbUser: (data: any) => set({ dbUser: data }),
+  setDbUser: (data) => set({ dbUser: data }),
+  clearDbUser: () => set({ dbUser: null }),
 }));

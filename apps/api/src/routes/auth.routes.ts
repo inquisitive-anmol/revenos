@@ -1,15 +1,22 @@
 import { Router } from 'express';
+import { requireAuthGuard } from '@/middleware/auth.middleware';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { syncUserHandler, getMeHandler } from '@/controllers/auth.controller';
 
 const router = Router();
 
 /**
  * POST /api/v1/auth/sync
- * Syncs a Clerk user to the local database after sign-up / sign-in.
- * Called from the web client after Clerk authentication completes.
- * TODO: implement auth sync controller
+ * Idempotent provisioning: creates User, Workspace, WorkspaceMember if they
+ * don't exist yet. Called by the frontend right after Clerk sign-in/sign-up.
+ * Body: { email, firstName, lastName }
  */
-router.post('/sync', (_req, res) => {
-  res.status(200).json({ success: true, message: 'auth sync — not yet implemented' });
-});
+router.post('/sync', requireAuthGuard, asyncHandler(syncUserHandler));
+
+/**
+ * GET /api/v1/auth/me
+ * Returns the MongoDB User document for the authenticated Clerk user.
+ */
+router.get('/me', requireAuthGuard, asyncHandler(getMeHandler));
 
 export default router;
