@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
-import { createClerkClient } from '@clerk/backend';
+import { clerkClient } from '@clerk/express';
 import { WorkspaceMember } from '@revenos/db';
 import { BadRequestError, ForbiddenError } from '@/errors/AppError';
 import { asyncHandler } from '@/utils/asyncHandler';
@@ -63,24 +63,32 @@ export const tenantGuard = asyncHandler(async (
     } else {
       // Auto-provision workspace and user Just-In-Time
       logger.info({ clerkUserId }, 'tenantGuard: auto-provisioning workspace');
-      const clerkClient = createClerkClient({
-        secretKey: process.env.CLERK_SECRET_KEY!,
-        publishableKey: process.env.CLERK_PUBLISHABLE_KEY!,
-      });
       
-      const clerkProfile = await clerkClient.users.getUser(clerkUserId);
+      let clerkProfile;
+      try {
+        clerkProfile = await clerkClient.users.getUser(clerkUserId);
+      } catch (err) {
+        logger.error({ err, clerkUserId }, 'tenantGuard: failed to fetch user from Clerk API');
+        throw new BadRequestError('Failed to verify user profile with Clerk');
+      }
+
       const primaryEmail =
         clerkProfile.emailAddresses.find((e: any) => e.id === clerkProfile.primaryEmailAddressId)?.emailAddress ??
         clerkProfile.emailAddresses[0]?.emailAddress ??
         '';
 
-      const workspace = await provisionWorkspaceForUser(
-        clerkUserId,
-        primaryEmail,
-        clerkProfile.firstName || 'New',
-        clerkProfile.lastName || 'User'
-      );
-      workspaceId = workspace._id.toString();
+      try {
+        const workspace = await provisionWorkspaceForUser(
+          clerkUserId,
+          primaryEmail,
+          clerkProfile.firstName || 'New',
+          clerkProfile.lastName || 'User'
+        );
+        workspaceId = workspace._id.toString();
+      } catch (err) {
+        logger.error({ err, clerkUserId }, 'tenantGuard: failed to provision workspace');
+        throw new Error('Failed to auto-provision workspace');
+      }
     }
   }
 

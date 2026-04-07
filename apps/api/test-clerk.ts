@@ -1,0 +1,1 @@
+import { createClerkClient } from '@clerk/backend'; import { config } from 'dotenv'; config({path: '../../.env'}); const c = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY! }); c.users.getUserList().then(console.log).catch(console.error);
