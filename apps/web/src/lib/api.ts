@@ -13,7 +13,7 @@ export default api;
 
 
 export const useApi = () => {
-  const { getToken } = useAuth();
+  const { getToken, orgId, userId } = useAuth();
 
   const authApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
@@ -26,6 +26,11 @@ export const useApi = () => {
     const token = await getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Use Clerk org as tenant (multi-tenant), fall back to userId (single-tenant)
+    const tenantId = orgId ?? userId;
+    if (tenantId) {
+      config.headers['X-Tenant-ID'] = tenantId;
     }
     return config;
   });
