@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
+import { createClerkClient } from '@clerk/backend';
 import { WorkspaceMember } from '@revenos/db';
 import { BadRequestError, ForbiddenError } from '@/errors/AppError';
 import { asyncHandler } from '@/utils/asyncHandler';
+import { provisionWorkspaceForUser } from '@/services/workspace.service';
 import logger from '@/config/logger';
 
 /**
@@ -54,23 +56,39 @@ export const tenantGuard = asyncHandler(async (
     }
   }
 
-  // Dev bypass — only active when no real membership exists
-  if (!workspaceId && process.env.NODE_ENV !== 'production') {
-    workspaceId = process.env.DEV_WORKSPACE_ID || 'dev-workspace';
-    logger.warn({ clerkUserId }, 'tenantGuard: no workspace membership found, using DEV_WORKSPACE_ID');
-  }
-
   if (!workspaceId) {
-    throw new BadRequestError(
-      'No workspace found for your account. Your workspace is still being set up — please wait a moment and refresh.',
-    );
+    if (process.env.NODE_ENV !== 'production' && clerkUserId === 'dev-user') {
+      workspaceId = process.env.DEV_WORKSPACE_ID || 'dev-workspace';
+      logger.warn('tenantGuard: no workspace membership found, using DEV_WORKSPACE_ID');
+    } else {
+      // Auto-provision workspace and user Just-In-Time
+      logger.info({ clerkUserId }, 'tenantGuard: auto-provisioning workspace');
+      const clerkClient = createClerkClient({
+        secretKey: process.env.CLERK_SECRET_KEY!,
+        publishableKey: process.env.CLERK_PUBLISHABLE_KEY!,
+      });
+      
+      const clerkProfile = await clerkClient.users.getUser(clerkUserId);
+      const primaryEmail =
+        clerkProfile.emailAddresses.find((e: any) => e.id === clerkProfile.primaryEmailAddressId)?.emailAddress ??
+        clerkProfile.emailAddresses[0]?.emailAddress ??
+        '';
+
+      const workspace = await provisionWorkspaceForUser(
+        clerkUserId,
+        primaryEmail,
+        clerkProfile.firstName || 'New',
+        clerkProfile.lastName || 'User'
+      );
+      workspaceId = workspace._id.toString();
+    }
   }
 
   logger.debug({ clerkUserId, workspaceId }, 'tenantGuard: resolved workspace');
 
   req.tenant = {
-    id: workspaceId,
-    slug: workspaceId,
+    id: workspaceId as string,
+    slug: workspaceId as string,
   };
 
   next();

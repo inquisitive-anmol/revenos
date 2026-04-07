@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import { Webhook } from 'svix';
 import { BadRequestError } from '@/errors/AppError';
 import { handleEmailReply } from '../services/webhook.service';
-import { provisionWorkspaceForUser } from '../services/workspace.service';
 import logger from '@/config/logger';
 
 const router = Router();
@@ -56,30 +55,8 @@ router.post('/clerk', async (req: Request, res: Response) => {
   logger.info({ eventType: event.type }, 'Webhook received: Clerk');
 
   if (event.type === 'user.created') {
-    const data = event.data;
-    if (!data?.id) {
-      logger.warn('user.created event missing user id, skipping');
-      return res.status(200).json({ success: true, received: true });
-    }
-
-    const primaryEmail = data.email_addresses?.find((e: any) => e.primary)?.email_address
-      ?? data.email_addresses?.[0]?.email_address
-      ?? '';
-
-    try {
-      await provisionWorkspaceForUser(
-        data.id,
-        primaryEmail,
-        data.first_name || 'New',
-        data.last_name || 'User',
-      );
-      logger.info({ clerkUserId: data.id }, 'Workspace provisioned via webhook');
-    } catch (err) {
-      // Log but don't fail — Clerk will retry on non-2xx responses.
-      // Retries are idempotent since provisionWorkspaceForUser checks for existing workspace.
-      logger.error({ err, clerkUserId: data.id }, 'Failed to provision workspace in webhook');
-      return res.status(500).json({ success: false, error: 'Workspace provisioning failed' });
-    }
+    logger.info({ clerkUserId: event.data?.id }, 'user.created event received, deferring to tenantGuard auto-provisioning');
+    return res.status(200).json({ success: true, received: true });
   }
 
   return res.status(200).json({ success: true, received: true });

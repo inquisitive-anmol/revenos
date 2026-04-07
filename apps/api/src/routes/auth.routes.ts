@@ -1,22 +1,17 @@
 import { Router } from 'express';
 import { requireAuthGuard } from '@/middleware/auth.middleware';
 import { asyncHandler } from '@/utils/asyncHandler';
-import { syncUserHandler, getMeHandler } from '@/controllers/auth.controller';
+import { getMeHandler } from '@/controllers/auth.controller';
 
 const router = Router();
 
-/**
- * POST /api/v1/auth/sync
- * Idempotent provisioning: creates User, Workspace, WorkspaceMember if they
- * don't exist yet. Called by the frontend right after Clerk sign-in/sign-up.
- * Body: { email, firstName, lastName }
- */
-router.post('/sync', requireAuthGuard, asyncHandler(syncUserHandler));
+import { tenantGuard } from '@/middleware/tenant.middleware';
 
 /**
  * GET /api/v1/auth/me
- * Returns the MongoDB User document for the authenticated Clerk user.
+ * Returns the MongoDB User document and active Workspace for the authenticated Clerk user.
+ * Protected by tenantGuard which recursively auto-provisions if missing.
  */
-router.get('/me', requireAuthGuard, asyncHandler(getMeHandler));
+router.get('/me', requireAuthGuard, tenantGuard, asyncHandler(getMeHandler));
 
 export default router;

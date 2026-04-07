@@ -40,15 +40,10 @@ export const useAuthSync = () => {
       setSyncError(null);
 
       try {
-        const primaryEmail =
-          clerkUser.primaryEmailAddress?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress ?? '';
 
-        // 1. Provision (idempotent) + get back user & workspace
-        const syncRes = await api.post('/api/v1/auth/sync', {
-          email: primaryEmail,
-          firstName: clerkUser.firstName || 'New',
-          lastName: clerkUser.lastName || 'User',
-        });
+
+        // 1. Auto-provision (if needed) via middleware + get back user & active workspace
+        const syncRes = await api.get('/api/v1/auth/me');
 
         const dbUser = syncRes.data?.data?.user as DbUser | null;
         if (dbUser) setDbUser(dbUser);
