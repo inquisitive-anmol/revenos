@@ -14,12 +14,12 @@ export interface ILead extends Document {
   industry?: string;
   icpScore: number;
   status:
-    | "prospecting"
-    | "contacted"
-    | "qualified"
-    | "disqualified"
-    | "meeting_booked"
-    | "closed";
+  | "prospecting"
+  | "contacted"
+  | "qualified"
+  | "disqualified"
+  | "meeting_booked"
+  | "closed";
   enrichmentData: Record<string, unknown>;
   researchNotes?: string;
   tags: string[];

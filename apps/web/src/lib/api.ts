@@ -1,5 +1,7 @@
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
+import { useWorkspaceStore } from '../stores/workspace.store';
+
 
 // Ensure you export the centralized Axios instance
 const api = axios.create({
@@ -14,6 +16,7 @@ export default api;
 
 export const useApi = () => {
   const { getToken, orgId, userId } = useAuth();
+  const { activeWorkspaceId } = useWorkspaceStore();
 
   const authApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
@@ -27,8 +30,8 @@ export const useApi = () => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // Use Clerk org as tenant (multi-tenant), fall back to userId (single-tenant)
-    const tenantId = orgId ?? userId;
+    // Priority: real MongoDB workspaceId → Clerk orgId → Clerk userId (fallback)
+    const tenantId = activeWorkspaceId ?? orgId ?? userId;
     if (tenantId) {
       config.headers['X-Tenant-ID'] = tenantId;
     }

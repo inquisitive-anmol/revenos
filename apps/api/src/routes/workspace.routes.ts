@@ -1,26 +1,32 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import { asyncHandler } from '@/utils/asyncHandler';
-import { validate } from '@/middleware/validate.middleware';
+import { requireAuthGuard } from '@/middleware/auth.middleware';
+import { tenantGuard } from '@/middleware/tenant.middleware';
 import {
-  createWorkspaceHandler,
+  listWorkspacesHandler,
   getWorkspaceHandler,
+  getInviteInfoHandler,
+  acceptInviteHandler,
+  regenerateInviteHandler,
 } from '@/controllers/workspace.controller';
 
 const router = Router();
 
-const CreateWorkspaceSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  userName: z.string().min(2, 'User name must be at least 2 characters'),
-});
+// ── Public (invite info only — no auth needed) ────────────────────────────────
+router.get('/invite/:token', asyncHandler(getInviteInfoHandler));
 
+// ── Authenticated, no tenant context needed ───────────────────────────────────
+// These routes work BEFORE the user has a resolved workspace
+router.get('/mine', requireAuthGuard, asyncHandler(listWorkspacesHandler));
+router.post('/invite/:token/accept', requireAuthGuard, asyncHandler(acceptInviteHandler));
+
+// ── Authenticated + tenant-scoped ─────────────────────────────────────────────
+router.get('/me', requireAuthGuard, tenantGuard, asyncHandler(getWorkspaceHandler));
 router.post(
-  '/',
-  validate({ body: CreateWorkspaceSchema }),
-  asyncHandler(createWorkspaceHandler)
+  '/:id/invite/regenerate',
+  requireAuthGuard,
+  tenantGuard,
+  asyncHandler(regenerateInviteHandler),
 );
-
-router.get('/me', asyncHandler(getWorkspaceHandler));
 
 export default router;

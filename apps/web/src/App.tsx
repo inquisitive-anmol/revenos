@@ -14,6 +14,7 @@ import CreateCampaignPage from "./app/(dashboard)/campaign/create/page";
 import LeadsPage from "./app/(dashboard)/lead/list/page";
 import LeadDetailsPage from "./app/(dashboard)/lead/[id]/page";
 import MeetingsPage from "./app/(dashboard)/meeting/list/page";
+import InviteAcceptPage from "./app/(auth)/invite/[token]/page";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       {/* 1. COMPLETELY PUBLIC ROUTES */}
       {/* Accessible to anyone, logged in or not */}
       <Route path="/" element={<Home />} />
+      <Route path="/invite/:token" element={<InviteAcceptPage />} />
 
       {/* 2. AUTH-ONLY ROUTES */}
       {/* Kicks logged-in users to the dashboard */}

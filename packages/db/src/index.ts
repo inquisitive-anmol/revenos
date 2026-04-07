@@ -1,4 +1,5 @@
 export * from "./models/workspace.model";
+export * from "./models/workspace-member.model";
 export * from "./models/user.model";
 export * from "./models/agent.model";
 export * from "./models/campaign.model";
@@ -7,4 +8,4 @@ export * from "./models/conversation.model";
 export * from "./models/agentLog.model";
 export * from "./models/meeting.model";
 export * from "./models/emailThread.model";
-export * from "./plugins/tenancy.plugin";
+export * from "./plugins/tenancy.plugin";

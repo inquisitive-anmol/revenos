@@ -1,17 +1,53 @@
 import { Router, Request, Response } from 'express';
+import { Webhook } from 'svix';
 import { BadRequestError } from '@/errors/AppError';
-import { handleEmailReply } from "../services/webhook.service";
+import { handleEmailReply } from '../services/webhook.service';
+import { provisionWorkspaceForUser } from '../services/workspace.service';
 import logger from '@/config/logger';
 
 const router = Router();
 
 /**
  * POST /api/v1/webhooks/clerk
- * Receives Clerk user lifecycle events (user.created, user.updated, etc.)
- * TODO: Verify Svix signature using WEBHOOK_SECRET env var before processing.
+ * Receives Clerk user lifecycle events, verified via Svix signature.
+ *
+ * Requires CLERK_WEBHOOK_SECRET env var (whsec_... from Clerk Dashboard → Webhooks).
+ * The raw body is captured in app.ts via express.json verify callback.
  */
-router.post('/clerk', (req: Request, res: Response) => {
-  const event = req.body as { type?: string };
+router.post('/clerk', async (req: Request, res: Response) => {
+  const secret = process.env.CLERK_WEBHOOK_SECRET;
+
+  if (!secret) {
+    logger.error('CLERK_WEBHOOK_SECRET is not set — webhook rejected');
+    return res.status(500).json({ error: 'Webhook secret not configured' });
+  }
+
+  // Svix requires the raw body bytes — captured in app.ts verify callback
+  const rawBody = (req as any).rawBody as Buffer | undefined;
+  if (!rawBody) {
+    throw new BadRequestError('Missing raw body for webhook verification');
+  }
+
+  const svixId = req.headers['svix-id'] as string;
+  const svixTimestamp = req.headers['svix-timestamp'] as string;
+  const svixSignature = req.headers['svix-signature'] as string;
+
+  if (!svixId || !svixTimestamp || !svixSignature) {
+    throw new BadRequestError('Missing Svix signature headers');
+  }
+
+  let event: { type?: string; data?: any };
+  try {
+    const wh = new Webhook(secret);
+    event = wh.verify(rawBody, {
+      'svix-id': svixId,
+      'svix-timestamp': svixTimestamp,
+      'svix-signature': svixSignature,
+    }) as typeof event;
+  } catch (err) {
+    logger.warn({ err }, 'Clerk webhook signature verification failed');
+    return res.status(400).json({ error: 'Invalid webhook signature' });
+  }
 
   if (!event.type) {
     throw new BadRequestError('Missing event type');
@@ -19,10 +55,34 @@ router.post('/clerk', (req: Request, res: Response) => {
 
   logger.info({ eventType: event.type }, 'Webhook received: Clerk');
 
-  // TODO: Route to event handler based on event.type
-  // e.g. if (event.type === 'user.created') await syncClerkUser(event.data);
+  if (event.type === 'user.created') {
+    const data = event.data;
+    if (!data?.id) {
+      logger.warn('user.created event missing user id, skipping');
+      return res.status(200).json({ success: true, received: true });
+    }
 
-  res.status(200).json({ success: true, received: true });
+    const primaryEmail = data.email_addresses?.find((e: any) => e.primary)?.email_address
+      ?? data.email_addresses?.[0]?.email_address
+      ?? '';
+
+    try {
+      await provisionWorkspaceForUser(
+        data.id,
+        primaryEmail,
+        data.first_name ?? 'New',
+        data.last_name ?? 'User',
+      );
+      logger.info({ clerkUserId: data.id }, 'Workspace provisioned via webhook');
+    } catch (err) {
+      // Log but don't fail — Clerk will retry on non-2xx responses.
+      // Retries are idempotent since provisionWorkspaceForUser checks for existing workspace.
+      logger.error({ err, clerkUserId: data.id }, 'Failed to provision workspace in webhook');
+      return res.status(500).json({ success: false, error: 'Workspace provisioning failed' });
+    }
+  }
+
+  return res.status(200).json({ success: true, received: true });
 });
 
 /**
@@ -32,21 +92,18 @@ router.post('/clerk', (req: Request, res: Response) => {
 router.post('/:provider', (req: Request, res: Response) => {
   const { provider } = req.params as { provider: string };
   logger.info({ provider }, 'Webhook received');
-
-  // TODO: Route to provider-specific handler
   res.status(200).json({ success: true, received: true });
 });
 
-// from resend
-// POST /api/v1/webhooks/email/reply
-router.post("/email/reply", async (req: Request, res: Response) => {
+// POST /api/v1/webhooks/email/reply  (from Resend)
+router.post('/email/reply', async (req: Request, res: Response) => {
   try {
     const payload = req.body;
-    console.log("[Webhook] Email reply received:", JSON.stringify(payload));
+    logger.info('[Webhook] Email reply received');
     await handleEmailReply(payload);
     res.status(200).json({ received: true });
   } catch (error: any) {
-    console.error("[Webhook] Error:", error.message);
+    logger.error({ err: error }, '[Webhook] Email reply error');
     res.status(500).json({ error: error.message });
   }
 });
