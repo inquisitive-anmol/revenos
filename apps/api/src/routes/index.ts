@@ -18,7 +18,7 @@ import workspaceRoutes from './workspace.routes';
 const router = Router();
 
 // ── Public ────────────────────────────────────────────────────────────────────
-router.use('/auth', authRateLimiter, authRoutes);
+router.use('/auth', generalRateLimiter, authRoutes);
 
 // ── Webhooks (signature-verified, no session auth needed) ─────────────────────
 router.use('/webhooks', webhookRateLimiter, webhooksRoutes);
