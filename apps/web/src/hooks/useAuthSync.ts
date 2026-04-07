@@ -46,8 +46,8 @@ export const useAuthSync = () => {
         // 1. Provision (idempotent) + get back user & workspace
         const syncRes = await api.post('/api/v1/auth/sync', {
           email: primaryEmail,
-          firstName: clerkUser.firstName ?? 'New',
-          lastName: clerkUser.lastName ?? 'User',
+          firstName: clerkUser.firstName || 'New',
+          lastName: clerkUser.lastName || 'User',
         });
 
         const dbUser = syncRes.data?.data?.user as DbUser | null;

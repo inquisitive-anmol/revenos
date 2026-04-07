@@ -70,8 +70,8 @@ router.post('/clerk', async (req: Request, res: Response) => {
       await provisionWorkspaceForUser(
         data.id,
         primaryEmail,
-        data.first_name ?? 'New',
-        data.last_name ?? 'User',
+        data.first_name || 'New',
+        data.last_name || 'User',
       );
       logger.info({ clerkUserId: data.id }, 'Workspace provisioned via webhook');
     } catch (err) {

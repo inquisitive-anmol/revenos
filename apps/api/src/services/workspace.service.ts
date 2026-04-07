@@ -22,7 +22,10 @@ export const provisionWorkspaceForUser = async (
     return existing;
   }
 
-  const name = `${firstName}'s Workspace`;
+  const finalFirstName = firstName || 'New';
+  const finalLastName = lastName || 'User';
+
+  const name = `${finalFirstName}'s Workspace`;
 
   const workspace = await Workspace.create({
     clerkOwnerId: clerkUserId,
@@ -33,7 +36,7 @@ export const provisionWorkspaceForUser = async (
   // Upsert User identity doc
   await User.findOneAndUpdate(
     { clerkId: clerkUserId },
-    { clerkId: clerkUserId, email, name: `${firstName} ${lastName}`.trim() },
+    { clerkId: clerkUserId, email, name: `${finalFirstName} ${finalLastName}`.trim() },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
 

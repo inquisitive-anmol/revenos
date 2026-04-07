@@ -34,8 +34,8 @@ export const syncUserHandler = async (req: Request, res: Response) => {
   const workspace = await provisionWorkspaceForUser(
     userId,
     email,
-    firstName ?? 'New',
-    lastName ?? 'User',
+    firstName || 'New',
+    lastName || 'User',
   );
 
   // Fetch the User doc that was upserted during provisioning
