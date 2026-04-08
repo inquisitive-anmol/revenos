@@ -70,6 +70,10 @@
   --font-label: 'Inter', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   font-family: 'Inter', sans-serif;
 }

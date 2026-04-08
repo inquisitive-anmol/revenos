@@ -2,11 +2,15 @@ import { useAuth } from '@clerk/clerk-react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthSync } from '../../../hooks/useAuthSync';
 import { useWorkspaceStore } from '../../../stores/workspace.store';
+import { useRealtimeWorkers } from '../../../hooks/useRealtimeWorkers';
 
 export default function ProtectedRoute() {
   const { isLoaded, isSignedIn } = useAuth();
   const { isSyncing, isSynced, syncError } = useAuthSync();
   const { workspaces } = useWorkspaceStore();
+
+  // Spin up real-time connection for synced users to safely subscribe to workspaces
+  useRealtimeWorkers();
 
   // 1. Wait for Clerk to initialise
   if (!isLoaded) {

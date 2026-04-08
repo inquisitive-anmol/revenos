@@ -15,10 +15,13 @@ import LeadsPage from "./app/(dashboard)/lead/list/page";
 import LeadDetailsPage from "./app/(dashboard)/lead/[id]/page";
 import MeetingsPage from "./app/(dashboard)/meeting/list/page";
 import InviteAcceptPage from "./app/(auth)/invite/[token]/page";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <Routes>
+    <>
+      <Toaster position="top-right" />
+      <Routes>
 
       {/* 1. COMPLETELY PUBLIC ROUTES */}
       {/* Accessible to anyone, logged in or not */}
@@ -47,6 +50,7 @@ function App() {
         <Route path="/meetings" element={<MeetingsPage />} />
       </Route>
     </Routes>
+    </>
   );
 }
 export default App;

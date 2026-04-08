@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import gracefulShutdown from 'http-graceful-shutdown';
 import { createApp } from './app';
 import { attachSocketIO } from './socket/index';
+import { initializeQueueEvents } from './socket/queueEvents';
 import { env, logger, redis } from './config/index';
 import { connectDatabase, disconnectDatabase } from './config/database';
 
@@ -25,6 +26,7 @@ async function bootstrap(): Promise<void> {
 
   // ── 3. Socket.IO ───────────────────────────────────────────────────────
   attachSocketIO(server);
+  initializeQueueEvents();
 
   // ── 4. Redis connection check ──────────────────────────────────────────
   try {

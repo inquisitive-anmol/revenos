@@ -7,6 +7,7 @@ import { useMeetings } from "../../../hooks/useMeetings";
 import { useCampaignStore } from "../../../stores/campaign.store";
 import { useLeadStore } from "../../../stores/lead.store";
 import { useMeetingStore } from "../../../stores/meeting.store";
+import { useActivityStore } from "../../../stores/activity.store";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const { campaigns, loading: campaignsLoading } = useCampaignStore();
   const { leads, loading: leadsLoading } = useLeadStore();
   const { meetings } = useMeetingStore();
+  const { activities } = useActivityStore();
 
   // Fetch all data on mount
   useEffect(() => {
@@ -281,71 +283,45 @@ export default function DashboardPage() {
                   </span>
                 </div>
 
-                <div className="flex-1 p-6 space-y-8">
-                  {/* Activity items stay as-is — Socket.io will power these in a later step */}
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold text-sm flex items-center justify-center flex-shrink-0">QA</div>
-                    <div>
-                      <p className="text-sm text-on-surface font-medium">
-                        Qualifier Agent replied to <span className="text-primary font-semibold cursor-pointer">John Doe</span> at TechCorp
-                      </p>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-secondary font-medium">
-                        <span className="flex items-center gap-1 text-slate-600">
-                          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                          82% confidence
-                        </span>
-                        <span>2 mins ago</span>
-                      </div>
+                <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+                  {activities.length === 0 && (
+                    <div className="text-secondary text-sm text-center py-10 flex flex-col items-center gap-2">
+                      <span className="material-symbols-outlined text-[32px] opacity-40">bolt</span>
+                      Waiting for live agent events...
                     </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-600 font-bold text-sm flex items-center justify-center flex-shrink-0">SA</div>
-                    <div>
-                      <p className="text-sm text-on-surface font-medium">
-                        Searcher Agent found 12 new prospects for <span className="text-primary font-semibold cursor-pointer">Project Alpha</span>
-                      </p>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-secondary font-medium">
-                        <span className="flex items-center gap-1 text-slate-600">
-                          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
-                          High intent
-                        </span>
-                        <span>14 mins ago</span>
+                  )}
+                  {activities.map((act) => {
+                    const colorMap: Record<string, string> = {
+                      prospector: 'bg-orange-100 text-orange-600',
+                      qualifier: 'bg-blue-100 text-blue-600',
+                      booker: 'bg-emerald-100 text-emerald-600',
+                      searcher: 'bg-purple-100 text-purple-600',
+                      system: 'bg-slate-100 text-slate-600',
+                    };
+                    const bgColor = colorMap[act.type] ?? 'bg-slate-100 text-slate-600';
+                    const msAgo = Math.floor((Date.now() - new Date(act.timestamp).getTime()) / 60000);
+                    const timeLabel = msAgo < 1 ? 'Just now' : `${msAgo} min${msAgo === 1 ? '' : 's'} ago`;
+                    return (
+                      <div key={act.id} className="flex gap-4">
+                        <div className={`w-10 h-10 rounded-full font-bold text-sm flex items-center justify-center flex-shrink-0 ${bgColor}`}>
+                          {act.agentId}
+                        </div>
+                        <div>
+                          <p className="text-sm text-on-surface font-medium">
+                            {act.title}{act.details ? ' — ' : ''}
+                            {act.details && <span className="text-primary font-semibold">{act.details}</span>}
+                          </p>
+                          <div className="flex items-center gap-3 mt-1.5 text-xs text-secondary font-medium">
+                            <span className="flex items-center gap-1 text-slate-600">
+                              <span className="material-symbols-outlined text-[14px]">bolt</span>
+                              Automated
+                            </span>
+                            <span>{timeLabel}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 font-bold text-sm flex items-center justify-center flex-shrink-0">OB</div>
-                    <div>
-                      <p className="text-sm text-on-surface font-medium">
-                        Booker Agent booked a meeting with <span className="text-primary font-semibold cursor-pointer">Sarah Chen</span> at InnovateX
-                      </p>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-secondary font-medium">
-                        <span className="flex items-center gap-1 text-slate-600">
-                          <span className="material-symbols-outlined text-[14px]">calendar_month</span>
-                          Scheduled for Apr 7
-                        </span>
-                        <span>1 hour ago</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-bold text-sm flex items-center justify-center flex-shrink-0">PA</div>
-                    <div>
-                      <p className="text-sm text-on-surface font-medium">
-                        Prospector Agent found leads for <span className="text-primary font-semibold cursor-pointer">Campaign #1</span>
-                      </p>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-secondary font-medium">
-                        <span className="flex items-center gap-1 text-slate-600">
-                          <span className="material-symbols-outlined text-[14px]">history</span>
-                          {totalLeads} leads total
-                        </span>
-                        <span>3 hours ago</span>
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
 

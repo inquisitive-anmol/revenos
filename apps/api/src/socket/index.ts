@@ -1,3 +1,4 @@
+import { WorkspaceMember } from '@revenos/db';
 import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { verifyToken } from '@clerk/backend';
@@ -12,7 +13,7 @@ let io: SocketIOServer | null = null;
  *
  * ── Auth:      Clerk session tokens verified on every new connection
  * ── CORS:      Mirrors the Express CORS config (CORS_ORIGINS env var)
- * ── Rooms:     Each user auto-joins `user:<userId>` and `org:<orgId>` rooms
+ * ── Rooms:     Each user auto-joins `user:<userId>` and `workspace:<workspaceId>` rooms
  *               for targeted server-side pushes via getIO()
  *
  * Client usage:
@@ -42,7 +43,11 @@ export function attachSocketIO(server: HTTPServer): SocketIOServer {
     try {
       const claims = await verifyToken(token, { secretKey: env.CLERK_SECRET_KEY });
       socket.data.userId = claims.sub;
-      socket.data.orgId = (claims as Record<string, unknown>).org_id;
+      
+      // Fetch workspace memberships
+      const memberships = await WorkspaceMember.find({ clerkUserId: claims.sub });
+      socket.data.workspaceIds = memberships.map(m => m.workspaceId.toString());
+      
       next();
     } catch (err) {
       logger.warn({ err, socketId: socket.id }, 'Socket: auth failed');
@@ -53,13 +58,13 @@ export function attachSocketIO(server: HTTPServer): SocketIOServer {
   // ── Connection handler ───────────────────────────────────────────────────
   io.on('connection', (socket: Socket) => {
     const userId = socket.data.userId as string;
-    const orgId = socket.data.orgId as string | undefined;
+    const workspaceIds = socket.data.workspaceIds as string[];
 
-    logger.info({ socketId: socket.id, userId, orgId }, 'Socket: client connected');
+    logger.info({ socketId: socket.id, userId, workspaces: workspaceIds.length }, 'Socket: client connected');
 
-    // Auto-join user & org rooms for targeted pushes
+    // Auto-join user & workspace rooms for targeted pushes
     void socket.join(`user:${userId}`);
-    if (orgId) void socket.join(`org:${orgId}`);
+    workspaceIds.forEach(id => void socket.join(`workspace:${id}`));
 
     socket.on('disconnect', (reason) => {
       logger.info({ socketId: socket.id, userId, reason }, 'Socket: client disconnected');

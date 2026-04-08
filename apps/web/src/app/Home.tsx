@@ -14,8 +14,8 @@ export default function LandingPage() {
             <div className="hidden md:flex items-center gap-7">
               <a href="#features" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">Features</a>
               <a href="#how-it-works" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">How it Works</a>
-              <a href="#" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">Pricing</a>
-              <a href="#" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">Case Studies</a>
+              <a href="#pricing" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">Pricing</a>
+              <a href="#case-studies" className="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors duration-200">Case Studies</a>
             </div>
           </div>
           <div className="flex items-center gap-5">
@@ -209,6 +209,94 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        
+        {/* Case Studies Section */}
+        <section className="py-32 bg-surface" id="case-studies">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary-container text-primary rounded-full mb-6 text-[10px] font-black uppercase tracking-widest">
+                  Verified Intelligence
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black tracking-tight text-on-surface leading-tight">
+                  The Protocol in <span className="text-primary">Action</span>
+                </h2>
+              </div>
+              <p className="text-lg text-on-surface-variant font-medium max-w-md">
+                Real-world deployment metrics from category leaders who have successfully automated their revenue infrastructure.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Case Study 1 */}
+              <div className="group relative overflow-hidden rounded-[3rem] border border-outline bg-surface-container-low hover:border-primary/30 transition-all duration-500">
+                <div className="aspect-[16/9] bg-slate-900 relative overflow-hidden flex items-center justify-center p-12">
+                   <div className="absolute inset-0 network-grid opacity-20"></div>
+                   <div className="relative z-10 flex flex-col items-center text-center">
+                     <span className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">FORGE</span>
+                     <div className="h-0.5 w-12 bg-primary"></div>
+                   </div>
+                   {/* Decorative elements */}
+                   <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-primary/10 blur-[60px] rounded-full group-hover:bg-primary/20 transition-all"></div>
+                </div>
+                <div className="p-10">
+                  <div className="flex gap-4 mb-8">
+                    <div className="flex-1">
+                      <div className="text-3xl font-black text-on-surface tracking-tighter">5.4x</div>
+                      <div className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Pipeline Velocity</div>
+                    </div>
+                    <div className="w-px h-12 bg-outline"></div>
+                    <div className="flex-1 pl-4">
+                      <div className="text-3xl font-black text-on-surface tracking-tighter">12d</div>
+                      <div className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Avg. Sales Cycle</div>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-on-surface mb-4">Autonomous Outbound at Scale</h3>
+                  <p className="text-on-surface-variant font-medium leading-relaxed mb-8">
+                    Forge replaced their 12-person SDR team with 4 RevenOs Delta-nodes, increasing qualified meeting volume by 440% while reducing overhead costs by 70%.
+                  </p>
+                  <button className="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group-hover:text-on-primary-fixed-variant">
+                    Read Intelligence Report
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Case Study 2 */}
+              <div className="group relative overflow-hidden rounded-[3rem] border border-outline bg-surface-container-low hover:border-primary/30 transition-all duration-500">
+                <div className="aspect-[16/9] bg-slate-950 relative overflow-hidden flex items-center justify-center p-12">
+                   <div className="absolute inset-0 network-grid opacity-20"></div>
+                   <div className="relative z-10 flex flex-col items-center text-center">
+                     <span className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4">VELOCITY</span>
+                     <div className="h-0.5 w-12 bg-tertiary"></div>
+                   </div>
+                   <div className="absolute -top-12 -left-12 w-48 h-48 bg-tertiary/10 blur-[60px] rounded-full group-hover:bg-tertiary/20 transition-all"></div>
+                </div>
+                <div className="p-10">
+                  <div className="flex gap-4 mb-8">
+                    <div className="flex-1">
+                      <div className="text-3xl font-black text-on-surface tracking-tighter">142%</div>
+                      <div className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Quota Attainment</div>
+                    </div>
+                    <div className="w-px h-12 bg-outline"></div>
+                    <div className="flex-1 pl-4">
+                      <div className="text-3xl font-black text-on-surface tracking-tighter">$2.4M</div>
+                      <div className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">New Pipeline/Mo</div>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-on-surface mb-4">Precision Global Expansion</h3>
+                  <p className="text-on-surface-variant font-medium leading-relaxed mb-8">
+                    Velocity utilized RevenOs to map and engage the entire DACH region within 3 weeks, identifying 4,000+ qualified target accounts with zero localized hiring.
+                  </p>
+                  <button className="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group-hover:text-on-primary-fixed-variant">
+                    Read Intelligence Report
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Dashboard Preview Section (Dark Mode) */}
         <section className="py-24 overflow-hidden bg-background">
@@ -360,6 +448,122 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section className="py-32 bg-surface-container-low" id="pricing">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight text-on-surface mb-6">Investment in Autonomy</h2>
+              <p className="text-lg text-on-surface-variant max-w-2xl mx-auto font-medium">
+                Choose the compute power required to dominate your market. Scale up as your autonomous engine matures.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Plan 1: Free */}
+              <div className="bg-surface border border-outline rounded-[3rem] p-10 flex flex-col hover:shadow-xl transition-all duration-300">
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-on-surface mb-2">Starter Node</h3>
+                  <p className="text-on-surface-variant text-sm font-medium">For individual operators and small tests.</p>
+                </div>
+                <div className="mb-8">
+                  <span className="text-5xl font-black text-on-surface">$0</span>
+                  <span className="text-on-surface-variant font-bold ml-2">/mo</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1">
+                  <li className="flex items-center gap-3 text-on-surface-variant font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    100 Emails per Month
+                  </li>
+                  <li className="flex items-center gap-3 text-on-surface-variant font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    Basic ICP Mapping
+                  </li>
+                  <li className="flex items-center gap-3 text-on-surface-variant font-medium text-sm text-opacity-50">
+                    <span className="material-symbols-outlined text-[20px]">block</span>
+                    Smart Qualification
+                  </li>
+                </ul>
+                <button className="w-full py-4 bg-surface border border-outline text-on-surface rounded-2xl font-bold hover:bg-surface-container transition-all">
+                  Initialize Free Node
+                </button>
+              </div>
+
+              {/* Plan 2: $99 (Popular) */}
+              <div className="bg-primary text-white border border-primary rounded-[3rem] p-10 flex flex-col shadow-2xl shadow-primary/20 scale-105 relative z-10">
+                <div className="absolute top-6 right-8 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                  <span className="text-[10px] font-black uppercase tracking-widest">Most Deployed</span>
+                </div>
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold mb-2">Accelerator Engine</h3>
+                  <p className="text-white/80 text-sm font-medium">For high-growth teams ready to scale.</p>
+                </div>
+                <div className="mb-8">
+                  <span className="text-5xl font-black">$99</span>
+                  <span className="text-white/70 font-bold ml-2">/mo</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1">
+                  <li className="flex items-center gap-3 text-white font-medium text-sm">
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                    Unlimited Emails
+                  </li>
+                  <li className="flex items-center gap-3 text-white font-medium text-sm">
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                    Smart Qualification AI
+                  </li>
+                  <li className="flex items-center gap-3 text-white font-medium text-sm">
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                    CRM & LinkedIn Sync
+                  </li>
+                  <li className="flex items-center gap-3 text-white font-medium text-sm">
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                    Multi-channel Outreach
+                  </li>
+                </ul>
+                <button className="w-full py-4 bg-white text-primary rounded-2xl font-bold hover:bg-white/90 active:scale-[0.98] transition-all">
+                  Launch Accelerator
+                </button>
+              </div>
+
+              {/* Plan 3: $499 */}
+              <div className="bg-slate-950 text-white border border-slate-800 rounded-[3rem] p-10 flex flex-col hover:border-primary/50 transition-all duration-300">
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-white mb-2">Sovereign Instance</h3>
+                  <p className="text-slate-400 text-sm font-medium">Uncapped compute for category leaders.</p>
+                </div>
+                <div className="mb-8">
+                  <span className="text-5xl font-black">$499</span>
+                  <span className="text-slate-500 font-bold ml-2">/mo</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1">
+                  <li className="flex items-center gap-3 text-slate-300 font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    Dedicated Agent Training
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-300 font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    Custom LLM Fine-tuning
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-300 font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    Priority Node Access
+                  </li>
+                  <li className="flex items-center gap-3 text-slate-300 font-medium text-sm">
+                    <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+                    White-glove Protocol Ops
+                  </li>
+                </ul>
+                <button className="w-full py-4 bg-slate-800 text-white border border-slate-700 rounded-2xl font-bold hover:bg-slate-700 transition-all">
+                  Initialize Sovereign
+                </button>
+              </div>
+            </div>
+            
+            <p className="text-center mt-12 text-on-surface-variant text-sm font-medium">
+              Need a custom deployment? <a href="#" className="text-primary font-bold underline underline-offset-4">Talk to an Infrastructure Engineer</a>
+            </p>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="py-24 px-6 bg-background">
           <div className="max-w-7xl mx-auto">
@@ -408,8 +612,8 @@ export default function LandingPage() {
               <h4 className="font-black text-[11px] uppercase tracking-widest text-on-surface mb-6">System</h4>
               <ul className="space-y-4">
                 <li><a href="#" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Protocol Features</a></li>
-                <li><a href="#" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Investment</a></li>
-                <li><a href="#" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Impact Library</a></li>
+                <li><a href="#pricing" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Pricing</a></li>
+                <li><a href="#case-studies" className="text-sm font-medium text-secondary hover:text-primary transition-colors">Case Studies</a></li>
               </ul>
             </div>
             

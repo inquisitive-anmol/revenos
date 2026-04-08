@@ -11,7 +11,7 @@ import logger from './logger';
  * The URL scheme drives the connection config automatically.
  */
 const redis = new Redis(env.REDIS_URL, {
-  maxRetriesPerRequest: 3,
+  maxRetriesPerRequest: null,
   retryStrategy: (times) => {
     if (times > 5) {
       logger.error('Redis: max retries exceeded — aborting reconnect');

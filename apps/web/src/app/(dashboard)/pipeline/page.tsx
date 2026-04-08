@@ -6,6 +6,7 @@ import { useMeetings } from "../../../hooks/useMeetings";
 import { useMeetingStore } from "../../../stores/meeting.store";
 import { useUser } from "@clerk/clerk-react";
 import { useApi } from "../../../lib/api";
+import toast from "react-hot-toast";
 
 // Column definitions
 const COLUMNS: { id: Lead["status"]; label: string; color: string }[] = [
@@ -105,8 +106,10 @@ export default function PipelinePage() {
       );
       // Refresh leads after qualifying
       await fetchLeads();
+      toast.success("Lead qualified successfully");
     } catch (err: any) {
       console.error("Failed to qualify lead:", err.message);
+      toast.error("Failed to qualify lead");
     } finally {
       setQualifyingId(null);
     }
