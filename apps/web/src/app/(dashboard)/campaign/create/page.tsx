@@ -413,7 +413,7 @@ export default function CreateCampaignPage() {
             </main>
 
             {/* Sticky Bottom Footer */}
-            <footer className="fixed bottom-0 right-0 w-[calc(100%-256px)] bg-surface/90 backdrop-blur-md border-t border-outline py-4 px-8 z-50">
+            <footer className="fixed bottom-0 right-0 w-full lg:w-[calc(100%-256px)] bg-surface/90 backdrop-blur-md border-t border-outline py-4 px-4 md:px-8 z-50">
                 <div className="max-w-[800px] mx-auto flex justify-between items-center">
                     <Link to="/campaigns" className="px-4 py-2.5 text-secondary font-semibold hover:text-on-surface transition-colors text-sm active:scale-95">
                         Cancel

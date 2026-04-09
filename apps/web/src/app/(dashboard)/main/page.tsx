@@ -68,7 +68,7 @@ export default function DashboardPage() {
   const isLoading = campaignsLoading || leadsLoading;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Global loading shimmer */}
       {isLoading && (
         <div className="mb-4 flex items-center gap-2 text-sm text-secondary font-medium">

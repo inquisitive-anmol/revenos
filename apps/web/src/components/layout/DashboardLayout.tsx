@@ -2,11 +2,22 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { useUIStore } from '../../stores/ui.store';
 
 export const DashboardLayout: React.FC = () => {
+  const { isMobileMenuOpen, closeMobileMenu } = useUIStore();
+
   return (
     <div className="flex h-screen bg-background text-on-background overflow-hidden font-sans">
-      {/* Fixed Sidebar */}
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
+          onClick={closeMobileMenu}
+        />
+      )}
+
+      {/* Sidebar - Handles its own responsive visibility classes */}
       <Sidebar />
 
       {/* Main Content Area */}

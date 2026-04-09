@@ -87,14 +87,14 @@ export default function CampaignsPage() {
   };
 
   return (
-    <div className="p-8 pb-2 flex-1">
+    <div className="p-4 md:p-8 pb-2 flex-1">
       {/* Header Section */}
-      <div className="flex justify-between items-end mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-on-surface mb-1">Campaigns</h1>
           <p className="text-secondary font-medium">Manage and monitor your precision outreach velocity.</p>
         </div>
-        <Link to="/campaigns/create" className="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:bg-on-primary-fixed-variant active:scale-95 transition-all flex items-center gap-2">
+        <Link to="/campaigns/create" className="w-full md:w-auto justify-center bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary/20 hover:bg-on-primary-fixed-variant active:scale-95 transition-all flex items-center gap-2">
           <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
           New Campaign
         </Link>
