@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUIStore } from "../../../stores/ui.store";
+import { NotificationPanel } from "../../../components/shared/NotificationPanel";
 
 export default function AgentBuilderPage() {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useUIStore();
 
   return (
@@ -55,7 +58,19 @@ export default function AgentBuilderPage() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
+          <div className="relative">
+            <button 
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              className={`relative text-secondary hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-low ${isNotificationsOpen ? 'text-primary bg-surface-container-low' : ''}`}
+            >
+              <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: isNotificationsOpen ? "'FILL' 1" : "" }}>
+                notifications
+              </span>
+            </button>
+            {isNotificationsOpen && <NotificationPanel onClose={() => setIsNotificationsOpen(false)} />}
+          </div>
+
           <button className="flex items-center justify-center rounded-lg bg-primary hover:bg-on-primary-fixed-variant text-white text-xs md:text-sm font-bold px-3 md:px-4 py-2 transition-all shadow-sm active:scale-95 whitespace-nowrap">
             Deploy Agents
           </button>

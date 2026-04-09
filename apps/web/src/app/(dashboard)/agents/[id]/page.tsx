@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { NotificationPanel } from "../../../../components/shared/NotificationPanel";
 
 export default function AgentDetailPage() {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [agentStatus, setAgentStatus] = useState<"Active" | "Paused">("Active");
 
@@ -20,9 +22,17 @@ export default function AgentDetailPage() {
         </div>
 
         <div className="flex items-center gap-5">
-          <button className="relative text-secondary hover:text-on-surface transition-colors">
-            <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>notifications</span>
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              className={`relative text-secondary hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container-low ${isNotificationsOpen ? 'text-primary bg-surface-container-low' : ''}`}
+            >
+              <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: isNotificationsOpen ? "'FILL' 1" : "" }}>
+                notifications
+              </span>
+            </button>
+            {isNotificationsOpen && <NotificationPanel onClose={() => setIsNotificationsOpen(false)} />}
+          </div>
           <button className="text-secondary hover:text-on-surface transition-colors">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>settings</span>
           </button>

@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
             )}
           </button>
 
-          {isNotificationsOpen && <NotificationPanel />}
+          {isNotificationsOpen && <NotificationPanel onClose={() => setIsNotificationsOpen(false)} />}
         </div>
 
         <div className="h-8 w-px bg-outline mx-1 hidden md:block"></div>
