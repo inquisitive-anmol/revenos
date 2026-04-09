@@ -145,7 +145,7 @@ export default function LeadDetailsPage() {
   return (
     <div className="p-8">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Page Toolbar / Breadcrumbs */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -158,7 +158,7 @@ export default function LeadDetailsPage() {
               <span className="text-on-surface">{lead.firstName} {lead.lastName}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {lead.humanControlled ? (
               <button
@@ -193,16 +193,18 @@ export default function LeadDetailsPage() {
               </div>
             </div>
             <div className="pt-1">
-              <div className="flex items-center gap-3 mb-1.5">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:mb-1.5">
                 <h1 className="text-3xl font-extrabold tracking-tight text-on-surface">
                   {lead.firstName} {lead.lastName}
                 </h1>
-                <span className="px-2.5 py-1 bg-primary-container/60 text-primary text-[10px] font-black rounded-md tracking-widest uppercase">
-                  Score: {lead.icpScore * 10}%
-                </span>
-                <span className={`px-2.5 py-1 text-[10px] font-black rounded-md tracking-widest uppercase ${getStatusColor(lead.status)}`}>
-                  {lead.status?.replace(/_/g, " ") || ""}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 bg-primary-container/60 text-primary text-[10px] font-black rounded-md tracking-widest uppercase">
+                    Score: {lead.icpScore * 10}%
+                  </span>
+                  <span className={`px-2.5 py-1 text-[10px] font-black rounded-md tracking-widest uppercase ${getStatusColor(lead.status)}`}>
+                    {lead.status?.replace(/_/g, " ") || ""}
+                  </span>
+                </div>
               </div>
               <p className="text-secondary font-medium text-[15px]">
                 {lead.title} at <span className="text-on-surface font-bold">{lead.company}</span>
@@ -352,11 +354,11 @@ export default function LeadDetailsPage() {
                     AI Handled
                   </span>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="p-4 md:p-6 space-y-4">
                   {allMessages.map((msg, idx) => (
                     <div
                       key={idx}
-                      className={`flex gap-4 ${msg.direction === "outbound" ? "flex-row-reverse ml-auto max-w-[85%]" : "max-w-[85%]"}`}
+                      className={`flex gap-4 ${msg.direction === "outbound" ? "flex-row-reverse ml-auto max-w-[90%]" : "max-w-[90%]"}`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.direction === "outbound"
                         ? "bg-primary shadow-md shadow-primary/30"

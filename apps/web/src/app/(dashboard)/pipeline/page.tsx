@@ -103,7 +103,7 @@ export default function PipelinePage() {
     <div className="flex flex-col h-full overflow-hidden">
       {/* Filter & Action Toolbar (Page Specific) */}
       <div className="h-16 bg-surface border-b border-outline px-6 flex items-center justify-between flex-shrink-0 z-10">
-        <div className="flex items-center gap-3 overflow-x-auto">
+        <div className="flex items-center gap-3 overflow-x-auto mr-2">
           <button className="flex items-center gap-2 px-3 py-2 bg-surface-container-low hover:bg-surface-container transition-colors rounded-lg text-sm font-semibold text-on-surface whitespace-nowrap">
             <span className="material-symbols-outlined text-[18px]">person</span>
             Agent: All
@@ -116,7 +116,7 @@ export default function PipelinePage() {
           </button>
           
           {!loading && (
-            <span className="text-xs font-bold text-secondary ml-2">
+            <span className="text-xs font-bold text-secondary ml-2 text-nowrap">
               {filteredLeads.length} leads in focus
             </span>
           )}

@@ -128,16 +128,15 @@ export default function MeetingsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface-container-low p-1 rounded-xl shadow-sm border border-outline w-fit mb-6">
+      <div className="flex gap-1 bg-surface-container-low p-1 rounded-xl shadow-sm border border-outline w-full md:w-fit mb-6 overflow-x-auto">
         {["All Meetings", "Upcoming", "Completed", "Rescheduled"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 text-xs font-bold rounded-lg transition-all ${
-              activeTab === tab
+            className={`px-5 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === tab
                 ? "bg-primary text-white shadow-sm"
                 : "text-secondary hover:text-on-surface hover:bg-surface"
-            }`}
+              }`}
           >
             {tab}
           </button>
@@ -173,17 +172,17 @@ export default function MeetingsPage() {
                         <div className="text-xs font-medium text-secondary">{time}</div>
                       </td>
                       <td className="px-6 py-5">
-                         <div className="flex items-center gap-3.5">
-                            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
-                              {lead ? `${lead.firstName?.[0]}${lead.lastName?.[0]}` : "?"}
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+                            {lead ? `${lead.firstName?.[0]}${lead.lastName?.[0]}` : "?"}
+                          </div>
+                          <div>
+                            <div className="text-sm font-extrabold text-on-surface mb-0.5">
+                              {lead ? `${lead.firstName} ${lead.lastName}` : "Unknown Lead"}
                             </div>
-                            <div>
-                               <div className="text-sm font-extrabold text-on-surface mb-0.5">
-                                {lead ? `${lead.firstName} ${lead.lastName}` : "Unknown Lead"}
-                              </div>
-                              <div className="text-xs font-medium text-secondary">{lead?.email || ""}</div>
-                            </div>
-                         </div>
+                            <div className="text-xs font-medium text-secondary">{lead?.email || ""}</div>
+                          </div>
+                        </div>
                       </td>
                       <td className="px-6 py-5 font-semibold text-sm text-on-surface">
                         {lead?.company || "—"}
@@ -193,7 +192,7 @@ export default function MeetingsPage() {
                       </td>
                       <td className="px-6 py-5 text-right">
                         <div className="flex flex-col items-end gap-1">
-                           {lead && (
+                          {lead && (
                             <button
                               onClick={() => navigate(`/leads/${typeof meeting.leadId === "string" ? meeting.leadId : (meeting.leadId as any)._id}`)}
                               className="text-[11px] font-extrabold text-primary hover:underline"
@@ -201,7 +200,7 @@ export default function MeetingsPage() {
                               View Lead
                             </button>
                           )}
-                           {!meeting.outcome && (
+                          {!meeting.outcome && (
                             <button
                               onClick={() => updateOutcome(meeting._id, "completed")}
                               className="text-[11px] font-extrabold text-green-600 hover:underline"
