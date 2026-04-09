@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { useCampaigns } from "../../../hooks/useCampaigns";
@@ -8,12 +8,19 @@ import { useCampaignStore } from "../../../stores/campaign.store";
 import { useLeadStore } from "../../../stores/lead.store";
 import { useMeetingStore } from "../../../stores/meeting.store";
 import { useActivityStore } from "../../../stores/activity.store";
+import { NotificationPanel } from "../../../components/shared/NotificationPanel";
+import { useNotificationStore } from "../../../stores/notification.store";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
   // Clerk user
   const { user } = useUser();
+
+  // Notification Store
+  const { unstyledCount } = useNotificationStore();
 
   // Hooks
   const { fetchCampaigns } = useCampaigns();
@@ -25,6 +32,17 @@ export default function DashboardPage() {
   const { leads, loading: leadsLoading } = useLeadStore();
   const { meetings } = useMeetingStore();
   const { activities } = useActivityStore();
+
+  // Handle clicking outside notifications
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setIsNotificationsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Fetch all data on mount
   useEffect(() => {
@@ -146,10 +164,23 @@ export default function DashboardPage() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-6">
-            <button className="relative text-secondary hover:text-on-surface transition-colors">
-              <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>notifications</span>
-              <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-error rounded-full border border-surface"></span>
-            </button>
+            <div className="relative" ref={notificationRef}>
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className={`relative text-secondary hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container-low ${isNotificationsOpen ? 'text-primary bg-surface-container-low' : ''}`}
+              >
+                <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: isNotificationsOpen ? "'FILL' 1" : "" }}>
+                  notifications
+                </span>
+                {unstyledCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-error text-white text-[10px] font-bold rounded-full border border-surface flex items-center justify-center">
+                    {unstyledCount > 9 ? '9+' : unstyledCount}
+                  </span>
+                )}
+              </button>
+
+              {isNotificationsOpen && <NotificationPanel />}
+            </div>
 
             <div className="h-8 w-px bg-outline"></div>
 

@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '@clerk/clerk-react';
-import toast from 'react-hot-toast';
 import { useLeads } from './useLeads';
 import { useCampaigns } from './useCampaigns';
 import { useActivityStore } from '../stores/activity.store';
+import { notify } from '../utils/notification.utils';
 
 let socketInstance: Socket | null = null;
 
@@ -33,7 +33,11 @@ export const useRealtimeWorkers = () => {
           console.log('[Realtime] Worker completed:', payload);
           
           if (payload.workerName === 'prospector') {
-             toast.success(`Prospector finished! Found ${payload.data?.leadsFound || 0} leads.`);
+             notify({
+               title: 'Prospecting Complete',
+               message: `Found ${payload.data?.leadsFound || 0} new leads`,
+               type: 'prospector'
+             });
              addActivity({
                agentId: 'PA',
                type: 'prospector',
@@ -41,7 +45,11 @@ export const useRealtimeWorkers = () => {
                details: `Found ${payload.data?.leadsFound || 0} new leads`,
              });
           } else if (payload.workerName === 'qualifier') {
-             toast.success(`Qualifier finished processing leads.`);
+             notify({
+               title: 'Leads Qualified',
+               message: 'Finished scoring new leads',
+               type: 'qualifier'
+             });
              addActivity({
                agentId: 'QA',
                type: 'qualifier',
@@ -49,7 +57,11 @@ export const useRealtimeWorkers = () => {
                details: 'Processed new leads',
              });
           } else if (payload.workerName === 'booker') {
-             toast.success(`Booker finished processing tasks.`);
+             notify({
+               title: 'Tasks Finished',
+               message: 'Booker agent completed meeting tasks',
+               type: 'booker'
+             });
              addActivity({
                agentId: 'BA',
                type: 'booker',
@@ -57,7 +69,11 @@ export const useRealtimeWorkers = () => {
                details: 'Processed meeting invites',
              });
           } else {
-             toast.success(`Background task ${payload.workerName} completed.`);
+             notify({
+               title: 'Task Completed',
+               message: `Background task ${payload.workerName} completed.`,
+               type: 'system'
+             });
           }
 
           fetchLeads();
@@ -66,7 +82,11 @@ export const useRealtimeWorkers = () => {
 
         socketInstance.on('worker:failed', (payload: any) => {
           console.error('[Realtime] Worker failed:', payload);
-          toast.error(`Background task ${payload.workerName} failed.`);
+          notify({
+            title: 'Task Failed',
+            message: `Background task ${payload.workerName} failed.`,
+            type: 'error'
+          });
         });
 
       } catch (err) {
