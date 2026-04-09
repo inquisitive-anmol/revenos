@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "./app/(auth)/login/page";
 import SignupPage from "./app/(auth)/signup/page";
 import PipelinePage from "./app/(dashboard)/pipeline/page";
-import AgentDetailPage from "./app/(dashboard)/agents/page";
+import AgentDetailPage from "./app/(dashboard)/agents/[id]/page";
 import Home from "./app/Home";
 import DashboardPage from "./app/(dashboard)/main/page";
 import AgentBuilderPage from "./app/(dashboard)/agents/page";
@@ -16,6 +16,7 @@ import LeadDetailsPage from "./app/(dashboard)/lead/[id]/page";
 import MeetingsPage from "./app/(dashboard)/meeting/list/page";
 import InviteAcceptPage from "./app/(auth)/invite/[token]/page";
 import { Toaster } from 'react-hot-toast';
+import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 function App() {
   return (
@@ -38,19 +39,24 @@ function App() {
       {/* 3. PROTECTED ROUTES */}
       {/* Kicks unauthenticated users to /sign-in */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/pipeline" element={<PipelinePage />} />
-        <Route path="/campaigns" element={<CampaignsPage />} />
-        <Route path="/campaigns/:id" element={<CampaignDetailsPage />} />
-        <Route path="/campaigns/create" element={<CreateCampaignPage />} />
-        <Route path="/leads" element={<LeadsPage />} />
-        <Route path="/leads/:id" element={<LeadDetailsPage />} />
+        {/* Dashboard Layout Group */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/pipeline" element={<PipelinePage />} />
+          <Route path="/campaigns" element={<CampaignsPage />} />
+          <Route path="/campaigns/:id" element={<CampaignDetailsPage />} />
+          <Route path="/campaigns/create" element={<CreateCampaignPage />} />
+          <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/leads/:id" element={<LeadDetailsPage />} />
+          <Route path="/meetings" element={<MeetingsPage />} />
+        </Route>
+
+        {/* Unique Builder Mode Routes (Excluded from general layout) */}
         <Route path="/agents/:id" element={<AgentDetailPage />} />
         <Route path="/agents" element={<AgentBuilderPage />} />
-        <Route path="/meetings" element={<MeetingsPage />} />
       </Route>
     </Routes>
     </>
   );
 }
-export default App;
+export default App;

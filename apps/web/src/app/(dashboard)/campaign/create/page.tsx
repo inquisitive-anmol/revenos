@@ -150,54 +150,22 @@ export default function CreateCampaignPage() {
     };
 
     return (
-        <div className="bg-background text-on-background min-h-screen font-sans flex flex-col relative z-0">
+        <div className="flex-1 bg-background relative mb-24">
 
             {/* Background Decorative Elements */}
-            <div className="fixed top-12 right-10 -z-10 opacity-[0.03] pointer-events-none">
+            <div className="absolute top-12 right-10 opacity-[0.03] pointer-events-none -z-10">
                 <span className="material-symbols-outlined text-[400px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
                     blur_on
                 </span>
             </div>
-            <div className="fixed bottom-20 left-4 -z-10 opacity-[0.03] pointer-events-none">
+            <div className="absolute bottom-20 left-4 opacity-[0.03] pointer-events-none -z-10">
                 <span className="material-symbols-outlined text-[300px] text-primary">
                     alt_route
                 </span>
             </div>
 
-            {/* Top Navigation Bar */}
-            <header className="fixed top-0 w-full z-50 h-16 bg-surface border-b border-outline flex justify-between items-center px-6">
-                <div className="flex items-center gap-8">
-                    <Link to="/" className="text-xl font-extrabold tracking-tighter text-primary">
-                        Revenos
-                    </Link>
-                    <nav className="hidden md:flex items-center gap-2">
-                        <Link to="/dashboard" className="px-3 py-2 text-sm font-semibold text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors">
-                            Dashboard
-                        </Link>
-                        <Link to="/campaigns" className="px-3 py-2 text-sm font-bold text-primary border-b-2 border-primary">
-                            Campaigns
-                        </Link>
-                        <Link to="/pipeline" className="px-3 py-2 text-sm font-semibold text-secondary hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors">
-                            Pipeline
-                        </Link>
-                    </nav>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <button className="w-9 h-9 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors rounded-full active:scale-95">
-                        <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>notifications</span>
-                    </button>
-                    <button className="w-9 h-9 flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container-low transition-colors rounded-full active:scale-95">
-                        <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>help</span>
-                    </button>
-                    <button className="w-8 h-8 rounded-full bg-[#e6d5c3] flex items-center justify-center overflow-hidden border border-outline shadow-sm ml-2">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Professional&backgroundColor=transparent" alt="User Avatar" className="w-full h-full object-cover scale-110 translate-y-1" />
-                    </button>
-                </div>
-            </header>
-
             {/* Main Form Content */}
-            <main className="flex-1 pt-28 pb-32 px-6">
+            <main className="p-8 pb-12">
                 <div className="max-w-[800px] mx-auto">
 
                     {/* Header */}
@@ -445,7 +413,7 @@ export default function CreateCampaignPage() {
             </main>
 
             {/* Sticky Bottom Footer */}
-            <footer className="fixed bottom-0 w-full bg-surface/90 backdrop-blur-md border-t border-outline py-4 px-8 z-50">
+            <footer className="fixed bottom-0 right-0 w-[calc(100%-256px)] bg-surface/90 backdrop-blur-md border-t border-outline py-4 px-8 z-50">
                 <div className="max-w-[800px] mx-auto flex justify-between items-center">
                     <Link to="/campaigns" className="px-4 py-2.5 text-secondary font-semibold hover:text-on-surface transition-colors text-sm active:scale-95">
                         Cancel
