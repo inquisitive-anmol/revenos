@@ -30,7 +30,7 @@ export default function CampaignDetailsPage() {
         // Use a functional check instead of depending on the whole campaigns array
         const res = await api.get(`/api/v1/campaigns/${id}`);
         setActiveCampaign(res.data.data || res.data);
-        
+
         // Fetch leads for this campaign
         await fetchLeads({ campaignId: id });
       } catch (err: any) {
@@ -175,8 +175,8 @@ export default function CampaignDetailsPage() {
                 onClick={handleToggleStatus}
                 disabled={toggleLoading}
                 className={`w-11 h-6 rounded-full p-1 flex items-center transition-colors duration-300 ease-in-out disabled:opacity-50 ${activeCampaign.status === "active"
-                    ? "bg-primary justify-end"
-                    : "bg-slate-300 justify-start"
+                  ? "bg-primary justify-end"
+                  : "bg-slate-300 justify-start"
                   }`}
               >
                 <div className="w-4 h-4 bg-white rounded-full shadow-sm"></div>

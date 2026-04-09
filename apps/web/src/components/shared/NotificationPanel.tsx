@@ -40,7 +40,7 @@ export const NotificationPanel: React.FC = () => {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -54,14 +54,14 @@ export const NotificationPanel: React.FC = () => {
         <h3 className="font-bold text-on-surface">Notifications</h3>
         <div className="flex gap-2">
           {notifications.length > 0 && (
-            <button 
+            <button
               onClick={markAllAsRead}
               className="text-primary text-xs font-bold hover:underline"
             >
               Mark all read
             </button>
           )}
-          <button 
+          <button
             onClick={clearNotifications}
             className="text-secondary text-xs font-bold hover:underline"
           >
@@ -77,7 +77,7 @@ export const NotificationPanel: React.FC = () => {
             <span className="material-symbols-outlined text-[18px] text-primary">notifications_active</span>
             <p className="text-[11px] font-medium text-on-surface-variant">Enable desktop notifications?</p>
           </div>
-          <button 
+          <button
             onClick={handleRequestPermission}
             className="bg-primary text-white text-[10px] font-bold py-1 px-3 rounded-full hover:bg-primary/90 transition-colors"
           >
@@ -98,7 +98,7 @@ export const NotificationPanel: React.FC = () => {
         ) : (
           <div className="flex flex-col">
             {notifications.map((n) => (
-              <div 
+              <div
                 key={n.id}
                 onClick={() => !n.read && markAsRead(n.id)}
                 className={`px-5 py-4 flex gap-4 hover:bg-surface-container-low/50 transition-colors cursor-pointer border-b border-outline last:border-0 ${!n.read ? 'bg-primary/5' : ''}`}

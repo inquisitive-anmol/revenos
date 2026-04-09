@@ -17,6 +17,8 @@ import MeetingsPage from "./app/(dashboard)/meeting/list/page";
 import InviteAcceptPage from "./app/(auth)/invite/[token]/page";
 import { Toaster } from 'react-hot-toast';
 import { DashboardLayout } from "./components/layout/DashboardLayout";
+import AnalyticsPage from "./app/(dashboard)/analytics/main/page";
+import SettingsPage from "./app/(settings)/settings/page";
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/:id" element={<LeadDetailsPage />} />
           <Route path="/meetings" element={<MeetingsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* Unique Builder Mode Routes (Excluded from general layout) */}
@@ -59,4 +63,4 @@ function App() {
     </>
   );
 }
-export default App;
+export default App;

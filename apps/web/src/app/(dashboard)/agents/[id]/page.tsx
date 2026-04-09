@@ -7,7 +7,7 @@ export default function AgentDetailPage() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-sans">
-      
+
       {/* Top Header */}
       <header className="flex items-center justify-between border-b border-outline px-6 py-4 bg-surface flex-shrink-0 z-20">
         <div className="flex items-center gap-3">
@@ -18,7 +18,7 @@ export default function AgentDetailPage() {
           </div>
           <h2 className="text-lg font-bold text-on-surface tracking-tight">SalesForge AI</h2>
         </div>
-        
+
         <div className="flex items-center gap-5">
           <button className="relative text-secondary hover:text-on-surface transition-colors">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>notifications</span>
@@ -26,7 +26,7 @@ export default function AgentDetailPage() {
           <button className="text-secondary hover:text-on-surface transition-colors">
             <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>settings</span>
           </button>
-          
+
           <div className="w-9 h-9 rounded-full bg-[#d6ccb6] flex items-center justify-center overflow-hidden shadow-sm border border-outline">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin&backgroundColor=transparent" alt="User Avatar" className="w-full h-full object-cover scale-110 translate-y-1" />
           </div>
@@ -35,7 +35,7 @@ export default function AgentDetailPage() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 md:p-8">
-        
+
         {/* Back Link */}
         <Link to="/agents" className="flex items-center gap-2 text-primary font-medium hover:underline text-sm mb-6 w-fit">
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -58,16 +58,16 @@ export default function AgentDetailPage() {
               <p className="text-secondary font-medium text-sm">Last deployed 2 hours ago • Version 2.4.1</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center bg-surface-container-low rounded-lg p-1 border border-outline">
-              <button 
+              <button
                 onClick={() => setAgentStatus("Active")}
                 className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${agentStatus === "Active" ? "bg-surface shadow-sm text-on-surface" : "text-secondary hover:text-on-surface"}`}
               >
                 Active
               </button>
-              <button 
+              <button
                 onClick={() => setAgentStatus("Paused")}
                 className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${agentStatus === "Paused" ? "bg-surface shadow-sm text-on-surface" : "text-secondary hover:text-on-surface"}`}
               >
@@ -138,18 +138,18 @@ export default function AgentDetailPage() {
 
         {/* Conversation History Section */}
         <div className="flex flex-col bg-surface rounded-xl border border-outline shadow-sm overflow-hidden">
-          
+
           {/* Table Toolbar */}
           <div className="px-6 py-4 border-b border-outline flex flex-wrap gap-4 justify-between items-center">
             <h3 className="text-on-surface text-base font-bold">Conversation History</h3>
             <div className="flex gap-3">
               <div className="relative">
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]">search</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search leads..." 
+                  placeholder="Search leads..."
                   className="pl-9 pr-4 py-2 w-64 rounded-lg border border-outline bg-surface text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-secondary font-medium"
                 />
               </div>
@@ -173,7 +173,7 @@ export default function AgentDetailPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline">
-                
+
                 {/* Row 1 */}
                 <tr className="hover:bg-surface-container-low/50 transition-colors group">
                   <td className="px-6 py-4 text-sm text-secondary whitespace-nowrap font-medium">Oct 24, 14:20</td>
