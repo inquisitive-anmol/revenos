@@ -6,12 +6,11 @@ import { useLeads } from "../../../../hooks/useLeads";
 import { useLeadStore } from "../../../../stores/lead.store";
 
 export default function CampaignDetailsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const api = useApi();
 
-  const { setActiveCampaign, activeCampaign, campaigns } = useCampaignStore();
+  const { setActiveCampaign, activeCampaign } = useCampaignStore();
   const { fetchLeads } = useLeads();
   const { leads, loading: leadsLoading } = useLeadStore();
 

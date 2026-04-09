@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNotificationStore } from '../../stores/notification.store';
 import { requestNotificationPermission } from '../../utils/notification.utils';
 

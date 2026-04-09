@@ -8,7 +8,7 @@ export default function CampaignsPage() {
   const [activeTab, setActiveTab] = useState("All");
 
   const { fetchCampaigns, updateCampaignStatus } = useCampaigns();
-  const { campaigns, loading, error } = useCampaignStore();
+  const { campaigns, loading } = useCampaignStore();
 
   // Fetch on mount
   useEffect(() => {
@@ -77,14 +77,7 @@ export default function CampaignsPage() {
     }
   };
 
-  const handlePauseCampaign = async (campaignId: string) => {
-    try {
-      await updateCampaignStatus(campaignId, "paused");
-      await fetchCampaigns();
-    } catch (err: any) {
-      console.error("Failed to pause:", err.message);
-    }
-  };
+
 
   return (
     <div className="p-4 md:p-8 pb-2 flex-1">

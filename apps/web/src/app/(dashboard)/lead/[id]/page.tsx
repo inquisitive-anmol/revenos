@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
 import { useApi } from "../../../../lib/api";
 
 interface Lead {
@@ -39,7 +38,6 @@ export default function LeadDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const api = useApi();
-  const { user } = useUser();
 
   const [lead, setLead] = useState<Lead | null>(null);
   const [threads, setThreads] = useState<EmailThread[]>([]);

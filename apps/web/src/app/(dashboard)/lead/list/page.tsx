@@ -42,7 +42,7 @@ export default function LeadsPage() {
 
   const navigate = useNavigate();
   const { fetchLeads } = useLeads();
-  const { leads, loading, error } = useLeadStore();
+  const { leads, loading } = useLeadStore();
 
   useEffect(() => {
     fetchLeads();

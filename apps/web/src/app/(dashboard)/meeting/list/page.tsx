@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMeetings } from "../../../../hooks/useMeetings";
 import { useMeetingStore, type Meeting, type MeetingLead } from "../../../../stores/meeting.store";
 
@@ -39,7 +39,7 @@ export default function MeetingsPage() {
   const navigate = useNavigate();
 
   const { fetchMeetings, updateOutcome } = useMeetings();
-  const { meetings, loading, error } = useMeetingStore();
+  const { meetings, loading } = useMeetingStore();
 
   useEffect(() => {
     fetchMeetings();
