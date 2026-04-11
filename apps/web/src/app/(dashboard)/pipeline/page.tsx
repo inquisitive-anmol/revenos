@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PageMetadata from "../../../components/shared/PageMetadata";
 import { useLeads } from "../../../hooks/useLeads";
 import { useLeadStore, type Lead } from "../../../stores/lead.store";
 import { useMeetings } from "../../../hooks/useMeetings";
@@ -101,6 +102,10 @@ export default function PipelinePage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
+      <PageMetadata 
+        title="Sales Pipeline | RevenOs" 
+        description="Track and manage your leads through the automated sales pipeline." 
+      />
       {/* Filter & Action Toolbar (Page Specific) */}
       <div className="h-16 bg-surface border-b border-outline px-6 flex items-center justify-between flex-shrink-0 z-10">
         <div className="flex items-center gap-3 overflow-x-auto mr-2">

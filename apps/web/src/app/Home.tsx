@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
+import PageMetadata from "../components/shared/PageMetadata";
 
 export default function LandingPage() {
   return (
     <div className="bg-background text-on-background min-h-screen font-sans selection:bg-primary-container selection:text-on-primary-container">
+      <PageMetadata 
+        title="RevenOs | Engine of Autonomous Revenue" 
+        description="RevenOs is the AI-powered sales platform that automates your entire top-of-funnel lifecycle, from prospecting to meeting booking."
+      />
       
       {/* Navigation */}
       <header className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline/50">

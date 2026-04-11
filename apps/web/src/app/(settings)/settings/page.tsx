@@ -1,5 +1,13 @@
+import PageMetadata from "../../../components/shared/PageMetadata";
+
 export default function SettingsPage() {
     return (
-        <div>SettingsPage coming soon...</div>
+        <div>
+            <PageMetadata 
+              title="Account Settings | RevenOs" 
+              description="Manage your RevenOs account, team members, and integration settings."
+            />
+            SettingsPage coming soon...
+        </div>
     )
 }

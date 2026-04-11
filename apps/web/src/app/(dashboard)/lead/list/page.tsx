@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PageMetadata from "../../../../components/shared/PageMetadata";
 import { useLeads } from "../../../../hooks/useLeads";
 import { useLeadStore, type Lead } from "../../../../stores/lead.store";
 
@@ -72,6 +73,10 @@ export default function LeadsPage() {
 
   return (
     <div className="p-4 md:p-8 pb-2 flex-1">
+      <PageMetadata 
+        title="Lead Database | RevenOs" 
+        description="Manage and nurture your high-velocity pipeline of qualified prospects." 
+      />
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Header Card */}

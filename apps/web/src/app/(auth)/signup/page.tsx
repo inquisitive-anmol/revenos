@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUp } from '@clerk/clerk-react';
 import { useAuthStore } from "../../../stores/authStore";
+import PageMetadata from "../../../components/shared/PageMetadata";
 
 export default function SignUpPage() {
     const { isLoaded, signUp, setActive } = useSignUp();
@@ -107,6 +108,10 @@ export default function SignUpPage() {
     if (pendingVerification) {
         return (
             <div className="bg-background text-on-background min-h-screen flex flex-col font-sans relative overflow-hidden">
+                <PageMetadata 
+                  title="Verify Email | RevenOs" 
+                  description="Verify your email to start your autonomous revenue journey."
+                />
 
                 {/* Decorative Concentric Rings Background */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.15] z-0">
@@ -221,6 +226,10 @@ export default function SignUpPage() {
 
     return (
         <div className="bg-background text-on-background min-h-screen flex flex-col font-sans">
+            <PageMetadata 
+              title="Join Revenos | Start Your Autonomous Revenue Journey" 
+              description="Sign up for RevenOs and start scaling your sales with autonomous AI agents. 14-day free trial."
+            />
             {/* Main Content */}
             <main className="flex-grow flex flex-col items-center justify-center px-4 py-12">
 
@@ -235,7 +244,7 @@ export default function SignUpPage() {
                         </span>
                     </div>
                     <h1 className="text-2xl font-bold tracking-tight text-on-surface mb-2">
-                        SalesForge AI
+                        RevenOs
                     </h1>
                     <p className="text-on-surface-variant text-sm font-medium">
                         Start your 14-day free trial
@@ -356,7 +365,7 @@ export default function SignUpPage() {
             <footer className="w-full mt-auto border-t border-outline bg-transparent">
                 <div className="flex flex-col md:flex-row justify-between items-center px-8 py-6 w-full max-w-6xl mx-auto">
                     <p className="text-sm text-secondary mb-4 md:mb-0">
-                        © 2024 SalesForge AI. All rights reserved.
+                        © 2024 RevenOs. All rights reserved.
                     </p>
                     <div className="flex gap-6">
                         <a href="#" className="text-sm text-secondary hover:text-on-surface transition-colors">

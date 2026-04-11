@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import PageMetadata from "../../../components/shared/PageMetadata";
 import { useUIStore } from "../../../stores/ui.store";
 import { NotificationPanel } from "../../../components/shared/NotificationPanel";
 
@@ -9,7 +10,10 @@ export default function AgentBuilderPage() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-sans overflow-hidden">
-      
+      <PageMetadata 
+        title="AI Agents | RevenOs" 
+        description="Build and deploy autonomous AI agents to handle your sales outreach." 
+      />
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div 

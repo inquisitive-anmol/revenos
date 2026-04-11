@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import PageMetadata from "../../../../components/shared/PageMetadata";
 import { useCampaigns } from "../../../../hooks/useCampaigns";
 import { useCampaignStore, type Campaign } from "../../../../stores/campaign.store";
 
@@ -81,6 +82,10 @@ export default function CampaignsPage() {
 
   return (
     <div className="p-4 md:p-8 pb-2 flex-1">
+      <PageMetadata 
+        title="Campaigns | RevenOs" 
+        description="Manage and monitor your precision outreach velocity and campaign performance." 
+      />
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>

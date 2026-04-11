@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import PageMetadata from "../../../components/shared/PageMetadata";
 import { useCampaigns } from "../../../hooks/useCampaigns";
 import { useLeads } from "../../../hooks/useLeads";
 import { useMeetings } from "../../../hooks/useMeetings";
@@ -69,6 +70,10 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-8">
+      <PageMetadata 
+        title="Dashboard | RevenOs" 
+        description="Overview of your sales outreach performance, active campaigns, and lead conversions." 
+      />
       {/* Global loading shimmer */}
       {isLoading && (
         <div className="mb-4 flex items-center gap-2 text-sm text-secondary font-medium">

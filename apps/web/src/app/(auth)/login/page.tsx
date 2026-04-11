@@ -2,6 +2,7 @@ import { useAuthStore } from "../../../stores/authStore";
 import { useSignIn } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PageMetadata from "../../../components/shared/PageMetadata";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -37,6 +38,10 @@ export default function LoginPage() {
 
     return (
         <div className="bg-background text-on-background min-h-screen flex flex-col">
+            <PageMetadata 
+              title="Login | RevenOs" 
+              description="Access your autonomous sales dashboard and manage your AI outreach."
+            />
 
             {/* Main */}
             <main className="flex-grow flex items-center justify-center px-4 py-12">
