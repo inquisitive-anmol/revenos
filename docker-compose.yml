@@ -4,7 +4,30 @@ networks:
   revenos_net:
     driver: bridge
 
+volumes:
+  redis_data:
+    driver: local
+
 services:
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: revenos_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6380:6380"
+    volumes:
+      - redis_data:/data
+    networks:
+      - revenos_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── API ──────────────────────────────────────────────────────────────────────
   api:
     build:
       context: .
@@ -14,7 +37,10 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - .env.production        # ← single source of truth
+      - .env.production
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - revenos_net
     healthcheck:
@@ -23,6 +49,7 @@ services:
       timeout: 10s
       retries: 3
 
+  # ── Workers ──────────────────────────────────────────────────────────────────
   workers:
     build:
       context: .
@@ -30,10 +57,14 @@ services:
     container_name: revenos_workers
     restart: unless-stopped
     env_file:
-      - .env.production        # ← same file
+      - .env.production
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - revenos_net
 
+  # ── Web (Frontend) ───────────────────────────────────────────────────────────
   web:
     build:
       context: .
