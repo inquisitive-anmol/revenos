@@ -23,9 +23,9 @@ export const useRealtimeWorkers = () => {
         if (!token || !isMounted) return;
 
         if (!socketInstance) {
-          const apiUrl = import.meta.env.VITE_API_BASE_URL;
+          const apiUrl = import.meta.env.VITE_API_URL;
           if (!apiUrl) {
-            console.error('[Realtime] VITE_API_BASE_URL is not set. Socket.IO will not connect.');
+            console.error('[Realtime] VITE_API_URL is not set. Socket.IO will not connect.');
             return;
           }
           socketInstance = io(apiUrl, {
@@ -36,49 +36,49 @@ export const useRealtimeWorkers = () => {
 
         socketInstance.on('worker:completed', (payload: any) => {
           console.log('[Realtime] Worker completed:', payload);
-          
+
           if (payload.workerName === 'prospector') {
-             notify({
-               title: 'Prospecting Complete',
-               message: `Found ${payload.data?.leadsFound || 0} new leads`,
-               type: 'prospector'
-             });
-             addActivity({
-               agentId: 'PA',
-               type: 'prospector',
-               title: 'Prospector Agent finished searching',
-               details: `Found ${payload.data?.leadsFound || 0} new leads`,
-             });
+            notify({
+              title: 'Prospecting Complete',
+              message: `Found ${payload.data?.leadsFound || 0} new leads`,
+              type: 'prospector'
+            });
+            addActivity({
+              agentId: 'PA',
+              type: 'prospector',
+              title: 'Prospector Agent finished searching',
+              details: `Found ${payload.data?.leadsFound || 0} new leads`,
+            });
           } else if (payload.workerName === 'qualifier') {
-             notify({
-               title: 'Leads Qualified',
-               message: 'Finished scoring new leads',
-               type: 'qualifier'
-             });
-             addActivity({
-               agentId: 'QA',
-               type: 'qualifier',
-               title: 'Qualifier Agent finished scoring',
-               details: 'Processed new leads',
-             });
+            notify({
+              title: 'Leads Qualified',
+              message: 'Finished scoring new leads',
+              type: 'qualifier'
+            });
+            addActivity({
+              agentId: 'QA',
+              type: 'qualifier',
+              title: 'Qualifier Agent finished scoring',
+              details: 'Processed new leads',
+            });
           } else if (payload.workerName === 'booker') {
-             notify({
-               title: 'Tasks Finished',
-               message: 'Booker agent completed meeting tasks',
-               type: 'booker'
-             });
-             addActivity({
-               agentId: 'BA',
-               type: 'booker',
-               title: 'Booker Agent completed tasks',
-               details: 'Processed meeting invites',
-             });
+            notify({
+              title: 'Tasks Finished',
+              message: 'Booker agent completed meeting tasks',
+              type: 'booker'
+            });
+            addActivity({
+              agentId: 'BA',
+              type: 'booker',
+              title: 'Booker Agent completed tasks',
+              details: 'Processed meeting invites',
+            });
           } else {
-             notify({
-               title: 'Task Completed',
-               message: `Background task ${payload.workerName} completed.`,
-               type: 'system'
-             });
+            notify({
+              title: 'Task Completed',
+              message: `Background task ${payload.workerName} completed.`,
+              type: 'system'
+            });
           }
 
           fetchLeads();
