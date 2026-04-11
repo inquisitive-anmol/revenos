@@ -23,7 +23,12 @@ export const useRealtimeWorkers = () => {
         if (!token || !isMounted) return;
 
         if (!socketInstance) {
-          socketInstance = io(import.meta.env.VITE_API_BASE_URL || '', {
+          const apiUrl = import.meta.env.VITE_API_BASE_URL;
+          if (!apiUrl) {
+            console.error('[Realtime] VITE_API_BASE_URL is not set. Socket.IO will not connect.');
+            return;
+          }
+          socketInstance = io(apiUrl, {
             auth: { token },
             transports: ['websocket', 'polling'],
           });
