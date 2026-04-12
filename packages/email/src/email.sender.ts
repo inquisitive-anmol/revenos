@@ -6,12 +6,12 @@ export interface SendEmailOptions {
   from: string;
   subject: string;
   html: string;
-  replyTo?: string;
+  replyTo?: string; // kept for interface compat but ignored internally
   tags?: { name: string; value: string }[];
 }
 
 export interface SendEmailResult {
-  messageId: string; // the thread tracking ID — saved as externalThreadId
+  messageId: string; // threadId — save this as externalThreadId
   resendId: string;
   success: boolean;
 }
@@ -21,16 +21,18 @@ export const sendEmail = async (
 ): Promise<SendEmailResult> => {
   const resend = getResendClient();
 
-  // Generate a unique thread ID — embed it in reply-to address
+  // Always generate a unique threadId and embed it in reply-to
+  // Ignore options.replyTo — we own the reply-to for thread tracking
   const threadId = crypto.randomUUID();
-  const replyToAddress = `contact+${threadId}@contact.leadxai.in`;
+  const inboxDomain = process.env.REPLY_TO_EMAIL?.split("@")[1] || "contact.leadxai.in";
+  const trackingReplyTo = `contact+${threadId}@${inboxDomain}`;
 
   const result = await resend.emails.send({
     to: options.to,
     from: options.from,
     subject: options.subject,
     html: options.html,
-    replyTo: replyToAddress, // <-- encoded thread ID
+    replyTo: trackingReplyTo, // always the tracking address
     tags: options.tags,
   });
 
@@ -38,9 +40,8 @@ export const sendEmail = async (
     throw new Error(`Email send failed: ${result.error.message}`);
   }
 
-  // The threadId is what you save as externalThreadId
   return {
-    messageId: threadId,
+    messageId: threadId, // save this as externalThreadId
     resendId: result.data?.id || "",
     success: true,
   };
