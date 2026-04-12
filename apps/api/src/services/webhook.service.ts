@@ -12,13 +12,31 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     return;
   }
 
-  const emailId = payload.data?.email_id;
-  if (!emailId) {
-    console.log("[Webhook] No email_id in payload");
+  // Extract threadId from the to address: contact+<threadId>@contact.leadxai.in
+  const toAddresses: string[] = payload.data?.to ?? [];
+  const trackingAddress = toAddresses.find((addr) =>
+    addr.includes("contact+")
+  );
+
+  if (!trackingAddress) {
+    console.log("[Webhook] No tracking address found in to field");
     return;
   }
 
-  // Fetch full email — body and headers are not in the webhook payload
+  // Parse: contact+227c285f-f298-40da-baaf-150f6d2400b0@contact.leadxai.in
+  const match = trackingAddress.match(/contact\+([^@]+)@/);
+  const threadId = match?.[1];
+
+  if (!threadId) {
+    console.log("[Webhook] Could not parse threadId from address");
+    return;
+  }
+
+  console.log(`[Webhook] ThreadId extracted: ${threadId}`);
+
+  const emailId = payload.data?.email_id;
+
+  // Fetch full email for body content
   const { data: fullEmail, error } = await resend.emails.receiving.get(emailId);
   if (error || !fullEmail) {
     console.error("[Webhook] Failed to fetch received email:", error);
@@ -31,39 +49,13 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     return;
   }
 
-  // headers can be array [{name, value}] or Record<string, string> depending on SDK version
-  // handle both shapes safely
-  const rawHeaders = (fullEmail as any).headers;
-  let inReplyTo: string | undefined;
-
-  if (Array.isArray(rawHeaders)) {
-    inReplyTo = rawHeaders.find(
-      (h: { name: string; value: string }) =>
-        h.name.toLowerCase() === "in-reply-to"
-    )?.value?.trim();
-  } else if (rawHeaders && typeof rawHeaders === "object") {
-    const entry = Object.entries(rawHeaders as Record<string, string>).find(
-      ([key]) => key.toLowerCase() === "in-reply-to"
-    );
-    inReplyTo = entry?.[1]?.trim();
-  }
-
-  if (!inReplyTo) {
-    console.log("[Webhook] No In-Reply-To header — cannot match thread");
-    return;
-  }
-
-  console.log(`[Webhook] In-Reply-To: ${inReplyTo}`);
-  // Replace this:
-  // const thread = await EmailThread.findOne({ externalThreadId: inReplyTo });
-
-  // With this — bypass tenancy plugin by going through the raw model collection:
+  // Match thread — no tenancy plugin issue since this is a direct collection access
   const thread = await (EmailThread as any).collection.findOne({
-    externalThreadId: inReplyTo,
+    externalThreadId: threadId,
   });
-  
+
   if (!thread) {
-    console.log(`[Webhook] No thread found for In-Reply-To: ${inReplyTo}`);
+    console.log(`[Webhook] No thread found for threadId: ${threadId}`);
     return;
   }
 
@@ -71,6 +63,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     _id: thread.leadId,
     workspaceId: thread.workspaceId,
   });
+
   if (!lead) {
     console.log("[Webhook] No lead found for thread");
     return;

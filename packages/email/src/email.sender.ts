@@ -1,5 +1,5 @@
-import crypto from "crypto";
 import { getResendClient } from "./resend.client";
+import crypto from "crypto";
 
 export interface SendEmailOptions {
   to: string;
@@ -11,8 +11,8 @@ export interface SendEmailOptions {
 }
 
 export interface SendEmailResult {
-  messageId: string; // RFC Message-ID e.g. <uuid@contact.leadxai.in>
-  resendId: string;  // Resend's internal UUID
+  messageId: string; // the thread tracking ID — saved as externalThreadId
+  resendId: string;
   success: boolean;
 }
 
@@ -21,30 +21,26 @@ export const sendEmail = async (
 ): Promise<SendEmailResult> => {
   const resend = getResendClient();
 
-  // Generate RFC Message-ID before sending — we own it, no guessing after the fact
-  const domain = options.from.includes("@")
-    ? options.from.split("@")[1].replace(/>.*/, "").trim()
-    : "mail.local";
-  const generatedMessageId = `<${crypto.randomUUID()}@${domain}>`;
+  // Generate a unique thread ID — embed it in reply-to address
+  const threadId = crypto.randomUUID();
+  const replyToAddress = `contact+${threadId}@contact.leadxai.in`;
 
   const result = await resend.emails.send({
     to: options.to,
     from: options.from,
     subject: options.subject,
     html: options.html,
-    replyTo: options.replyTo,
+    replyTo: replyToAddress, // <-- encoded thread ID
     tags: options.tags,
-    headers: {
-      "Message-ID": generatedMessageId,
-    },
   });
 
   if (result.error) {
     throw new Error(`Email send failed: ${result.error.message}`);
   }
 
+  // The threadId is what you save as externalThreadId
   return {
-    messageId: generatedMessageId, // save this as externalThreadId
+    messageId: threadId,
     resendId: result.data?.id || "",
     success: true,
   };
