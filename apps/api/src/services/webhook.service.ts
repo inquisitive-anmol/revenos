@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { qualifierQueue } from "../config/queue";
+import { qualifierQueue, bookerConfirmQueue } from "../config/queue";
 import { EmailThread, Lead } from "@revenos/db";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -23,7 +23,6 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     return;
   }
 
-  // Parse: contact+227c285f-f298-40da-baaf-150f6d2400b0@contact.leadxai.in
   const match = trackingAddress.match(/contact\+([^@]+)@/);
   const threadId = match?.[1];
 
@@ -49,7 +48,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     return;
   }
 
-  // Match thread — no tenancy plugin issue since this is a direct collection access
+  // Match thread — bypass tenancy plugin
   const thread = await (EmailThread as any).collection.findOne({
     externalThreadId: threadId,
   });
@@ -69,8 +68,9 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     return;
   }
 
-  await EmailThread.findOneAndUpdate(
-    { _id: thread._id, workspaceId: thread.workspaceId },
+  // Append inbound message to thread
+  await (EmailThread as any).collection.updateOne(
+    { _id: thread._id },
     {
       $push: {
         messages: {
@@ -81,30 +81,93 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
           sentAt: new Date(payload.data.created_at || Date.now()),
         },
       },
-      status: "replied",
+      $set: {
+        // Don't overwrite status here — router below sets the right one
+        updatedAt: new Date(),
+      },
     }
   );
 
-  const originalEmail = thread.messages[0]?.body || "";
+  // ── ROUTER: branch on thread.status ──────────────────────────────────────
 
-  await qualifierQueue.add(
-    "classify-reply",
-    {
-      workspaceId: thread.workspaceId.toString(),
-      campaignId: thread.campaignId.toString(),
-      leadId: thread.leadId.toString(),
-      originalEmail,
-      replyContent,
-      fromEmail: process.env.FROM_EMAIL!,
-      fromName: process.env.FROM_NAME!,
-      playbook: {
-        tone: "professional",
-        valueProposition: "RevenOS automates your outbound sales process",
-        callToAction: "15-minute call",
+  const threadStatus = thread.status as string;
+  console.log(`[Webhook] Thread status: ${threadStatus}`);
+
+  // ── Branch 1: Normal qualification reply ─────────────────────────────────
+  if (threadStatus === "active" || threadStatus === "replied") {
+    await (EmailThread as any).collection.updateOne(
+      { _id: thread._id },
+      { $set: { status: "replied" } }
+    );
+
+    const originalEmail = thread.messages[0]?.body || "";
+
+    await qualifierQueue.add(
+      "classify-reply",
+      {
+        workspaceId: thread.workspaceId.toString(),
+        campaignId: thread.campaignId.toString(),
+        leadId: thread.leadId.toString(),
+        originalEmail,
+        replyContent,
+        fromEmail: process.env.FROM_EMAIL!,
+        fromName: process.env.FROM_NAME!,
+        playbook: {
+          tone: "professional",
+          valueProposition: "RevenOS automates your outbound sales process",
+          callToAction: "15-minute call",
+        },
       },
-    },
-    { attempts: 3, backoff: { type: "exponential", delay: 2000 } }
-  );
+      { attempts: 3, backoff: { type: "exponential", delay: 2000 } }
+    );
 
-  console.log(`[Webhook] Reply queued for classification. Lead: ${lead.email}`);
+    console.log(`[Webhook] Queued for qualification. Lead: ${lead.email}`);
+    return;
+  }
+
+  // ── Branch 2: Lead replied to slot proposal — confirm booking ────────────
+  if (threadStatus === "awaiting_slot_reply") {
+    if (!thread.proposedSlots || thread.proposedSlots.length === 0) {
+      console.error("[Webhook] awaiting_slot_reply but no proposedSlots on thread — cannot confirm");
+      return;
+    }
+
+    if (!thread.bookerMeta) {
+      console.error("[Webhook] awaiting_slot_reply but no bookerMeta on thread — cannot confirm");
+      return;
+    }
+
+    await bookerConfirmQueue.add(
+      "confirm-booking",
+      {
+        workspaceId: thread.workspaceId.toString(),
+        campaignId: thread.campaignId.toString(),
+        leadId: thread.leadId.toString(),
+        threadId: thread._id.toString(),
+        replyContent,
+        proposedSlots: thread.proposedSlots,
+        bookerMeta: thread.bookerMeta,
+        lead: {
+          email: lead.email,
+          firstName: lead.firstName,
+          lastName: lead.lastName,
+          company: lead.company,
+          title: lead.title,
+        },
+      },
+      { attempts: 3, backoff: { type: "exponential", delay: 2000 } }
+    );
+
+    console.log(`[Webhook] Queued for booking confirmation. Lead: ${lead.email}`);
+    return;
+  }
+
+  // ── Branch 3: Already booked — ignore or log ─────────────────────────────
+  if (threadStatus === "meeting_booked" || threadStatus === "closed") {
+    console.log(`[Webhook] Thread already ${threadStatus}, ignoring reply from ${lead.email}`);
+    return;
+  }
+
+  // ── Fallback ──────────────────────────────────────────────────────────────
+  console.log(`[Webhook] Unhandled thread status: ${threadStatus} for lead ${lead.email}`);
 };

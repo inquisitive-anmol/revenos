@@ -24,19 +24,67 @@ export const BookerInputSchema = z.object({
 });
 
 export const AvailableSlotSchema = z.object({
-  startTime: z.number(),
-  endTime: z.number(),
+  startTime: z.number(),       // unix timestamp
+  endTime: z.number(),         // unix timestamp
   startTimeFormatted: z.string(),
   endTimeFormatted: z.string(),
 });
 
-export const BookerOutputSchema = z.object({
-  meetingBooked: z.boolean(),
-  calendarEventId: z.string().optional(),
-  scheduledAt: z.date().optional(),
-  slotPickerSent: z.boolean(),
+// Slots as stored in MongoDB EmailThread.proposedSlots
+// (ISO strings instead of unix timestamps)
+export const StoredSlotSchema = z.object({
+  start: z.string(),           // ISO string
+  end: z.string(),             // ISO string
+  startFormatted: z.string(),
+  endFormatted: z.string(),
 });
 
 export type BookerInput = z.infer<typeof BookerInputSchema>;
 export type AvailableSlot = z.infer<typeof AvailableSlotSchema>;
-export type BookerOutput = z.infer<typeof BookerOutputSchema>;
+export type StoredSlot = z.infer<typeof StoredSlotSchema>;
+
+export interface BookerOutput {
+  slotPickerSent: boolean;
+  threadId: string;
+  proposedSlots: AvailableSlot[];
+}
+
+export interface BookerConfirmInput {
+  leadId: string;
+  workspaceId: string;
+  campaignId: string;
+  threadId: string;
+  replyText: string;
+  proposedSlots: StoredSlot[];  // from MongoDB — StoredSlot shape
+  bookerMeta: {
+    leadEmail: string;
+    leadName: string;
+    calendarId: string;
+    durationMins: number;
+  };
+  lead: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    company: string;
+    title: string;
+  };
+  emailConfig: {
+    fromEmail: string;
+    fromName: string;
+  };
+  calendar: {
+    grantId: string;
+    calendarId?: string;
+    meetingDuration: number;
+    timezone: string;
+  };
+}
+
+export interface BookerConfirmOutput {
+  meetingBooked: boolean;
+  unclear: boolean;
+  calendarEventId?: string;
+  scheduledAt?: Date;
+  confirmedSlot?: StoredSlot;
+}

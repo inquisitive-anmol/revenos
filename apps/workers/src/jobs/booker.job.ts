@@ -1,7 +1,7 @@
 import { Worker, Job } from "bullmq";
 import { redis } from "../config/redis";
 import { BookerAgent } from "@revenos/agents";
-import { Lead, Meeting, Campaign, AgentLog, Agent } from "@revenos/db";
+import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
 
 export interface BookerJobData {
@@ -54,7 +54,7 @@ export const bookerWorker = new Worker<BookerJobData>(
       nylasClient
     );
 
-    // 4. Run booker agent
+    // 4. Run Phase 1 — fetch slots + send slot picker email (does NOT book)
     const result = await bookerAgent.run({
       leadId,
       workspaceId,
@@ -77,45 +77,88 @@ export const bookerWorker = new Worker<BookerJobData>(
       },
     });
 
-    // 5. Save meeting to MongoDB
-    if (result.meetingBooked && result.calendarEventId) {
-      await Meeting.create({
+    // 5. Save proposedSlots + bookerMeta on the EmailThread so
+    //    the webhook handler can run Phase 2 when the lead replies
+    const db = EmailThread.db;
+    const rawCollection = db.collection("emailthreads");
+
+    const updateResult = await rawCollection.updateOne(
+      { externalThreadId: result.threadId },
+      {
+        $set: {
+          status: "awaiting_slot_reply",
+          proposedSlots: result.proposedSlots.map((s) => ({
+            start: new Date(s.startTime * 1000).toISOString(),
+            end: new Date(s.endTime * 1000).toISOString(),
+            startFormatted: s.startTimeFormatted,
+            endFormatted: s.endTimeFormatted,
+          })),
+          bookerMeta: {
+            leadEmail: lead.email,
+            leadName: `${lead.firstName} ${lead.lastName}`,
+            calendarId: "primary",
+            durationMins: 30,
+          },
+        },
+      }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      // Thread may not exist yet if sendEmail creates it async — create it
+      await rawCollection.insertOne({
         workspaceId,
         leadId: lead._id,
         campaignId,
-        calendarEventId: result.calendarEventId,
-        scheduledAt: result.scheduledAt,
-      });
-
-      // 6. Update lead status
-      await Lead.findOneAndUpdate(
-        { _id: leadId, workspaceId },
-        { status: "meeting_booked" }
-      );
-
-      // 7. Update campaign metrics
-      await Campaign.findOneAndUpdate(
-        { _id: campaignId, workspaceId },
-        { $inc: { "metrics.meetingsBooked": 1 } }
-      );
-
-      // 8. Log completion
-      await AgentLog.create({
-        workspaceId,
-        agentId: agent._id,
-        campaignId,
-        event: "booker.meeting_booked",
-        data: {
-          leadId,
-          calendarEventId: result.calendarEventId,
-          scheduledAt: result.scheduledAt,
+        externalThreadId: result.threadId,
+        messages: [],
+        status: "awaiting_slot_reply",
+        proposedSlots: result.proposedSlots.map((s) => ({
+          start: new Date(s.startTime * 1000).toISOString(),
+          end: new Date(s.endTime * 1000).toISOString(),
+          startFormatted: s.startTimeFormatted,
+          endFormatted: s.endTimeFormatted,
+        })),
+        bookerMeta: {
+          leadEmail: lead.email,
+          leadName: `${lead.firstName} ${lead.lastName}`,
+          calendarId: "primary",
+          durationMins: 30,
         },
-        timestamp: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
+
+      console.log(`[BookerJob] EmailThread not found for threadId ${result.threadId}, created new one`);
     }
 
+    // 6. Update lead status to reflect slots have been sent
+    await Lead.findOneAndUpdate(
+      { _id: leadId, workspaceId },
+      { status: "slots_sent" }
+    );
+
+    // 7. Update campaign metrics
+    await Campaign.findOneAndUpdate(
+      { _id: campaignId, workspaceId },
+      { $inc: { "metrics.slotsSent": 1 } }
+    );
+
+    // 8. Log completion
+    await AgentLog.create({
+      workspaceId,
+      agentId: agent._id,
+      campaignId,
+      event: "booker.slots_sent",
+      data: {
+        leadId,
+        threadId: result.threadId,
+        slotsOffered: result.proposedSlots.length,
+      },
+      timestamp: new Date(),
+    });
+
     console.log(
-      `[BookerJob] Completed. Meeting booked for ${lead.email} ✅`
+      `[BookerJob] Completed. Slot picker sent to ${lead.email} ✅`
     );
 
     return result;
