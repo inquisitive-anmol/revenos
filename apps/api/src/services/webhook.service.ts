@@ -54,8 +54,14 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
   }
 
   console.log(`[Webhook] In-Reply-To: ${inReplyTo}`);
+  // Replace this:
+  // const thread = await EmailThread.findOne({ externalThreadId: inReplyTo });
 
-  const thread = await EmailThread.findOne({ externalThreadId: inReplyTo });
+  // With this — bypass tenancy plugin by going through the raw model collection:
+  const thread = await (EmailThread as any).collection.findOne({
+    externalThreadId: inReplyTo,
+  });
+  
   if (!thread) {
     console.log(`[Webhook] No thread found for In-Reply-To: ${inReplyTo}`);
     return;
