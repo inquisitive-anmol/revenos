@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.join(process.cwd(), "../../.env") });
 
-import { generateText } from "ai";
-import { getModel } from "@revenos/ai-sdk";
+// import { generateWithRetry } from "ai";
+import { getModel, generateWithRetry } from "@revenos/ai-sdk";
 import Nylas from "nylas";
 import { Agent } from "../base/Agent";
 import { AgentContext } from "../base/AgentContext";
@@ -126,7 +126,7 @@ export class BookerAgent extends Agent {
       await this.log("booker.slots_found", { count: slots.length });
 
       const prompt = BOOKER_PROMPTS.SEND_SLOT_PICKER(input.lead, slots);
-      const { text } = await generateText({ model: getModel(), prompt });
+      const { text } = await generateWithRetry({ model: getModel(), prompt });
 
       let emailContent: { subject: string; body: string };
       try {
@@ -173,7 +173,7 @@ export class BookerAgent extends Agent {
         input.replyText,
         input.proposedSlots  // StoredSlot[] — has startFormatted field
       );
-      const { text } = await generateText({ model: getModel(), prompt });
+      const { text } = await generateWithRetry({ model: getModel(), prompt });
 
       let classification: { slotIndex: number | null; unclear: boolean };
       try {

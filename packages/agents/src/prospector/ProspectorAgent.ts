@@ -1,5 +1,5 @@
-import { generateText } from "ai";
-import { getModel } from "@revenos/ai-sdk";
+// import { generateWithRetry } from "ai";
+import { getModel, generateWithRetry } from "@revenos/ai-sdk";
 import { Agent } from "../base/Agent";
 import { AgentContext } from "../base/AgentContext";
 import { PROSPECTOR_STATES, ProspectorState } from "../base/AgentState";
@@ -38,7 +38,7 @@ export class ProspectorAgent extends Agent {
         input.leads
       );
 
-      const { text } = await generateText({
+      const { text } = await generateWithRetry({
         model: getModel(),
         prompt,
       });

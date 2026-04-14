@@ -1,5 +1,5 @@
-import { generateText } from "ai";
-import { getModel } from "@revenos/ai-sdk";
+// import { generateWithRetry } from "ai";
+import { getModel, generateWithRetry } from "@revenos/ai-sdk";
 import { Agent } from "../base/Agent";
 import { AgentContext } from "../base/AgentContext";
 import { QUALIFIER_STATES, QualifierState } from "../base/AgentState";
@@ -42,7 +42,7 @@ export class QualifierAgent extends Agent {
         input.playbook
       );
 
-      const { text } = await generateText({
+      const { text } = await generateWithRetry({
         model: getModel(),
         prompt: emailPrompt,
       });
@@ -120,7 +120,7 @@ export class QualifierAgent extends Agent {
       replyContent
     );
 
-    const { text } = await generateText({
+    const { text } = await generateWithRetry({
       model: getModel(),
       prompt,
     });
