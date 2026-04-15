@@ -4,6 +4,12 @@ import { EmailThread, Lead } from "@revenos/db";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
+const stripQuotedReply = (text: string): string => {
+  return text
+    .split(/\n>|\nOn .+ wrote:|\n--\s*\n/)[0]  // strip at quote markers
+    .trim();
+};
+
 export const handleEmailReply = async (payload: any): Promise<void> => {
   const type = payload.type;
 
@@ -101,7 +107,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
     );
 
     const originalEmail = thread.messages[0]?.body || "";
-
+    const cleanReply = stripQuotedReply(replyContent);
     await qualifierQueue.add(
       "classify-reply",
       {
@@ -109,7 +115,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
         campaignId: thread.campaignId.toString(),
         leadId: thread.leadId.toString(),
         originalEmail,
-        replyContent,
+        replyContent: cleanReply,
         fromEmail: process.env.FROM_EMAIL!,
         fromName: process.env.FROM_NAME!,
         playbook: {
@@ -137,6 +143,8 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
       return;
     }
 
+    const cleanReply = stripQuotedReply(replyContent);
+
     await bookerConfirmQueue.add(
       "confirm-booking",
       {
@@ -144,7 +152,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
         campaignId: thread.campaignId.toString(),
         leadId: thread.leadId.toString(),
         threadId: thread._id.toString(),
-        replyContent,
+        replyContent: cleanReply,
         proposedSlots: thread.proposedSlots,
         bookerMeta: thread.bookerMeta,
         lead: {
