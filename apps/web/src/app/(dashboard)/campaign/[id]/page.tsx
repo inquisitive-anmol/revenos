@@ -181,7 +181,7 @@ export default function CampaignDetailsPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                 Paused
               </span>
-            ) : activeCampaign.status === "stop" || activeCampaign.status === "completed" ? (
+            ) : activeCampaign.status === "completed" ? (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-100 text-red-700 text-[11px] font-bold uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                 Stopped
@@ -470,7 +470,7 @@ export default function CampaignDetailsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-secondary font-medium">
-                        {timeAgo(lead.updatedAt || lead.createdAt)}
+                        {timeAgo(lead.createdAt)}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button className="text-outline-variant hover:text-secondary transition-colors">
