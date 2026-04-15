@@ -49,24 +49,29 @@ export const prospectorWorker = new Worker<ProspectorJobData>(
     // 3. Save enriched leads to MongoDB
     const savedLeads = await Promise.all(
       result.enrichedLeads.map((enrichedLead) =>
-        Lead.create({
-          workspaceId,
-          campaignId,
-          email: enrichedLead.email,
-          firstName: enrichedLead.firstName,
-          lastName: enrichedLead.lastName,
-          company: enrichedLead.company,
-          title: enrichedLead.title,
-          linkedinUrl: enrichedLead.linkedinUrl ?? undefined,
-          companySize: enrichedLead.companySize ?? undefined,
-          industry: enrichedLead.industry ?? undefined,
-          icpScore: enrichedLead.icpScore,
-          researchNotes: enrichedLead.researchNotes,
-          status: "prospecting",
-          enrichmentData: {},
-          tags: [],
-          humanControlled: false,
-        })
+        Lead.findOneAndUpdate(
+          { email: enrichedLead.email, campaignId, workspaceId },
+          {
+            $setOnInsert: {
+              workspaceId,
+              campaignId,
+              email: enrichedLead.email,
+              firstName: enrichedLead.firstName,
+              lastName: enrichedLead.lastName,
+              company: enrichedLead.company,
+              title: enrichedLead.title,
+              linkedinUrl: enrichedLead.linkedinUrl ?? undefined,
+              companySize: enrichedLead.companySize ?? undefined,
+              industry: enrichedLead.industry ?? undefined,
+              icpScore: enrichedLead.icpScore,
+              researchNotes: enrichedLead.researchNotes,
+              status: "prospecting",
+              enrichmentData: {},
+              tags: [],
+            }
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        )
       )
     );
 

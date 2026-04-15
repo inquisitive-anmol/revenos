@@ -117,20 +117,23 @@ export const qualifierWorker = new Worker<QualifierJobData>(
         const lead = await Lead.findOne({ _id: leadId, workspaceId });
         if (!lead) throw new Error(`Lead ${leadId} not found`);
 
-        let agent = await Agent.findOne({ workspaceId, type: "qualifier" });
-        if (!agent) {
-            agent = await Agent.create({
-                workspaceId,
-                type: "qualifier",
-                config: {
-                    icpDescription: "",
-                    emailTone: playbook.tone,
-                    followUpDays: [0, 3, 7],
-                    qualificationThreshold: 7,
-                },
-                status: "idle",
-            });
-        }
+        const agent = await Agent.findOneAndUpdate(
+            { workspaceId, type: "qualifier" },
+            {
+                $setOnInsert: {
+                    workspaceId,
+                    type: "qualifier",
+                    config: {
+                        icpDescription: "",
+                        emailTone: playbook.tone,
+                        followUpDays: [0, 3, 7],
+                        qualificationThreshold: 7,
+                    },
+                    status: "idle",
+                }
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
 
         const qualifierAgent = new QualifierAgent({
             workspaceId,
@@ -163,22 +166,25 @@ export const qualifierWorker = new Worker<QualifierJobData>(
             playbook,
         });
 
-        await EmailThread.create({
-            workspaceId,
-            leadId: lead._id,
-            campaignId,
-            externalThreadId: result.messageId,
-            messages: [
-                {
-                    messageId: result.messageId,
-                    direction: "outbound",
-                    subject: result.subject,
-                    body: result.body,
-                    sentAt: new Date(),
-                },
-            ],
-            status: "active",
-        });
+        const existingThread = await EmailThread.findOne({ externalThreadId: result.messageId, workspaceId });
+        if (!existingThread) {
+            await EmailThread.create({
+                workspaceId,
+                leadId: lead._id,
+                campaignId,
+                externalThreadId: result.messageId,
+                messages: [
+                    {
+                        messageId: result.messageId,
+                        direction: "outbound",
+                        subject: result.subject,
+                        body: result.body,
+                        sentAt: new Date(),
+                    },
+                ],
+                status: "active",
+            });
+        }
 
         await Lead.findOneAndUpdate(
             { _id: leadId, workspaceId },

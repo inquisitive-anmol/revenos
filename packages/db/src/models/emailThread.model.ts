@@ -103,6 +103,9 @@ const EmailThreadSchema = new Schema<IEmailThread>(
 
 EmailThreadSchema.plugin(tenancyPlugin);
 
+EmailThreadSchema.index({ externalThreadId: 1 }, { unique: true });
+EmailThreadSchema.index({ workspaceId: 1, leadId: 1 });
+
 export const EmailThread = mongoose.model<IEmailThread>(
   "EmailThread",
   EmailThreadSchema

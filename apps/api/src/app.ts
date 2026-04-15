@@ -1,4 +1,5 @@
 // ── MUST be imported before anything that uses Express ──────────────────────
+import './sentry'; // Sentry instrumentation must be imported first
 import 'express-async-errors';
 
 import express, { Express } from 'express';
@@ -20,6 +21,12 @@ import {
 import router from '@/routes/index';
 import { env } from '@/config/env';
 import { parseCSV } from '@/utils/index';
+import * as Sentry from '@sentry/node';
+import { allQueues } from '@revenos/queue';
+import { ExpressAdapter } from '@bull-board/express';
+import { createBullBoard } from '@bull-board/api';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { getAuth } from '@clerk/express';
 
 /**
  * Express application factory.
@@ -41,6 +48,15 @@ import { parseCSV } from '@/utils/index';
 export function createApp(): Express {
   const app = express();
 
+  // ── Bull Board Setup ──────────────────────────────────────────────────
+  const serverAdapter = new ExpressAdapter();
+  serverAdapter.setBasePath('/admin/queues');
+
+  createBullBoard({
+    queues: allQueues.map((q) => new BullMQAdapter(q)),
+    serverAdapter,
+  });
+
   // ── 1. Security ────────────────────────────────────────────────────────
   app.use(helmet());
   app.use(
@@ -56,13 +72,17 @@ export function createApp(): Express {
   // ── 2. Body parsing + compression ─────────────────────────────────────
   // The `verify` callback captures the raw Buffer before JSON parsing.
   // Required for Svix webhook signature verification on /webhooks/clerk.
-  app.use(express.json({
-    limit: '10mb',
-    verify: (req: any, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }));
-  app.use(express.urlencoded({ extended: true }));
+  app.use((req, res, next) => {
+    const isCampaignUpload = req.path === '/api/v1/campaigns' || req.path.match(/^\/api\/v1\/campaigns\/[^\/]+\/prospect$/);
+    const limit = isCampaignUpload ? '10mb' : '100kb';
+    express.json({
+      limit,
+      verify: (req: any, _res, buf) => {
+        req.rawBody = buf;
+      },
+    })(req, res, next);
+  });
+  app.use(express.urlencoded({ extended: true, limit: '100kb' }));
   app.use(compression());
 
   // ── 3. Request logging ────────────────────────────────────────────────
@@ -71,8 +91,34 @@ export function createApp(): Express {
   // ── 4. Clerk context (non-blocking — does NOT enforce auth) ───────────
   app.use(clerkMiddleware());
 
+  // ── Bull Board Route (Protected) ──────────────────────────────────────
+  app.use(
+    '/admin/queues',
+    (req, res, next) => {
+      // Basic security check: user must be authenticated in Clerk
+      const auth = getAuth(req);
+      // Check if user is authenticated at all
+      if (!auth.userId) {
+        return process.env.NODE_ENV === 'production' 
+          ? res.status(401).send('Unauthorized')
+          : next(); // allow local dev bypass if no session
+      }
+
+      // Check for Admin role in Clerk session claims
+      // (This assumes you've added role to publicMetadata or metadata in Clerk dashboard)
+      const claim = auth.sessionClaims as any;
+      const role = claim?.metadata?.role || claim?.publicMetadata?.role;
+      
+      if (role !== 'admin' && process.env.NODE_ENV === 'production') {
+        return res.status(403).send('Forbidden: Admin access required');
+      }
+      next();
+    },
+    serverAdapter.getRouter()
+  );
+
   // ── 5. General rate limiter ───────────────────────────────────────────
-  // app.use('/api', generalRateLimiter);
+  app.use('/api', generalRateLimiter);
 
   // ── 6. Health endpoints (public, no rate limit) ───────────────────────
   app.get('/health', healthCheck);
@@ -86,6 +132,7 @@ export function createApp(): Express {
   app.use(notFoundHandler);
 
   // ── 9. Centralized error handler (MUST be last) ────────────────────────
+  Sentry.setupExpressErrorHandler(app);
   app.use(errorHandler);
 
   return app;

@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { qualifierQueue, bookerConfirmQueue } from "../config/queue";
+import { qualifierQueue, bookerConfirmQueue } from "@revenos/queue";
 import { EmailThread, Lead } from "@revenos/db";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);

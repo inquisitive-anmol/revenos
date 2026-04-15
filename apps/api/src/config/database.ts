@@ -5,7 +5,7 @@ const MONGODB_OPTIONS: mongoose.ConnectOptions = {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
   heartbeatFrequencyMS: 10000,
-  maxPoolSize: 10,
+  maxPoolSize: 20,
   minPoolSize: 2,
   connectTimeoutMS: 10000,
 };

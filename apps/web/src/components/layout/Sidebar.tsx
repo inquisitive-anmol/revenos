@@ -15,6 +15,7 @@ export const Sidebar: React.FC = () => {
     { name: 'Pipeline', path: '/pipeline', icon: 'alt_route' },
     { name: 'Leads', path: '/leads', icon: 'group', fill: true },
     { name: 'Meetings', path: '/meetings', icon: 'event_available' },
+    { name: 'Analytics', path: '/analytics', icon: 'analytics', fill: true },
     { name: 'Settings', path: '/settings', icon: 'settings' },
   ];
 

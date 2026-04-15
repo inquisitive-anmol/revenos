@@ -1,6 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { tenancyPlugin } from "../plugins/tenancy.plugin";
 
+export type LeadStatus =
+  | "pending"
+  | "qualifying"
+  | "qualified"
+  | "disqualified"
+  | "outreach_sent"
+  | "reply_received"
+  | "interested"
+  | "not_interested"
+  | "follow_up_scheduled"
+  | "follow_up_sent"
+  | "max_followups_reached"
+  | "meeting_booked";
+
 export interface ILead extends Document {
   workspaceId: string;
   campaignId: mongoose.Types.ObjectId;
@@ -13,26 +27,18 @@ export interface ILead extends Document {
   companySize?: number;
   industry?: string;
   icpScore: number;
-  status:
-  | "prospecting"
-  | "contacted"
-  | "qualified"
-  | "disqualified"
-  | "meeting_booked"
-  | "closed";
+  status: LeadStatus;
   enrichmentData: Record<string, unknown>;
   researchNotes?: string;
   tags: string[];
-  humanControlled: boolean;
+  followUpCount: number;
+  lastContactedAt?: Date;
   createdAt: Date;
 }
 
 const LeadSchema = new Schema<ILead>(
   {
-    workspaceId: {
-      type: String,
-      required: true,
-    },
+    workspaceId: { type: String, required: true },
     campaignId: {
       type: Schema.Types.ObjectId,
       ref: "Campaign",
@@ -50,23 +56,34 @@ const LeadSchema = new Schema<ILead>(
     status: {
       type: String,
       enum: [
-        "prospecting",
-        "contacted",
+        "pending",
+        "qualifying",
         "qualified",
         "disqualified",
+        "outreach_sent",
+        "reply_received",
+        "interested",
+        "not_interested",
+        "follow_up_scheduled",
+        "follow_up_sent",
+        "max_followups_reached",
         "meeting_booked",
-        "closed",
       ],
-      default: "prospecting",
+      default: "pending",
     },
     enrichmentData: { type: Schema.Types.Mixed, default: {} },
     researchNotes: { type: String },
     tags: [{ type: String }],
-    humanControlled: { type: Boolean, default: false },
+    followUpCount: { type: Number, default: 0 },
+    lastContactedAt: { type: Date },
   },
   { timestamps: true }
 );
 
 LeadSchema.plugin(tenancyPlugin);
+
+
+LeadSchema.index({ workspaceId: 1, campaignId: 1, status: 1 });
+LeadSchema.index({ email: 1, workspaceId: 1 }, { unique: true });
 
 export const Lead = mongoose.model<ILead>("Lead", LeadSchema);

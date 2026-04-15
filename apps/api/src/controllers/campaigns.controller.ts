@@ -15,12 +15,9 @@ export const listCampaignsHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
   const { page, limit } = parsePagination(req.query);
 
-  // In the future, pagination parameters could be passed down to the service
-  // For now, service returns all and we can just pass them as payload
-  const campaigns = await getCampaigns(workspaceId);
+  const { campaigns, total } = await getCampaigns(workspaceId, page, limit);
 
-  // Naive pagination meta setup for demonstration
-  return ok(res, campaigns, { page, limit, total: campaigns.length, totalPages: Math.ceil(campaigns.length / limit) });
+  return ok(res, campaigns, { page, limit, total, totalPages: Math.ceil(total / limit) });
 };
 
 export const createCampaignHandler = async (req: Request, res: Response) => {

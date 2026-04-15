@@ -35,4 +35,6 @@ const AgentLogSchema = new Schema<IAgentLog>(
 
 AgentLogSchema.plugin(tenancyPlugin);
 
+AgentLogSchema.index({ workspaceId: 1, campaignId: 1, timestamp: -1 });
+
 export const AgentLog = mongoose.model<IAgentLog>("AgentLog", AgentLogSchema);

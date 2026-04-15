@@ -31,9 +31,19 @@ export const createCampaign = async (
 };
 
 export const getCampaigns = async (
-  workspaceId: string
-): Promise<ICampaign[]> => {
-  return Campaign.find({ workspaceId }).sort({ createdAt: -1 });
+  workspaceId: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<{ campaigns: ICampaign[]; total: number }> => {
+  const [campaigns, total] = await Promise.all([
+    Campaign.find({ workspaceId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean(),
+    Campaign.countDocuments({ workspaceId }),
+  ]);
+  return { campaigns: campaigns as ICampaign[], total };
 };
 
 export const getCampaignById = async (

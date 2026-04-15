@@ -1,7 +1,7 @@
 import { QueueEvents } from 'bullmq';
 import redis from '../config/redis';
 import { getIO } from './index';
-import { prospectorQueue, qualifierQueue, bookerQueue } from '../config/queue';
+import { prospectorQueue, qualifierQueue, bookerQueue } from '@revenos/queue';
 import logger from '../config/logger';
 
 type QueueType = 'prospector' | 'qualifier' | 'booker';

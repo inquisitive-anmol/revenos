@@ -1,4 +1,4 @@
-import { prospectorQueue } from "@/config/queue";
+import { prospectorQueue } from "@revenos/queue";
 import { Campaign, Agent } from "@revenos/db";
 import { ProspectorJobData } from "@/services/types";
 import { NotFoundError } from "@/errors/AppError";

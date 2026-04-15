@@ -30,6 +30,7 @@ const EnvSchema = z.object({
 
   // ── CORS ─────────────────────────────────────────────────────────────────
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
+  SENTRY_DSN: z.string().optional(),
 
   // ── Logging ──────────────────────────────────────────────────────────────
   LOG_LEVEL: z

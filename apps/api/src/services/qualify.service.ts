@@ -1,4 +1,4 @@
-import { qualifierQueue } from "../config/queue";
+import { qualifierQueue } from "@revenos/queue";
 import { Lead } from "@revenos/db";
 
 export const triggerQualifier = async (
