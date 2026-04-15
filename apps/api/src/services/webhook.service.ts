@@ -151,7 +151,7 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
         workspaceId: thread.workspaceId.toString(),
         campaignId: thread.campaignId.toString(),
         leadId: thread.leadId.toString(),
-        threadId: thread._id.toString(),
+        threadId: thread.externalThreadId,
         replyContent: cleanReply,
         proposedSlots: thread.proposedSlots,
         bookerMeta: thread.bookerMeta,
