@@ -25,7 +25,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
 
   CLASSIFY_SLOT_REPLY: (
     replyText: string,
-    slots: { startFormatted: string }[]  // StoredSlot shape from MongoDB
+    slots: { startFormatted: string }[]
   ): string => `You are an AI assistant helping schedule a meeting.
 
 The prospect was offered these time slots:
@@ -33,8 +33,15 @@ ${slots.map((s, i) => `${i}: ${s.startFormatted}`).join("\n")}
 
 Their reply: "${replyText}"
 
-Determine which slot index they chose (0 to ${slots.length - 1}).
-If it is genuinely unclear or they requested different times entirely, set unclear to true and slotIndex to null.
+Your job is to determine which slot they chose. Use your judgment:
+- If they mention a specific slot, day, or time — pick the matching index
+- If they express general availability, flexibility, or defer the choice to you 
+  (in any phrasing) — pick index 0 (the earliest slot)
+- Only set unclear: true if they are explicitly requesting times outside the 
+  offered slots, or their reply is completely unrelated to scheduling
+
+Do NOT send back for clarification just because the reply is casual or indirect.
+Use common sense to infer intent.
 
 Respond ONLY with valid JSON, no markdown, no backticks:
 {
