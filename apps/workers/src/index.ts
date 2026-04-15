@@ -11,6 +11,8 @@ import { bookerConfirmWorker } from "./jobs/bookerConfirm.job";
 import { feederWorker } from "./jobs/feeder.job";
 // import { outreachWorker } from "./jobs/outreach.job";
 import { processFollowUp } from "./jobs/followup.job";
+import { creditAlertWorker } from "./jobs/creditAlert.job";
+import { creditResetWorker, setupCreditResetSchedule } from "./jobs/creditReset.job";
 
 import {
   onProspectorCompleted,
@@ -30,6 +32,22 @@ connectDB().then(() => {
   console.log("  ✅ Qualifier Worker");
   console.log("  ✅ Booker Worker");
   console.log("  ✅ Booker Confirm Worker");
+  console.log("  ✅ Credit Alert Worker");
+  console.log("  ✅ Credit Reset Worker");
+
+  // Setup repeatable schedules
+  setupCreditResetSchedule().catch(err => {
+    console.error("Failed to setup credit reset schedule:", err);
+  });
 });
 
-export { prospectorWorker, qualifierWorker, bookerWorker, bookerConfirmWorker, processFollowUp, feederWorker };
+export { 
+  prospectorWorker, 
+  qualifierWorker, 
+  bookerWorker, 
+  bookerConfirmWorker, 
+  processFollowUp, 
+  feederWorker,
+  creditAlertWorker,
+  creditResetWorker
+};

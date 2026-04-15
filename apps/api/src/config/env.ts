@@ -41,6 +41,17 @@ const EnvSchema = z.object({
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60_000),
   RATE_LIMIT_MAX: z.coerce.number().default(100),
   AUTH_RATE_LIMIT_MAX: z.coerce.number().default(10),
+
+  // ── Frontend/Client ──────────────────────────────────────────────────────
+  CLIENT_URL: z.string().url().default('http://localhost:3000'),
+
+  // ── Razorpay ─────────────────────────────────────────────────────────────
+  RAZORPAY_API_TEST_KEY: z.string().min(1),
+  RAZORPAY_KEY_TEST_SECRET: z.string().min(1),
+  RAZORPAY_WEBHOOK_SECRET: z.string().min(1),
+  RAZORPAY_PLAN_STARTER_ID: z.string().min(1),
+  RAZORPAY_PLAN_GROWTH_ID: z.string().min(1),
+  RAZORPAY_PLAN_SCALE_ID: z.string().min(1),
 });
 
 const _parsed = EnvSchema.safeParse(process.env);

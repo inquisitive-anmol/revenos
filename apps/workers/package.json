@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@revenos/agents": "*",
+    "@revenos/billing": "*",
+    "@revenos/communication": "*",
     "@revenos/db": "*",
     "@revenos/queue": "*",
     "bullmq": "^5.73.0",

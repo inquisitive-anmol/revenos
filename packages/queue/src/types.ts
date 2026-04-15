@@ -120,3 +120,17 @@ export interface BookerConfirmJobResult {
   confirmedSlot: { start: string; end: string };
   calendarLink?: string;
 }
+
+// ── Credits ───────────────────────────────────────────────────────────────────
+
+export interface CreditResetJobData {
+  /** The timestamp when this scan was initiated. */
+  scanTimestamp: number;
+}
+
+export interface CreditAlertJobData {
+  workspaceId: string;
+  currentBalance: number;
+  monthlyAllocation: number;
+  thresholdPercent: number;
+}

@@ -24,6 +24,8 @@ export {
   outreachQueue,
   followUpQueue,
   feederQueue,
+  creditResetQueue,
+  creditAlertQueue,
   allQueues,
   closeAllQueues,
   type QueueName,
@@ -39,4 +41,6 @@ export type {
   BookerJobData,
   BookerConfirmJobData,
   BookerConfirmJobResult,
+  CreditResetJobData,
+  CreditAlertJobData,
 } from "./types.js";

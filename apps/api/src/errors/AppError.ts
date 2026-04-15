@@ -73,6 +73,27 @@ export class TooManyRequestsError extends AppError {
   }
 }
 
+export class PaymentRequiredError extends AppError {
+  public readonly currentBalance: number;
+  public readonly requiredCredits: number;
+
+  constructor(
+    currentBalance: number,
+    requiredCredits: number,
+    action: string,
+  ) {
+    super(
+      `Insufficient credits for action '${action}'. Required: ${requiredCredits}, available: ${currentBalance}.`,
+      402,
+      'INSUFFICIENT_CREDITS',
+      true,
+      { currentBalance, requiredCredits, action },
+    );
+    this.currentBalance = currentBalance;
+    this.requiredCredits = requiredCredits;
+  }
+}
+
 export class InternalError extends AppError {
   constructor(message = 'Internal server error', details?: unknown) {
     super(message, 500, 'INTERNAL_ERROR', false, details);

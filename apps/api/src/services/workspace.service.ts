@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { Workspace, WorkspaceMember, User, IWorkspace } from '@revenos/db';
+import { Workspace, WorkspaceMember, User, IWorkspace, Billing, CreditWallet } from '@revenos/db';
 import { NotFoundError, ForbiddenError } from '@/errors/AppError';
 import logger from '@/config/logger';
 
@@ -38,12 +38,34 @@ export const provisionWorkspaceForUser = async (
 
   // Create owner membership
   await WorkspaceMember.create({
-    workspaceId: workspace._id,
+    workspaceId: workspace._id.toString(),
     clerkUserId,
     role: 'owner',
   });
 
-  logger.info({ clerkUserId, workspaceId: workspace._id }, 'Workspace provisioned');
+  // ── Provision Billing (Freemium) ───────────────────────────────────────────
+  // Create a default Credit Wallet with 100 free credits
+  await CreditWallet.create({
+    workspaceId: workspace._id.toString(),
+    balance: 100,
+    lifetimeEarned: 100,
+    lifetimeSpent: 0,
+  });
+
+  // Create a default Billing record (Free plan)
+  const nextMonth = new Date();
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+  await Billing.create({
+    workspaceId: workspace._id.toString(),
+    plan: 'free',
+    status: 'active',
+    monthlyCreditsIncluded: 100,
+    currentPeriodEnd: nextMonth,
+    nextResetAt: nextMonth,
+  });
+
+  logger.info({ clerkUserId, workspaceId: workspace._id.toString() }, 'Workspace provisioned with Freemium billing');
   return workspace;
 };
 

@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { Webhook } from 'svix';
 import { BadRequestError } from '@/errors/AppError';
 import { handleEmailReply } from '../services/webhook.service';
+import { razorpayWebhookHandler } from '../controllers/billing.controller';
 import logger from '@/config/logger';
 
 const router = Router();
@@ -61,6 +62,12 @@ router.post('/clerk', async (req: Request, res: Response) => {
 
   return res.status(200).json({ success: true, received: true });
 });
+
+/**
+ * POST /api/v1/webhooks/razorpay
+ * Receives Razorpay events (subscriptions, payments, etc.)
+ */
+router.post('/razorpay', razorpayWebhookHandler);
 
 /**
  * POST /api/v1/webhooks/:provider

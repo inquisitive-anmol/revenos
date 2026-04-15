@@ -93,6 +93,16 @@ export const feederQueue = new Queue("feeder", {
   defaultJobOptions: STANDARD_JOB_OPTIONS,
 });
 
+export const creditResetQueue = new Queue("credit-reset", {
+  connection,
+  defaultJobOptions: STANDARD_JOB_OPTIONS,
+});
+
+export const creditAlertQueue = new Queue("credit-alert", {
+  connection,
+  defaultJobOptions: STANDARD_JOB_OPTIONS,
+});
+
 // ── Convenience: all queues as an array ──────────────────────────────────────
 
 export const allQueues = [
@@ -103,6 +113,8 @@ export const allQueues = [
   outreachQueue,
   followUpQueue,
   feederQueue,
+  creditResetQueue,
+  creditAlertQueue,
 ] as const;
 
 export type QueueName =
@@ -112,7 +124,9 @@ export type QueueName =
   | "booker-confirm"
   | "outreach"
   | "followup"
-  | "feeder";
+  | "feeder"
+  | "credit-reset"
+  | "credit-alert";
 
 // ── Graceful drain ───────────────────────────────────────────────────────────
 

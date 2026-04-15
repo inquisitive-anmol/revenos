@@ -20,7 +20,7 @@ export const tenantGuard = asyncHandler(async (
 
   const workspaceIdFromHeader = req.headers['x-tenant-id'] as string | undefined;
   let workspaceId: string | undefined;
-  
+
   const cacheKey = `workspace:member:${clerkUserId}:${workspaceIdFromHeader || 'default'}`;
   const cachedWorkspaceId = await redis.get(cacheKey);
 
@@ -49,7 +49,7 @@ export const tenantGuard = asyncHandler(async (
     if (!workspaceId) {
       throw new ForbiddenError('No workspace found. Please refresh or contact support.');
     }
-    
+
     // Cache for 5 minutes
     await redis.setex(cacheKey, 300, workspaceId);
   }
