@@ -12,6 +12,7 @@ export interface BookerConfirmJobData {
     campaignId: string;
     leadId: string;
     threadId: string;           // MongoDB _id of EmailThread
+    threadObjectId: string;
     replyContent: string;
     proposedSlots: StoredSlot[];
     bookerMeta: {
@@ -37,6 +38,7 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             campaignId,
             leadId,
             threadId,
+            threadObjectId,
             replyContent,
             proposedSlots,
             bookerMeta,
@@ -128,7 +130,7 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
         // 6. Update EmailThread — mark booked + save meetingDetails
 
         await (EmailThread as any).collection.updateOne(
-            { _id: new Types.ObjectId(threadId) },
+            { _id: new Types.ObjectId(threadObjectId) },
             {
                 $set: {
                     status: "meeting_booked",
