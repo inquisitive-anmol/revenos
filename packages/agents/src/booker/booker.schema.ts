@@ -84,6 +84,7 @@ export interface BookerConfirmInput {
 export interface BookerConfirmOutput {
   meetingBooked: boolean;
   unclear: boolean;
+  newThreadId?: string;
   calendarEventId?: string;
   scheduledAt?: Date;
   confirmedSlot?: StoredSlot;

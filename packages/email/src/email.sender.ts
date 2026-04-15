@@ -8,6 +8,7 @@ export interface SendEmailOptions {
   html: string;
   replyTo?: string; // kept for interface compat but ignored internally
   tags?: { name: string; value: string }[];
+  threadId?: string;
 }
 
 export interface SendEmailResult {
@@ -23,7 +24,7 @@ export const sendEmail = async (
 
   // Always generate a unique threadId and embed it in reply-to
   // Ignore options.replyTo — we own the reply-to for thread tracking
-  const threadId = crypto.randomUUID();
+  const threadId = options.threadId || crypto.randomUUID();
   const inboxDomain = process.env.REPLY_TO_EMAIL?.split("@")[1] || "contact.leadxai.in";
   const trackingReplyTo = `contact+${threadId}@${inboxDomain}`;
 

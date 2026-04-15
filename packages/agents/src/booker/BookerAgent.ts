@@ -142,7 +142,7 @@ export class BookerAgent extends Agent {
         to: input.lead.email,
         from: input.emailConfig.fromEmail,
         subject: emailContent.subject,
-        html: emailContent.body,
+        html: emailContent.body
       });
 
       await this.log("booker.slots_sent", {
@@ -191,8 +191,9 @@ export class BookerAgent extends Agent {
           subject: "Re: Quick meeting",
           html: BOOKER_PROMPTS.UNCLEAR_SLOT_EMAIL(
             input.lead,
-            input.proposedSlots  // StoredSlot[] — prompts use startFormatted
+            input.proposedSlots // StoredSlot[] — prompts use startFormatted
           ),
+          threadId: input.threadId,
         });
 
         await this.log("booker.slot_unclear", { leadId: input.leadId });
@@ -247,8 +248,9 @@ export class BookerAgent extends Agent {
         subject: "Meeting Confirmed ✓",
         html: BOOKER_PROMPTS.CONFIRMATION_EMAIL(
           input.lead,
-          chosenSlot  // StoredSlot — prompt uses startFormatted ✅
+          chosenSlot // StoredSlot — prompt uses startFormatted ✅
         ),
+        threadId: input.threadId,
       });
 
       return {
