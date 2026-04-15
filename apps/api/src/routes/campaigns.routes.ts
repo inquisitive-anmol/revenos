@@ -9,6 +9,11 @@ import {
   updateCampaignHandler,
   prospectCampaignHandler,
   qualifyCampaignHandler,
+  startCampaignHandler,
+  pauseCampaignHandler,
+  resumeCampaignHandler,
+  stopCampaignHandler,
+  campaignStatusHandler,
 } from '@/controllers/campaigns.controller';
 
 const router = Router();
@@ -75,6 +80,38 @@ router.post(
     params: z.object({ id: z.string(), leadId: z.string() }),
   }),
   asyncHandler(qualifyCampaignHandler)
+);
+
+// ── Orchestrator Actions ──────────────────────────────────────────────────────
+
+router.get(
+  '/:id/status',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(campaignStatusHandler)
+);
+
+router.post(
+  '/:id/start',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(startCampaignHandler)
+);
+
+router.post(
+  '/:id/pause',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(pauseCampaignHandler)
+);
+
+router.post(
+  '/:id/resume',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(resumeCampaignHandler)
+);
+
+router.post(
+  '/:id/stop',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(stopCampaignHandler)
 );
 
 export default router;

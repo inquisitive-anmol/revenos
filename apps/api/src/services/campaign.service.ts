@@ -1,4 +1,5 @@
-import { Campaign, ICampaign } from "@revenos/db";
+import { Campaign, ICampaign, Lead } from "@revenos/db";
+import { Types } from "mongoose";
 
 export const createCampaign = async (
   workspaceId: string,
@@ -53,4 +54,48 @@ export const updateCampaignStatus = async (
     { status },
     { new: true }
   );
+};
+
+export const getCampaignStatusBreakdown = async (
+  workspaceId: string,
+  campaignId: string
+): Promise<{ campaign: ICampaign; leadBreakdown: Record<string, number> } | null> => {
+  const campaign = await Campaign.findOne({ _id: campaignId, workspaceId });
+  if (!campaign) return null;
+
+  const result = await Lead.aggregate([
+    {
+      $match: {
+        campaignId: new Types.ObjectId(campaignId),
+        workspaceId,
+      },
+    },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const leadBreakdown: Record<string, number> = {
+    pending: 0,
+    qualifying: 0,
+    qualified: 0,
+    disqualified: 0,
+    outreach_sent: 0,
+    reply_received: 0,
+    interested: 0,
+    not_interested: 0,
+    follow_up_scheduled: 0,
+    follow_up_sent: 0,
+    max_followups_reached: 0,
+    meeting_booked: 0,
+  };
+
+  result.forEach((group) => {
+    leadBreakdown[group._id] = group.count;
+  });
+
+  return { campaign: campaign.toObject(), leadBreakdown };
 };

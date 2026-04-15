@@ -10,6 +10,10 @@ import { triggerQualifier } from '@/services/qualify.service';
 import { created, ok, parsePagination } from '@/utils/response';
 import { NotFoundError } from '@/errors/AppError';
 import logger from '@/config/logger';
+import { Orchestrator } from '@revenos/agents';
+import { prospectorQueue, feederQueue } from '@revenos/queue';
+import { getCampaignStatusBreakdown } from '@/services/campaign.service';
+import { Lead } from '@revenos/db';
 
 export const listCampaignsHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
@@ -109,4 +113,68 @@ export const qualifyCampaignHandler = async (req: Request, res: Response) => {
       jobId: result.jobId,
     },
   });
+};
+
+// ── Orchestrator Endpoints ─────────────────────────────────────────────────────
+
+export const startCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  const orchestrator = new Orchestrator(prospectorQueue, feederQueue, workspaceId);
+  await orchestrator.startCampaign(id);
+
+  return ok(res, { message: 'Campaign started' });
+};
+
+export const pauseCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  const orchestrator = new Orchestrator(prospectorQueue, feederQueue, workspaceId);
+  await orchestrator.pauseCampaign(id);
+
+  return ok(res, { message: 'Campaign paused' });
+};
+
+export const resumeCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  const orchestrator = new Orchestrator(prospectorQueue, feederQueue, workspaceId);
+  await orchestrator.resumeCampaign(id);
+
+  return ok(res, { message: 'Campaign resumed' });
+};
+
+export const stopCampaignHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  // Set all non-terminal leads back to pending
+  await Lead.updateMany(
+    {
+      workspaceId,
+      campaignId: id,
+      status: { $nin: ['disqualified', 'not_interested', 'max_followups_reached', 'meeting_booked'] }
+    },
+    { $set: { status: 'pending' } }
+  );
+
+  const orchestrator = new Orchestrator(prospectorQueue, feederQueue, workspaceId);
+  await orchestrator.stopCampaign(id);
+
+  return ok(res, { message: 'Campaign stopped and leads reset to pending' });
+};
+
+export const campaignStatusHandler = async (req: Request, res: Response) => {
+  const workspaceId = req.tenant!.id;
+  const { id } = req.params;
+
+  const breakdown = await getCampaignStatusBreakdown(workspaceId, id);
+  if (!breakdown) {
+    throw new NotFoundError('Campaign');
+  }
+
+  return ok(res, breakdown);
 };

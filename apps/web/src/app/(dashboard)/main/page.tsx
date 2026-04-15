@@ -21,11 +21,34 @@ export default function DashboardPage() {
   const { meetings } = useMeetingStore();
   const { activities } = useActivityStore();
 
-  // Fetch all data on mount
+  // Fetch all data on mount and poll
   useEffect(() => {
-    fetchCampaigns();
-    fetchLeads();
-    fetchMeetings();
+    let didCancel = false;
+
+    const load = async () => {
+      try {
+        await Promise.all([
+          fetchCampaigns(),
+          fetchLeads(),
+          fetchMeetings(),
+        ]);
+      } catch (err) {
+        // ignore background poll errors
+      }
+    };
+
+    load();
+
+    const interval = setInterval(() => {
+      if (!didCancel) {
+        load();
+      }
+    }, 5000);
+
+    return () => {
+      didCancel = true;
+      clearInterval(interval);
+    };
   }, []);
 
   // Derived stats
@@ -97,11 +120,11 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-3xl font-extrabold text-on-surface mb-1">
-                {isLoading ? "—" : emailsSent.toLocaleString()}
+                {isLoading && campaigns.length === 0 ? "—" : emailsSent.toLocaleString()}
               </h3>
               <div className="flex items-center text-xs font-semibold text-emerald-600 gap-1">
                 <span className="material-symbols-outlined text-[14px]">trending_up</span>
-                Live
+                Live Sync
               </div>
             </div>
           </div>
@@ -116,11 +139,11 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-3xl font-extrabold text-on-surface mb-1">
-                {isLoading ? "—" : `${replyRate}%`}
+                {isLoading && campaigns.length === 0 ? "—" : `${replyRate}%`}
               </h3>
               <div className="flex items-center text-xs font-semibold text-emerald-600 gap-1">
                 <span className="material-symbols-outlined text-[14px]">trending_up</span>
-                Live
+                Live Sync
               </div>
             </div>
           </div>
@@ -135,11 +158,11 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-3xl font-extrabold text-on-surface mb-1">
-                {isLoading ? "—" : meetingsBooked}
+                {isLoading && meetings.length === 0 ? "—" : meetingsBooked}
               </h3>
               <div className="flex items-center text-xs font-semibold text-emerald-600 gap-1">
                 <span className="material-symbols-outlined text-[14px]">trending_up</span>
-                Live
+                Live Sync
               </div>
             </div>
           </div>
@@ -154,11 +177,11 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-3xl font-extrabold text-on-surface mb-1">
-                {isLoading ? "—" : totalLeads}
+                {isLoading && meetings.length === 0 ? "—" : totalLeads}
               </h3>
               <div className="flex items-center text-xs font-semibold text-emerald-600 gap-1">
                 <span className="material-symbols-outlined text-[14px]">trending_up</span>
-                Live
+                Live Sync
               </div>
             </div>
           </div>
