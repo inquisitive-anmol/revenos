@@ -19,6 +19,7 @@
   "dependencies": {
     "zod": "^4.3.6",
     "@revenos/ai-sdk": "*",
+    "@revenos/db": "*",
     "@revenos/email": "*"
   }
 }
