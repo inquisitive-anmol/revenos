@@ -5,6 +5,7 @@ import { BillingPlan } from "@revenos/db";
  * These are the credits automatically added on each billing cycle reset.
  */
 export const PLAN_MONTHLY_CREDITS: Record<BillingPlan, number> = {
+  free: 100,
   starter: 500,
   growth: 2000,
   scale: 10000,
