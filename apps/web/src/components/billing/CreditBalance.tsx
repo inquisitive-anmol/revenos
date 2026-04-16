@@ -4,17 +4,19 @@ interface CreditBalanceProps {
   balance: number;
   plan: string;
   nextResetAt: string;
-  allocation: number;
+  totalInCycle: number;
 }
 
-export const CreditBalance: React.FC<CreditBalanceProps> = ({ balance, plan, nextResetAt, allocation }) => {
+export const CreditBalance: React.FC<CreditBalanceProps> = ({ balance, plan, nextResetAt, totalInCycle }) => {
   const resetDate = new Date(nextResetAt).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric'
   });
 
-  const percent = Math.round((balance / allocation) * 100);
+  const percent = totalInCycle > 0 
+    ? Math.round((balance / totalInCycle) * 100) 
+    : 0;
 
   return (
     <div className="bg-surface rounded-2xl p-8 border border-outline shadow-sm relative overflow-hidden h-full flex flex-col justify-between">
@@ -22,7 +24,7 @@ export const CreditBalance: React.FC<CreditBalanceProps> = ({ balance, plan, nex
         <div className="flex items-center justify-between mb-2">
           <span className="text-[11px] font-bold text-secondary uppercase tracking-[0.2em]">Available Credits</span>
           <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest ${
-            balance < allocation * 0.2 ? 'bg-error-container text-error' : 'bg-primary-container text-primary'
+            percent < 20 ? 'bg-error-container text-error' : 'bg-primary-container text-primary'
           }`}>
             {plan} Plan
           </span>
@@ -32,14 +34,14 @@ export const CreditBalance: React.FC<CreditBalanceProps> = ({ balance, plan, nex
           <h2 className="text-6xl font-black tracking-tighter text-on-surface">
             {(balance || 0).toLocaleString()}
           </h2>
-          <span className="text-secondary font-bold text-lg">/ {(allocation || 0).toLocaleString()}</span>
+          <span className="text-secondary font-bold text-lg">/ {(totalInCycle || 0).toLocaleString()}</span>
         </div>
       </div>
 
       <div className="mt-8 relative z-10">
         <div className="flex justify-between text-xs mb-2">
-          <span className="text-secondary font-medium">Monthly Allocation</span>
-          <span className="text-on-surface font-bold">{percent}% Remaining</span>
+          <span className="text-secondary font-medium text-blue-500">Current Balance</span>
+          <span className="text-on-surface font-bold">{percent}% Left</span>
         </div>
         <div className="w-full bg-surface-container-high h-3 rounded-full overflow-hidden border border-outline/30">
           <div 

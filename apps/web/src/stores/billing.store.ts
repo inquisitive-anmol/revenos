@@ -6,6 +6,7 @@ interface BillingState {
   status: string;
   nextResetAt: string | null;
   monthlyCreditsIncluded: number;
+  totalInCycle: number;
   isLoading: boolean;
   error: string | null;
 
@@ -15,6 +16,7 @@ interface BillingState {
     status: string;
     nextResetAt: string;
     monthlyCreditsIncluded: number;
+    totalInCycle: number;
   }) => void;
   setBalance: (balance: number) => void;
   setLoading: (loading: boolean) => void;
@@ -28,6 +30,7 @@ export const useBillingStore = create<BillingState>((set) => ({
   status: 'active',
   nextResetAt: null,
   monthlyCreditsIncluded: 0,
+  totalInCycle: 0,
   isLoading: false,
   error: null,
 
@@ -37,6 +40,7 @@ export const useBillingStore = create<BillingState>((set) => ({
     status: data.status,
     nextResetAt: data.nextResetAt,
     monthlyCreditsIncluded: data.monthlyCreditsIncluded,
+    totalInCycle: data.totalInCycle,
     isLoading: false,
     error: null
   }),
@@ -53,6 +57,7 @@ export const useBillingStore = create<BillingState>((set) => ({
     status: 'active',
     nextResetAt: null,
     monthlyCreditsIncluded: 0,
+    totalInCycle: 0,
     isLoading: false,
     error: null
   }),

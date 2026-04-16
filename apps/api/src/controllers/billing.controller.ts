@@ -88,17 +88,41 @@ export const createTopUpHandler = async (req: Request, res: Response) => {
 export const getBillingBalanceHandler = async (req: Request, res: Response) => {
   const workspaceId = req.tenant!.id;
   
-  const [wallet, billing] = await Promise.all([
+  // Start of current month for cycle calculation
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const [wallet, billing, usage] = await Promise.all([
     getBalance(workspaceId),
-    Billing.findOne({ workspaceId })
+    Billing.findOne({ workspaceId }),
+    CreditTransaction.aggregate([
+      {
+        $match: {
+          workspaceId,
+          type: 'debit',
+          createdAt: { $gte: startOfMonth }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalSpent: { $sum: '$amount' }
+        }
+      }
+    ])
   ]);
 
   if (!wallet || !billing) {
     throw new NotFoundError('Billing information not found. This workspace might not be provisioned correctly.');
   }
 
+  const spentInCycle = usage.length > 0 ? usage[0].totalSpent : 0;
+  const totalInCycle = wallet.balance + spentInCycle;
+
   return ok(res, {
     balance: wallet.balance,
+    totalInCycle: totalInCycle || wallet.balance,
     lifetimeEarned: wallet.lifetimeEarned,
     lifetimeSpent: wallet.lifetimeSpent,
     plan: billing.plan,

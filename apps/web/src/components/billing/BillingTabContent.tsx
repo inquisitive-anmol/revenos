@@ -31,6 +31,7 @@ export const BillingTabContent: React.FC = () => {
         status: balanceData.status,
         nextResetAt: balanceData.nextResetAt,
         monthlyCreditsIncluded: balanceData.monthlyCreditsIncluded,
+        totalInCycle: balanceData.totalInCycle,
       });
     }
   }, [balanceData, setBillingData]);
@@ -124,7 +125,7 @@ export const BillingTabContent: React.FC = () => {
             balance={balanceData?.balance ?? 0}
             plan={balanceData?.plan ?? 'Free'}
             nextResetAt={balanceData?.nextResetAt ?? new Date().toISOString()}
-            allocation={balanceData?.monthlyCreditsIncluded ?? 0}
+            totalInCycle={balanceData?.totalInCycle ?? 0}
           />
           <UsageBreakdown stats={usageStats || []} />
         </div>
