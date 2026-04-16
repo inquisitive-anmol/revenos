@@ -3,6 +3,7 @@ import { redis } from "../config/redis";
 import { BookerAgent } from "@revenos/agents";
 import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
+import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 
 export interface BookerJobData {
   workspaceId: string;
@@ -76,6 +77,36 @@ export const bookerWorker = new Worker<BookerJobData>(
         timezone: "Asia/Kolkata",
       },
     });
+
+    try {
+      await deductCredits(
+        workspaceId,
+        CREDIT_COSTS.AI_AGENT_RUN,
+        "AI_AGENT_RUN",
+        leadId
+      );
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        console.warn(`[BookerJob] Insufficient credits for workspace ${workspaceId}`);
+      } else {
+        throw err;
+      }
+    }
+
+    try {
+      await deductCredits(
+        workspaceId,
+        CREDIT_COSTS.EMAIL_SENT,
+        "EMAIL_SENT",
+        result.threadId // Use threadId since this initiates the email thread
+      );
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        console.warn(`[BookerJob] Insufficient credits for workspace ${workspaceId}`);
+      } else {
+        throw err;
+      }
+    }
 
     // 5. Save proposedSlots + bookerMeta on the EmailThread so
     //    the webhook handler can run Phase 2 when the lead replies

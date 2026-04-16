@@ -17,7 +17,8 @@ export interface LeadInput {
 export const triggerProspector = async (
   workspaceId: string,
   campaignId: string,
-  leads: LeadInput[]
+  leads: LeadInput[],
+  sourceMode?: 'csv' | 'icp'
 ): Promise<{ jobId: string; leadsQueued: number }> => {
   // 1. Verify campaign exists and belongs to workspace
   const campaign = await Campaign.findOne({
@@ -63,6 +64,7 @@ export const triggerProspector = async (
       campaignId,
       agentId: agent._id.toString(),
       icpDescription: campaign.settings.icpDescription,
+      sourceMode,
       leads,
     } as ProspectorJobData,
     {

@@ -3,6 +3,7 @@ import { redis } from "../config/redis";
 import { ProspectorAgent } from "@revenos/agents";
 import { Lead, Campaign, AgentLog } from "@revenos/db";
 import { ProspectorInput } from "@revenos/agents";
+import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 
 export interface ProspectorJobData {
   workspaceId: string;
@@ -45,6 +46,22 @@ export const prospectorWorker = new Worker<ProspectorJobData>(
       workspaceId,
       leads,
     });
+
+    try {
+      await deductCredits(
+        workspaceId,
+        CREDIT_COSTS.AI_AGENT_RUN,
+        "AI_AGENT_RUN",
+        campaignId
+      );
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        console.warn(`[ProspectorJob] Insufficient credits for workspace ${workspaceId}`);
+      } else {
+        throw err;
+      }
+    }
+
 
     // 3. Save enriched leads to MongoDB
     const savedLeads = await Promise.all(

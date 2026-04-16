@@ -2,6 +2,7 @@ import { Worker, Job, Queue } from "bullmq";
 import { redis } from "../config/redis";
 import { QualifierAgent } from "@revenos/agents";
 import { Lead, Campaign, EmailThread, AgentLog, Agent } from "@revenos/db";
+import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 
 export interface QualifierJobData {
     workspaceId: string;
@@ -54,6 +55,21 @@ export const qualifierWorker = new Worker<QualifierJobData>(
                 originalEmail,
                 replyContent
             );
+
+            try {
+                await deductCredits(
+                    workspaceId,
+                    CREDIT_COSTS.AI_AGENT_RUN,
+                    "AI_AGENT_RUN",
+                    leadId
+                );
+            } catch (err) {
+                if (err instanceof InsufficientCreditsError) {
+                    console.warn(`[QualifierJob] Insufficient credits for workspace ${workspaceId}`);
+                } else {
+                    throw err;
+                }
+            }
 
             console.log(`[ReplyClassifier] Intent: ${classification.intent}`);
             console.log(`[ReplyClassifier] Score: ${classification.score}`);
@@ -166,6 +182,21 @@ export const qualifierWorker = new Worker<QualifierJobData>(
             playbook,
         });
 
+        try {
+            await deductCredits(
+                workspaceId,
+                CREDIT_COSTS.AI_AGENT_RUN,
+                "AI_AGENT_RUN",
+                leadId
+            );
+        } catch (err) {
+            if (err instanceof InsufficientCreditsError) {
+                console.warn(`[QualifierJob] Insufficient credits for workspace ${workspaceId}`);
+            } else {
+                throw err;
+            }
+        }
+
         const existingThread = await EmailThread.findOne({ externalThreadId: result.messageId, workspaceId });
         if (!existingThread) {
             await EmailThread.create({
@@ -204,6 +235,21 @@ export const qualifierWorker = new Worker<QualifierJobData>(
             data: { leadId, messageId: result.messageId, subject: result.subject },
             timestamp: new Date(),
         });
+
+        try {
+            await deductCredits(
+                workspaceId,
+                CREDIT_COSTS.EMAIL_SENT,
+                "EMAIL_SENT",
+                existingThread ? existingThread._id.toString() : leadId
+            );
+        } catch (err) {
+            if (err instanceof InsufficientCreditsError) {
+                console.warn(`[QualifierJob] Insufficient credits for workspace ${workspaceId}`);
+            } else {
+                throw err;
+            }
+        }
 
         console.log(`[QualifierJob] Completed. Email sent to ${lead.email}`);
         return { emailSent: true, messageId: result.messageId, leadId };

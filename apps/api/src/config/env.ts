@@ -52,6 +52,11 @@ const EnvSchema = z.object({
   RAZORPAY_PLAN_STARTER_ID: z.string().min(1),
   RAZORPAY_PLAN_GROWTH_ID: z.string().min(1),
   RAZORPAY_PLAN_SCALE_ID: z.string().min(1),
+
+  // ── Integrations ─────────────────────────────────────────────────────────
+  SERP_API_KEY: z.string().min(1), // Get from serpapi.com
+  HUNTER_API_KEY: z.string().min(1), // Get from hunter.io
+  APOLLO_API_KEY: z.string().optional(),
 });
 
 const _parsed = EnvSchema.safeParse(process.env);

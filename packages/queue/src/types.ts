@@ -13,6 +13,7 @@ export interface ProspectorJobData {
   campaignId: string;
   agentId: string;
   icpDescription: string;
+  sourceMode?: 'csv' | 'icp';
   leads: Array<{
     email: string;
     firstName: string;

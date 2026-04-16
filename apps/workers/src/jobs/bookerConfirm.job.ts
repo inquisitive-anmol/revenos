@@ -5,6 +5,7 @@ import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/
 import { getNylasClient } from "../config/nylas";
 import { StoredSlot } from "@revenos/agents/src/booker/booker.schema";
 import { Types } from "mongoose"; // add this at the top of the file with other imports
+import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 
 
 export interface BookerConfirmJobData {
@@ -102,6 +103,21 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             },
         });
 
+        try {
+            await deductCredits(
+                workspaceId,
+                CREDIT_COSTS.AI_AGENT_RUN,
+                "AI_AGENT_RUN",
+                leadId
+            );
+        } catch (err) {
+            if (err instanceof InsufficientCreditsError) {
+                console.warn(`[BookerConfirmJob] Insufficient credits for workspace ${workspaceId}`);
+            } else {
+                throw err;
+            }
+        }
+
         // 4. If unclear — agent already sent clarification email, just log and exit
         if (result.unclear || !result.meetingBooked) {
             console.log(`[BookerConfirmJob] Slot unclear for lead ${lead.email}, clarification sent`);
@@ -154,6 +170,22 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             { _id: campaignId, workspaceId },
             { $inc: { "metrics.meetingsBooked": 1 } }
         );
+
+        try {
+            await deductCredits(
+                workspaceId,
+                CREDIT_COSTS.AI_AGENT_RUN, // Cost is same as AI_AGENT_RUN per instructions 
+                "AI_AGENT_RUN", // closest enum reason
+                meeting._id.toString(),
+                { action: 'meeting_booked' }
+            );
+        } catch (err) {
+            if (err instanceof InsufficientCreditsError) {
+                console.warn(`[BookerConfirmJob] Insufficient credits for workspace ${workspaceId}`);
+            } else {
+                throw err;
+            }
+        }
 
         // 9. Log completion
         await AgentLog.create({

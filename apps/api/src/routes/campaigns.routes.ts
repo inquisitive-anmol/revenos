@@ -14,7 +14,10 @@ import {
   resumeCampaignHandler,
   stopCampaignHandler,
   campaignStatusHandler,
+  uploadCsvHandler,
+  icpSourcingHandler
 } from '@/controllers/campaigns.controller';
+import { uploadCsv } from '@/middleware/upload.middleware';
 
 const router = Router();
 
@@ -72,6 +75,19 @@ router.post(
     body: ProspectCampaignSchema,
   }),
   asyncHandler(prospectCampaignHandler)
+);
+
+router.post(
+  '/:id/upload',
+  validate({ params: z.object({ id: z.string() }) }),
+  uploadCsv,
+  asyncHandler(uploadCsvHandler)
+);
+
+router.post(
+  '/:id/prospect/icp',
+  validate({ params: z.object({ id: z.string() }) }),
+  asyncHandler(icpSourcingHandler)
 );
 
 router.post(
