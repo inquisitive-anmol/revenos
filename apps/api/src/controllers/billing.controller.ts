@@ -252,17 +252,30 @@ export const razorpayWebhookHandler = async (req: Request, res: Response) => {
       }
 
       case 'order.paid': {
-        const { notes } = payload.payload.order.entity;
-        const workspaceId = notes.workspaceId;
-        const credits = parseInt(notes.credits, 10);
-        const packageId = notes.packageId;
+        const { id: orderId, notes } = payload.payload.order.entity;
+        const workspaceId = notes?.workspaceId;
+        const creditsString = notes?.credits;
+        const packageId = notes?.packageId;
+
+        logger.info({ orderId, notes, workspaceId, creditsString }, '[Webhook] Processing order.paid');
+
+        if (!workspaceId || !creditsString) {
+          logger.warn({ orderId, notes }, '[Webhook] Missing required notes in order.paid');
+          break;
+        }
+
+        const credits = parseInt(creditsString, 10);
+        if (isNaN(credits)) {
+          logger.error({ orderId, creditsString }, '[Webhook] Invalid credits value in notes');
+          break;
+        }
 
         await addCredits(workspaceId, credits, 'MANUAL_TOPUP', packageId, {
           gateway: 'razorpay',
-          orderId: payload.payload.order.entity.id,
+          orderId,
         });
         
-        logger.info({ workspaceId, credits }, '[Webhook] One-time credits added');
+        logger.info({ workspaceId, credits, orderId }, '[Webhook] One-time credits added successfully');
         break;
       }
 
