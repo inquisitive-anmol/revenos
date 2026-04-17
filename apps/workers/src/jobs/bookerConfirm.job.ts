@@ -1,9 +1,8 @@
 import { Worker, Job } from "bullmq";
 import { redis } from "../config/redis";
-import { BookerAgent } from "@revenos/agents";
+import { BookerAgent, StoredSlot } from "@revenos/agents";
 import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
-import { StoredSlot } from "@revenos/agents/src/booker/booker.schema";
 import { Types } from "mongoose"; // add this at the top of the file with other imports
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 

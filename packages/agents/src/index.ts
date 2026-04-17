@@ -8,6 +8,8 @@ export * from "./qualifier/qualifier.schema";
 export * from "./booker/BookerAgent";
 export * from "./booker/booker.schema";
 export { Orchestrator } from "./orchestrator/Orchestrator";
+export { sourceLeadsFromICP } from "./prospector/icpSourcing.service";
+export { ICPSchema } from "./prospector/icp.schema";
 export { transitionLead, isTerminal, TERMINAL_STATUSES } from "./orchestrator/lead.statemachine";
 export { 
   onProspectorCompleted,
