@@ -5,6 +5,7 @@ import { verifyToken } from '@clerk/backend';
 import { env } from '@/config/env';
 import logger from '@/config/logger';
 import { parseCSV } from '@/utils/index';
+import Redis from 'ioredis';
 
 let io: SocketIOServer | null = null;
 
@@ -76,6 +77,25 @@ export function attachSocketIO(server: HTTPServer): SocketIOServer {
   });
 
   logger.info('Socket.IO initialized and attached to HTTP server');
+
+  // ── Redis → Socket.IO relay ──────────────────────────────────────────────
+  // Workers publish to 'agent_logs' channel; we relay to workspace rooms.
+  const subscriber = new Redis(env.REDIS_URL);
+  subscriber.subscribe('agent_logs', (err) => {
+    if (err) logger.error({ err }, 'Socket: Redis subscribe error');
+    else logger.info('Socket: Subscribed to agent_logs channel');
+  });
+  subscriber.on('message', (_channel: string, raw: string) => {
+    try {
+      const payload = JSON.parse(raw);
+      if (payload.workspaceId) {
+        io!.to(`workspace:${payload.workspaceId}`).emit('agent.log', payload);
+      }
+    } catch (e) {
+      logger.warn({ e }, 'Socket: Failed to parse agent_log message');
+    }
+  });
+
   return io;
 }
 

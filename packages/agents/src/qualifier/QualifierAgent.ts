@@ -71,6 +71,7 @@ export class QualifierAgent extends Agent {
       this.transition(QUALIFIER_STATES.EMAIL_SENT);
 
       const emailResult = await sendEmail({
+        leadId: input.leadId,
         to: input.lead.email,
         from: input.emailConfig.fromEmail,
         subject: generatedEmail.subject,
@@ -103,6 +104,76 @@ export class QualifierAgent extends Agent {
       };
     } catch (error) {
       await this.log("qualifier.error", { error: String(error) });
+      throw error;
+    }
+  }
+
+  async runFollowUp(input: QualifierInput & { followUpNumber: number }): Promise<QualifierResult> {
+    try {
+      this.transition(QUALIFIER_STATES.COMPOSING);
+      await this.log("qualifier.composing_followup", {
+        leadId: input.leadId,
+        followUpNumber: input.followUpNumber,
+      });
+
+      const emailPrompt = QUALIFIER_PROMPTS.GENERATE_FOLLOWUP(
+        input.lead,
+        input.playbook,
+        input.followUpNumber
+      );
+
+      const { text } = await generateWithRetry({
+        model: getModel(),
+        prompt: emailPrompt,
+      });
+
+      let generatedEmail: EmailGenerationOutput;
+      try {
+        const clean = text.replace(/```json|```/g, "").trim();
+        const raw = JSON.parse(clean);
+        generatedEmail = EmailGenerationOutputSchema.parse(raw);
+      } catch (parseError) {
+        this.transition(QUALIFIER_STATES.PENDING);
+        await this.log("qualifier.compose_followup_error", {
+          error: String(parseError),
+          rawText: text,
+        });
+        throw new Error(`Failed to parse follow-up integration: ${parseError}`);
+      }
+
+      this.transition(QUALIFIER_STATES.EMAIL_SENT);
+      const emailResult = await sendEmail({
+        leadId: input.leadId,
+        to: input.lead.email,
+        from: input.emailConfig.fromEmail,
+        subject: generatedEmail.subject,
+        html: generatedEmail.body,
+        replyTo: input.emailConfig.replyTo,
+        tags: [
+          { name: "leadId", value: input.leadId },
+          { name: "campaignId", value: input.campaignId },
+          { name: "workspaceId", value: input.workspaceId },
+          { name: "followUp", value: String(input.followUpNumber) },
+        ],
+      });
+
+      await this.log("qualifier.followup_sent", {
+        leadId: input.leadId,
+        messageId: emailResult.messageId,
+        subject: generatedEmail.subject,
+        followUpNumber: input.followUpNumber,
+      });
+
+      this.transition(QUALIFIER_STATES.AWAITING_REPLY);
+
+      return {
+        emailSent: true,
+        messageId: emailResult.messageId,
+        subject: generatedEmail.subject,
+        body: generatedEmail.body,
+      };
+    } catch (error) {
+      await this.log("qualifier.followup_error", { error: String(error) });
       throw error;
     }
   }

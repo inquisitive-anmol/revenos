@@ -18,3 +18,5 @@ export {
   checkCampaignCompletion 
 } from "./orchestrator/orchestrator.events";
 export * from "./orchestrator/HandoffProtocol";
+export { WorkflowExecutor } from "./orchestrator/WorkflowExecutor";
+export type { Workflow, WorkflowNode, WorkflowEdge, LeadContext, NextJob } from "./orchestrator/WorkflowExecutor";

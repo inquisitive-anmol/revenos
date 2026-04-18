@@ -92,4 +92,30 @@ router.post('/email/reply', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/v1/webhooks/email/track/open
+// Unauthenticated endpoint hit by email clients downloading the 1x1 tracking pixel
+router.get('/email/track/open', async (req: Request, res: Response) => {
+  try {
+    const { leadId, threadId } = req.query as { leadId?: string; threadId?: string };
+
+    if (leadId && threadId) {
+      await import('../services/webhook.service').then(m => m.handleEmailOpen(leadId, threadId));
+    }
+  } catch (err) {
+    logger.error({ err }, '[Webhook] Error tracking email open');
+    // Silently fail to not break the pixel rendering
+  }
+
+  // Always return a valid 1x1 transparent GIF/PNG
+  const pixelBuffer = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+  res.writeHead(200, {
+    'Content-Type': 'image/gif',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    'Content-Length': pixelBuffer.length
+  });
+  res.end(pixelBuffer);
+});
+
 export default router;

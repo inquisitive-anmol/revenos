@@ -34,6 +34,7 @@ export interface ILead extends Document {
   followUpCount: number;
   lastContactedAt?: Date;
   createdAt: Date;
+  humanControlled: boolean;
 }
 
 const LeadSchema = new Schema<ILead>(
@@ -76,6 +77,7 @@ const LeadSchema = new Schema<ILead>(
     tags: [{ type: String }],
     followUpCount: { type: Number, default: 0 },
     lastContactedAt: { type: Date },
+    humanControlled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

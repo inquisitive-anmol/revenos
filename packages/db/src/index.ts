@@ -8,6 +8,7 @@ export * from "./models/conversation.model";
 export * from "./models/agentLog.model";
 export * from "./models/meeting.model";
 export * from "./models/emailThread.model";
+export * from "./models/workflow.model";
 export * from "./models/billing.model";
 export * from "./models/creditWallet.model";
 export * from "./models/creditTransaction.model";

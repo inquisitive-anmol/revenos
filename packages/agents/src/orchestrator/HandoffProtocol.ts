@@ -1,7 +1,10 @@
 // Typed job data contracts between all agents
 // Both api (queue producers) and workers (consumers) import from here
 
+import { Workflow } from "./WorkflowExecutor";
+
 export interface ProspectorJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   agentId: string;
@@ -25,6 +28,7 @@ export interface ProspectorJobResult {
 }
 
 export interface OutreachJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   agentId: string;
@@ -41,6 +45,7 @@ export interface OutreachJobResult {
 }
 
 export interface BookerJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   leadId: string;
@@ -49,6 +54,7 @@ export interface BookerJobData {
 }
 
 export interface BookerConfirmJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   leadId: string;
@@ -64,7 +70,20 @@ export interface BookerConfirmJobResult {
 }
 
 export interface FollowUpJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   leadId: string;
 }
+
+export const DEFAULT_WORKFLOW: Workflow = {
+  nodes: [
+    { id: 'n1', type: 'prospector', position: {x:0,y:0}, config: {} },
+    { id: 'n2', type: 'qualifier', position: {x:0,y:0}, config: {} },
+    { id: 'n3', type: 'booker', position: {x:0,y:0}, config: {} }
+  ],
+  edges: [
+    { id: 'e1', source: 'n1', target: 'n2' },
+    { id: 'e2', source: 'n2', target: 'n3' }
+  ]
+};

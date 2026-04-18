@@ -180,3 +180,42 @@ export const handleEmailReply = async (payload: any): Promise<void> => {
   // ── Fallback ──────────────────────────────────────────────────────────────
   console.log(`[Webhook] Unhandled thread status: ${threadStatus} for lead ${lead.email}`);
 };
+
+export const handleEmailOpen = async (leadId: string, threadId: string): Promise<void> => {
+  const { AgentLog } = await import("@revenos/db");
+
+  const thread = await (EmailThread as any).collection.findOne({
+    externalThreadId: threadId,
+  });
+
+  if (!thread) {
+    return;
+  }
+
+  // Update openedAt timestamp
+  await (EmailThread as any).collection.updateOne(
+    { _id: thread._id },
+    { $set: { openedAt: new Date() } }
+  );
+
+  const lead = await Lead.findOne({
+    _id: leadId,
+    workspaceId: thread.workspaceId,
+  });
+
+  if (lead) {
+    // Optional: update lead status if it's currently just 'contacted'
+    if (lead.status === "contacted") {
+      await Lead.updateOne({ _id: lead._id }, { $set: { status: "opened" } });
+    }
+
+    // Emit AgentLog
+    await AgentLog.create({
+      workspaceId: thread.workspaceId,
+      campaignId: thread.campaignId,
+      event: "email.opened",
+      data: { leadId, threadId },
+      timestamp: new Date(),
+    });
+  }
+};

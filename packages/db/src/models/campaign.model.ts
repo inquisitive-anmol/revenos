@@ -28,6 +28,7 @@ export interface ICampaign extends Document {
   };
   startedAt?: Date;
   completedAt?: Date;
+  workflowId?: string;  // Optional ref to a workspace-level WorkflowTemplate
   createdAt: Date;
 }
 
@@ -61,6 +62,7 @@ const CampaignSchema = new Schema<ICampaign>(
     },
     startedAt: { type: Date },
     completedAt: { type: Date },
+    workflowId: { type: String, index: true }, // FK to Workflow._id (workspace-level)
   },
   { timestamps: true }
 );

@@ -19,7 +19,11 @@ export const Sidebar: React.FC = () => {
     { name: 'Settings', path: '/settings', icon: 'settings' },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) =>
+    path === '/agents'
+      ? location.pathname.startsWith('/agents')
+      : location.pathname === path;
+
 
   return (
     <aside className={`

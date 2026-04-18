@@ -29,6 +29,7 @@ export const useCampaigns = () => {
         problemToSolve?: string;
         goal?: string;
         status?: string;
+        workflowId?: string;
       }) => {
       setLoading(true);
       try {

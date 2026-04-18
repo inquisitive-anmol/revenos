@@ -5,7 +5,7 @@ import PipelinePage from "./app/(dashboard)/pipeline/page";
 import AgentDetailPage from "./app/(dashboard)/agents/[id]/page";
 import Home from "./app/Home";
 import DashboardPage from "./app/(dashboard)/main/page";
-import AgentBuilderPage from "./app/(dashboard)/agents/page";
+import AgentsPage from "./app/(dashboard)/agents/page";
 import PublicAuthRoute from "./components/protectRoutes/authRoutes/page";
 import ProtectedRoute from "./components/protectRoutes/protectedRoutes/page";
 import CampaignsPage from "./app/(dashboard)/campaign/campaigns/page";
@@ -19,6 +19,7 @@ import { Toaster } from 'react-hot-toast';
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import AnalyticsPage from "./app/(dashboard)/analytics/main/page";
 import SettingsPage from "./app/(settings)/settings/page";
+import WorkflowBuilderPage from "./app/(dashboard)/agents/builder/[workflowId]/page";
 
 function App() {
   return (
@@ -53,11 +54,12 @@ function App() {
           <Route path="/meetings" element={<MeetingsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/agents" element={<AgentsPage />} />
         </Route>
 
-        {/* Unique Builder Mode Routes (Excluded from general layout) */}
+        {/* Unique Builder/Fullscreen Routes (Excluded from dashboard layout) */}
         <Route path="/agents/:id" element={<AgentDetailPage />} />
-        <Route path="/agents" element={<AgentBuilderPage />} />
+        <Route path="/agents/builder/:workflowId" element={<WorkflowBuilderPage />} />
       </Route>
     </Routes>
     </>

@@ -139,6 +139,7 @@ export class BookerAgent extends Agent {
       this.transition(BOOKER_STATES.INVITE_SENT);
 
       const { messageId: threadId } = await sendEmail({
+        leadId: input.leadId,
         to: input.lead.email,
         from: input.emailConfig.fromEmail,
         subject: emailContent.subject,
@@ -186,6 +187,7 @@ export class BookerAgent extends Agent {
       // 2. If unclear, send clarification email and exit
       if (classification.unclear || classification.slotIndex === null) {
         await sendEmail({
+          leadId: input.leadId,
           to: input.lead.email,
           from: input.emailConfig.fromEmail,
           subject: "Re: Quick meeting",
@@ -243,6 +245,7 @@ export class BookerAgent extends Agent {
 
       // 5. Send confirmation email
       await sendEmail({
+        leadId: input.leadId,
         to: input.lead.email,
         from: input.emailConfig.fromEmail,
         subject: "Meeting Confirmed ✓",

@@ -15,6 +15,8 @@ import meetingsRoutes from './meetings.routes';
 import webhooksRoutes from './webhooks.routes';
 import workspaceRoutes from './workspace.routes';
 import billingRoutes from './billing.routes';
+import workflowsRoutes from './workflows.routes';
+import integrationsRoutes from './integrations.routes';
 
 const router = Router();
 
@@ -31,6 +33,8 @@ router.use('/campaigns', generalRateLimiter, requireAuthGuard, tenantGuard, camp
 router.use('/agents', generalRateLimiter, requireAuthGuard, tenantGuard, agentsRoutes);
 router.use('/analytics', generalRateLimiter, requireAuthGuard, tenantGuard, analyticsRoutes);
 router.use('/meetings', generalRateLimiter, requireAuthGuard, tenantGuard, meetingsRoutes);
+router.use('/workflows', generalRateLimiter, requireAuthGuard, tenantGuard, workflowsRoutes);
+router.use('/integrations', generalRateLimiter, requireAuthGuard, tenantGuard, integrationsRoutes);
 router.use('/billing', generalRateLimiter, billingRoutes);
 
 export default router;

@@ -4,6 +4,7 @@ import { BookerAgent } from "@revenos/agents";
 import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
+import { bookerQueue } from "@revenos/queue";
 
 export interface BookerJobData {
   workspaceId: string;
@@ -15,6 +16,15 @@ export const bookerWorker = new Worker<BookerJobData>(
   "booker",
   async (job: Job<BookerJobData>) => {
     const { workspaceId, campaignId, leadId } = job.data;
+
+    if (leadId) {
+        const leadCheck = await Lead.findOne({ _id: leadId, workspaceId }).lean();
+        if (leadCheck?.humanControlled) {
+            console.log(`[BookerWorker] Lead ${leadId} under human control. Snoozing job ${job.name} for 30m.`);
+            await bookerQueue.add(job.name, job.data, { delay: 30 * 60 * 1000, jobId: `${job.opts?.jobId ?? job.id}-retried-${Date.now()}` });
+            return;
+        }
+    }
 
     console.log(`[BookerJob] Starting job ${job.id} for lead ${leadId}`);
 

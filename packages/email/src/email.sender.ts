@@ -9,6 +9,7 @@ export interface SendEmailOptions {
   replyTo?: string; // kept for interface compat but ignored internally
   tags?: { name: string; value: string }[];
   threadId?: string;
+  leadId: string; // Required for open tracking pixel
 }
 
 export interface SendEmailResult {
@@ -28,11 +29,15 @@ export const sendEmail = async (
   const inboxDomain = process.env.REPLY_TO_EMAIL?.split("@")[1] || "contact.leadxai.in";
   const trackingReplyTo = `contact+${threadId}@${inboxDomain}`;
 
+  const apiUrl = process.env.API_URL || "https://api.revenos.ai";
+  const pixelUrl = `${apiUrl}/api/v1/webhooks/email/track/open?leadId=${options.leadId}&threadId=${threadId}`;
+  const htmlWithPixel = `${options.html}<img src="${pixelUrl}" width="1" height="1" alt="" style="display:none;" />`;
+
   const result = await resend.emails.send({
     to: options.to,
     from: options.from,
     subject: options.subject,
-    html: options.html,
+    html: htmlWithPixel,
     replyTo: trackingReplyTo, // always the tracking address
     tags: options.tags,
   });

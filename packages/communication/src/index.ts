@@ -47,4 +47,47 @@ export class EmailService {
 
     return this.sendEmail(to, subject, html);
   }
+
+  async sendMeetingBookedAlert(to: string, lead: any, meeting: any, clientUrl: string) {
+    const subject = `🎉 Meeting Booked: ${lead.firstName} @ ${lead.company}`;
+    
+    // Format date string safely
+    const scheduledDate = new Date(meeting.scheduledAt).toLocaleString("en-US", {
+      timeZone: "UTC", // Will be localized further on client or configured via Campaign
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const html = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #28a745;">🚀 New Meeting Booked!</h2>
+        <p>RevenOS AI has successfully secured a meeting.</p>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Lead:</strong> ${lead.firstName} ${lead.lastName} (${lead.title})</p>
+          <p style="margin: 5px 0;"><strong>Company:</strong> ${lead.company}</p>
+          <p style="margin: 5px 0;"><strong>Time:</strong> ${scheduledDate} UTC</p>
+        </div>
+        <p>The calendar invite has been sent to both parties automatically via Nylas.</p>
+        <a href="${clientUrl}/campaign/${meeting.campaignId}/leads/${lead._id}" style="display: inline-block; background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin-top: 10px;">View Lead in RevenOS</a>
+      </div>
+    `;
+
+    return this.sendEmail(to, subject, html);
+  }
+}
+
+export class SlackService {
+  async sendWebhook(url: string, payload: { text: string; blocks?: any[] }) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+        throw new Error(`Slack notify failed: ${response.statusText}`);
+    }
+  }
 }

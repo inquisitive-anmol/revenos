@@ -5,6 +5,8 @@ import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/
 import { getNylasClient } from "../config/nylas";
 import { Types } from "mongoose"; // add this at the top of the file with other imports
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
+import { bookerConfirmQueue } from "@revenos/queue";
+import { notifySalesOwnerOnBooking } from "../services/notification.service";
 
 
 export interface BookerConfirmJobData {
@@ -44,6 +46,15 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             bookerMeta,
             lead,
         } = job.data;
+
+        if (leadId) {
+            const leadCheck = await Lead.findOne({ _id: leadId, workspaceId }).lean();
+            if (leadCheck?.humanControlled) {
+                console.log(`[BookerConfirmJob] Lead ${leadId} under human control. Snoozing job ${job.name} for 30m.`);
+                await bookerConfirmQueue.add(job.name, job.data, { delay: 30 * 60 * 1000, jobId: `${job.opts?.jobId ?? job.id}-retried-${Date.now()}` });
+                return;
+            }
+        }
 
         console.log(`[BookerConfirmJob] Starting job ${job.id} for lead ${leadId}`);
 
@@ -141,6 +152,9 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             calendarEventId: result.calendarEventId,
             scheduledAt: result.scheduledAt,
         });
+
+        // 5.5 Trigger notifications
+        await notifySalesOwnerOnBooking(meeting, lead, workspaceId, campaignId);
 
         // 6. Update EmailThread — mark booked + save meetingDetails
 

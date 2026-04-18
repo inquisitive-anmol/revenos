@@ -4,8 +4,11 @@ import { ProspectorAgent } from "@revenos/agents";
 import { Lead, Campaign, AgentLog } from "@revenos/db";
 import { ProspectorInput } from "@revenos/agents";
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
+import { dispatchNext } from "../services/workflowDispatcher";
+import { emitAgentLog } from "../services/agentEvents";
 
 export interface ProspectorJobData {
+  nodeId?: string;
   workspaceId: string;
   campaignId: string;
   agentId: string;
@@ -25,6 +28,7 @@ export const prospectorWorker = new Worker<ProspectorJobData>(
     } = job.data;
 
     console.log(`[ProspectorJob] Starting job ${job.id}`);
+    await emitAgentLog({ workspaceId, campaignId, agentType: 'prospector', event: 'prospector.started', message: `Prospecting ${leads.length} lead(s)...` });
 
     // 1. Initialize agent
     const agent = new ProspectorAgent({
@@ -118,6 +122,25 @@ export const prospectorWorker = new Worker<ProspectorJobData>(
     console.log(
       `[ProspectorJob] Completed. ${savedLeads.length} leads saved.`
     );
+    await emitAgentLog({ workspaceId, campaignId, agentType: 'prospector', event: 'prospector.completed', message: `${savedLeads.length} lead(s) enriched and scored.` });
+
+    // Dispatch next step via workflow for each qualified lead saved
+    // Note: prospector runs in batch, so we trigger the qualifier per lead individually.
+    // The nodeId may not be set for legacy feeder-triggered jobs, which is fine — dispatcher falls back.
+    for (const lead of savedLeads) {
+      if (!lead) continue;
+      try {
+        await dispatchNext(
+          campaignId,
+          workspaceId,
+          job.data.nodeId ?? null,
+          { leadId: lead._id.toString(), score: lead.icpScore ?? 0, status: lead.status, humanControlled: false },
+          { workspaceId, campaignId, leadId: lead._id.toString() }
+        );
+      } catch (e) {
+        console.warn(`[ProspectorJob] Could not dispatch next for lead ${lead._id}:`, e);
+      }
+    }
 
     return { leadsFound: savedLeads.length };
   },

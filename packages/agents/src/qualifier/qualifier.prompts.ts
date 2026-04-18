@@ -45,6 +45,46 @@ Respond ONLY with a valid JSON object, no markdown:
   "body": "string (HTML allowed, keep it simple)",
   "previewText": "string (40-50 chars shown in email preview)"
 }`,
+  GENERATE_FOLLOWUP: (
+    lead: {
+      firstName: string;
+      lastName: string;
+      company: string;
+      title: string;
+    },
+    playbook: {
+      tone: string;
+      valueProposition: string;
+      callToAction: string;
+    },
+    followupNumber: number
+  ) => `You are an expert B2B sales copywriter for RevenOS.
+
+Write a short, polite follow-up email (touch #${followupNumber + 1}) to this prospect who has not replied to our earlier outreach.
+
+PROSPECT DETAILS:
+- Name: ${lead.firstName} ${lead.lastName}
+- Title: ${lead.title}
+- Company: ${lead.company}
+
+PLAYBOOK:
+- Tone: ${playbook.tone}
+- Value Proposition: ${playbook.valueProposition}
+- Call To Action: ${playbook.callToAction}
+
+RULES:
+- Maximum 50-75 words in the body
+- DO NOT repeat the entire pitch from the first email
+- Make it conversational and low-friction (e.g. "Just bubbling this up", or "Any thoughts on...")
+- Only one CTA
+- No emojis
+
+Respond ONLY with a valid JSON object, no markdown:
+{
+  "subject": "string (can be a variation of Re: or a new brief hook)",
+  "body": "string (HTML allowed, keep it simple)",
+  "previewText": "string"
+}`,
 
   CLASSIFY_REPLY: (
     originalEmail: string,

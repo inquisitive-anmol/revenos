@@ -4,6 +4,7 @@ import { useApi } from "../../../../lib/api";
 import { useCampaignStore } from "../../../../stores/campaign.store";
 import { useLeads } from "../../../../hooks/useLeads";
 import { useLeadStore } from "../../../../stores/lead.store";
+import ActivityFeed from "../../../../components/dashboard/ActivityFeed";
 
 export default function CampaignDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -194,7 +195,7 @@ export default function CampaignDetailsPage() {
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
              {/* Dynamic Orchestrator Control Buttons */}
              {activeCampaign.status === "draft" && (
                 <button
@@ -248,6 +249,14 @@ export default function CampaignDetailsPage() {
                   </button>
                 </>
              )}
+
+              <Link
+                to={`/builder/${id}`}
+                className="bg-surface text-on-surface border border-outline px-5 py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-surface-container-low active:scale-95 transition-all flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-[18px]">account_tree</span>
+                Agent Builder
+              </Link>
 
             <button
               onClick={() => navigate(`/campaigns/${id}/edit`)}
@@ -369,42 +378,46 @@ export default function CampaignDetailsPage() {
             </div>
           </div>
 
-          {/* Campaign Info Card */}
-          <div className="bg-surface rounded-2xl p-6 border border-outline shadow-sm flex flex-col gap-5">
-            <h2 className="text-lg font-bold text-on-surface">Campaign Settings</h2>
+          {/* Campaign Info Card + Live Activity Feed */}
+          <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <div className="flex flex-col gap-4">
-              <div className="border border-outline rounded-xl p-4">
-                <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-2">ICP Description</p>
-                <p className="text-sm text-on-surface font-medium leading-relaxed">
-                  {activeCampaign.settings?.icpDescription || "No ICP defined"}
-                </p>
-              </div>
-
-              <div className="border border-outline rounded-xl p-4">
-                <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-3">Daily Limits</p>
-                <div className="flex justify-between">
-                  <div className="text-center">
-                    <p className="text-sm font-extrabold text-on-surface">
-                      {activeCampaign.settings?.dailyEmailLimit || 50}
-                    </p>
-                    <p className="text-xs text-secondary font-medium">Emails/day</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-extrabold text-on-surface">
-                      {activeCampaign.settings?.timezone || "UTC"}
-                    </p>
-                    <p className="text-xs text-secondary font-medium">Timezone</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-extrabold text-on-surface">
-                      {new Date(activeCampaign.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </p>
-                    <p className="text-xs text-secondary font-medium">Created</p>
+            {/* Campaign Info */}
+            <div className="bg-surface rounded-2xl p-6 border border-outline shadow-sm flex flex-col gap-5">
+              <h2 className="text-lg font-bold text-on-surface">Campaign Settings</h2>
+              <div className="flex flex-col gap-4">
+                <div className="border border-outline rounded-xl p-4">
+                  <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-2">ICP Description</p>
+                  <p className="text-sm text-on-surface font-medium leading-relaxed">
+                    {activeCampaign.settings?.icpDescription || "No ICP defined"}
+                  </p>
+                </div>
+                <div className="border border-outline rounded-xl p-4">
+                  <p className="text-[10px] uppercase tracking-widest text-secondary font-bold mb-3">Daily Limits</p>
+                  <div className="flex justify-between">
+                    <div className="text-center">
+                      <p className="text-sm font-extrabold text-on-surface">{activeCampaign.settings?.dailyEmailLimit || 50}</p>
+                      <p className="text-xs text-secondary font-medium">Emails/day</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-extrabold text-on-surface">{activeCampaign.settings?.timezone || "UTC"}</p>
+                      <p className="text-xs text-secondary font-medium">Timezone</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-extrabold text-on-surface">
+                        {new Date(activeCampaign.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </p>
+                      <p className="text-xs text-secondary font-medium">Created</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Live Activity Feed */}
+            <div className="bg-surface rounded-2xl p-6 border border-outline shadow-sm flex flex-col" style={{ minHeight: '280px' }}>
+              <ActivityFeed campaignId={id!} workspaceId={(activeCampaign as any).workspaceId ?? ''} />
+            </div>
+
           </div>
 
         </div>
