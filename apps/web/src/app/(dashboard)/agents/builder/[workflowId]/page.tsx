@@ -316,6 +316,7 @@ function WorkflowCanvas() {
           onNodeClick={onNodeClick}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
+          deleteKeyCode={['Backspace', 'Delete']}
           fitView
           proOptions={{ hideAttribution: true }}
         >
