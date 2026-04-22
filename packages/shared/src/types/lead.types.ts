@@ -1,9 +1,19 @@
 export type LeadStatus =
-  | "prospecting"
-  | "contacted"
+  | "pending"
+  | "qualifying"
   | "qualified"
   | "disqualified"
+  | "outreach_sent"
+  | "reply_received"
+  | "interested"
+  | "not_interested"
+  | "follow_up_scheduled"
+  | "follow_up_sent"
+  | "max_followups_reached"
   | "meeting_booked"
+  | "prospecting"
+  | "contacted"
+  | "opened"
   | "closed";
 
 export interface Lead {

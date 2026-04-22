@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // ── List all flows for the workspace ────────────────────────────────────────
 export const listWorkflowsHandler = async (req: Request, res: Response) => {
-  const workspaceId = req.user?.workspaceId;
+  const workspaceId = req.tenant!.id;
   const workflows = await Workflow.find({ workspaceId })
     .select('workflowId name description nodes edges createdAt updatedAt')
     .sort({ updatedAt: -1 })
@@ -14,7 +14,7 @@ export const listWorkflowsHandler = async (req: Request, res: Response) => {
 
 // ── Create new flow ──────────────────────────────────────────────────────────
 export const createWorkflowHandler = async (req: Request, res: Response) => {
-  const workspaceId = req.user?.workspaceId;
+  const workspaceId = req.tenant!.id;
   const { name, description, nodes, edges } = req.body;
 
   const workflow = await Workflow.create({
@@ -31,7 +31,7 @@ export const createWorkflowHandler = async (req: Request, res: Response) => {
 
 // ── Get single flow by workflowId ────────────────────────────────────────────
 export const getWorkflowHandler = async (req: Request, res: Response) => {
-  const workspaceId = req.user?.workspaceId;
+  const workspaceId = req.tenant!.id;
   const { id } = req.params;
 
   const workflow = await Workflow.findOne({ workflowId: id, workspaceId }).lean();
@@ -44,7 +44,7 @@ export const getWorkflowHandler = async (req: Request, res: Response) => {
 
 // ── Update flow ──────────────────────────────────────────────────────────────
 export const updateWorkflowHandler = async (req: Request, res: Response) => {
-  const workspaceId = req.user?.workspaceId;
+  const workspaceId = req.tenant!.id;
   const { id } = req.params;
   const { name, description, nodes, edges } = req.body;
 
@@ -69,7 +69,7 @@ export const updateWorkflowHandler = async (req: Request, res: Response) => {
 
 // ── Delete flow ──────────────────────────────────────────────────────────────
 export const deleteWorkflowHandler = async (req: Request, res: Response) => {
-  const workspaceId = req.user?.workspaceId;
+  const workspaceId = req.tenant!.id;
   const { id } = req.params;
 
   const workflow = await Workflow.findOneAndDelete({ workflowId: id, workspaceId });

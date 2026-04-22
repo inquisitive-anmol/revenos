@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntegrations } from '../../hooks/useIntegrations';
 import toast from 'react-hot-toast';
-
 
 function formatDate(ts?: string) {
   if (!ts) return '';
@@ -20,11 +19,12 @@ interface IntegrationCardProps {
   onDisconnect: () => void;
   connectLabel?: string;
   badge?: string;
+  isConnecting?: boolean;
 }
 
 function IntegrationCard({
   icon, iconBg, title, subtitle, connected, connectedAs, connectedAt,
-  onConnect, onDisconnect, connectLabel = 'Connect', badge
+  onConnect, onDisconnect, connectLabel = 'Connect', badge, isConnecting
 }: IntegrationCardProps) {
   return (
     <div className={`bg-surface rounded-2xl border p-6 flex items-start gap-5 transition-all ${connected ? 'border-green-200 shadow-sm shadow-green-50' : 'border-outline'}`}>
@@ -64,9 +64,13 @@ function IntegrationCard({
         ) : (
           <button
             onClick={onConnect}
-            className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-on-primary-fixed-variant transition-all active:scale-95 shadow-sm"
+            disabled={isConnecting}
+            className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-on-primary-fixed-variant transition-all active:scale-95 shadow-sm disabled:opacity-60 disabled:cursor-wait flex items-center gap-2"
           >
-            {connectLabel}
+            {isConnecting && (
+              <span className="material-symbols-outlined text-[14px] animate-spin">progress_activity</span>
+            )}
+            {isConnecting ? 'Redirecting...' : connectLabel}
           </button>
         )}
       </div>
@@ -75,29 +79,30 @@ function IntegrationCard({
 }
 
 export default function IntegrationsTab() {
-  const { integrations, loading, fetchIntegrations, disconnectEmail, disconnectCalendar, disconnectSlack, saveEmailIntegration } = useIntegrations();
-
-  // Dev-mode: manual email connect form
-  const [showEmailForm, setShowEmailForm] = useState(false);
-  const [emailInput, setEmailInput] = useState('');
-  const [connecting, setConnecting] = useState(false);
+  const {
+    integrations, loading, connecting,
+    fetchIntegrations,
+    connectViaOAuth,
+    disconnectEmail, disconnectCalendar, disconnectSlack,
+  } = useIntegrations();
 
   useEffect(() => {
     fetchIntegrations();
   }, []);
 
-  const handleEmailConnect = async () => {
-    if (!emailInput.includes('@')) { toast.error('Enter a valid email address'); return; }
-    setConnecting(true);
+  const handleConnectEmail = async () => {
     try {
-      await saveEmailIntegration(emailInput, 'google');
-      setShowEmailForm(false);
-      setEmailInput('');
-      toast.success('Email connected!');
-    } catch {
-      toast.error('Failed to connect email');
-    } finally {
-      setConnecting(false);
+      await connectViaOAuth('email');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Failed to start email connection');
+    }
+  };
+
+  const handleConnectCalendar = async () => {
+    try {
+      await connectViaOAuth('calendar');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Failed to start calendar connection');
     }
   };
 
@@ -141,35 +146,10 @@ export default function IntegrationsTab() {
         connectedAs={integrations.email.email}
         connectedAt={integrations.email.connectedAt}
         onDisconnect={handleDisconnectEmail}
-        onConnect={() => setShowEmailForm(true)}
+        onConnect={handleConnectEmail}
         connectLabel="Connect Email"
+        isConnecting={connecting === 'email'}
       />
-
-      {/* Email Connection Form (dev mode — Nylas OAuth will replace this) */}
-      {showEmailForm && !integrations.email.connected && (
-        <div className="bg-surface-container-low border border-outline rounded-xl p-5 ml-4">
-          <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-3">Enter mailbox to connect</p>
-          <div className="flex gap-3">
-            <input
-              type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-              placeholder="you@company.com"
-              className="flex-1 border border-outline rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary bg-surface"
-              onKeyDown={(e) => e.key === 'Enter' && handleEmailConnect()}
-            />
-            <button onClick={handleEmailConnect} disabled={connecting} className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-on-primary-fixed-variant disabled:opacity-50 transition-all">
-              {connecting ? 'Connecting...' : 'Save'}
-            </button>
-            <button onClick={() => setShowEmailForm(false)} className="px-3 py-2 text-secondary border border-outline rounded-lg text-sm hover:bg-surface transition-colors">
-              Cancel
-            </button>
-          </div>
-          <p className="text-[10px] text-secondary mt-2">
-            📌 In production, this triggers the full Nylas OAuth flow. Credentials are stored server-side and never exposed.
-          </p>
-        </div>
-      )}
 
       {/* Calendar */}
       <IntegrationCard
@@ -180,8 +160,9 @@ export default function IntegrationsTab() {
         connected={integrations.calendar.connected}
         connectedAt={integrations.calendar.connectedAt}
         onDisconnect={handleDisconnectCalendar}
-        onConnect={() => toast('Nylas Calendar OAuth not yet wired — configure NYLAS_CLIENT_ID in env first.', { icon: 'ℹ️' })}
+        onConnect={handleConnectCalendar}
         connectLabel="Connect Calendar"
+        isConnecting={connecting === 'calendar'}
       />
 
       {/* Slack */}

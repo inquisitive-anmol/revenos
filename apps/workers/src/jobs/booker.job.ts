@@ -1,7 +1,7 @@
 import { Worker, Job } from "bullmq";
 import { redis } from "../config/redis";
 import { BookerAgent } from "@revenos/agents";
-import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
+import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread, Workspace } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 import { bookerQueue } from "@revenos/queue";
@@ -65,7 +65,22 @@ export const bookerWorker = new Worker<BookerJobData>(
       nylasClient
     );
 
-    // 4. Run Phase 1 — fetch slots + send slot picker email (does NOT book)
+    // 4. Fetch workspace to get per-tenant Nylas credentials
+    const workspace = await Workspace.findOne({ _id: workspaceId }).lean();
+    const calendarGrantId = workspace?.integrations?.calendar?.nylasGrantId
+      ?? process.env.NYLAS_GRANT_ID; // fallback to env for dev/testing
+
+    if (!calendarGrantId) {
+      throw new Error(
+        `[BookerJob] No calendar integration found for workspace ${workspaceId}. ` +
+        `User must connect their calendar in Settings → Integrations.`
+      );
+    }
+
+    const fromEmail = process.env.FROM_EMAIL!;
+    const fromName = process.env.FROM_NAME!;
+
+    // 5. Run Phase 1 — fetch slots + send slot picker email (does NOT book)
     const result = await bookerAgent.run({
       leadId,
       workspaceId,
@@ -78,13 +93,13 @@ export const bookerWorker = new Worker<BookerJobData>(
         title: lead.title,
       },
       emailConfig: {
-        fromEmail: process.env.FROM_EMAIL!,
-        fromName: process.env.FROM_NAME!,
+        fromEmail,
+        fromName,
       },
       calendar: {
-        grantId: process.env.NYLAS_GRANT_ID!,
+        grantId: calendarGrantId,
         meetingDuration: 30,
-        timezone: "Asia/Kolkata",
+        timezone: workspace?.settings?.timezone ?? "Asia/Kolkata",
       },
     });
 

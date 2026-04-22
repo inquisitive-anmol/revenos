@@ -43,6 +43,7 @@ export interface IEmailThread extends Document {
     calendarLink?: string; // Google Meet / calendar link if available
   };
 
+  openedAt?: Date;
   createdAt: Date;
 }
 
@@ -74,6 +75,7 @@ const EmailThreadSchema = new Schema<IEmailThread>(
       ],
       default: "active",
     },
+    openedAt: { type: Date },
 
     proposedSlots: [
       {

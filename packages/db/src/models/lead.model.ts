@@ -13,7 +13,11 @@ export type LeadStatus =
   | "follow_up_scheduled"
   | "follow_up_sent"
   | "max_followups_reached"
-  | "meeting_booked";
+  | "meeting_booked"
+  | "prospecting"
+  | "contacted"
+  | "opened"
+  | "closed";
 
 export interface ILead extends Document {
   workspaceId: string;
@@ -69,6 +73,10 @@ const LeadSchema = new Schema<ILead>(
         "follow_up_sent",
         "max_followups_reached",
         "meeting_booked",
+        "prospecting",
+        "contacted",
+        "opened",
+        "closed",
       ],
       default: "pending",
     },

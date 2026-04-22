@@ -1,9 +1,9 @@
 import { Worker, Job } from "bullmq";
 import { redis } from "../config/redis";
 import { BookerAgent, StoredSlot } from "@revenos/agents";
-import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread } from "@revenos/db";
+import { Lead, Meeting, Campaign, AgentLog, Agent, EmailThread, Workspace } from "@revenos/db";
 import { getNylasClient } from "../config/nylas";
-import { Types } from "mongoose"; // add this at the top of the file with other imports
+import { Types } from "mongoose";
 import { deductCredits, InsufficientCreditsError, CREDIT_COSTS } from "@revenos/billing";
 import { bookerConfirmQueue } from "@revenos/queue";
 import { notifySalesOwnerOnBooking } from "../services/notification.service";
@@ -91,7 +91,19 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
             nylasClient
         );
 
-        // 3. Run Phase 2 — classify reply + book the chosen slot
+        // 3. Fetch workspace to get per-tenant Nylas credentials
+        const workspace = await Workspace.findOne({ _id: workspaceId }).lean();
+        const calendarGrantId = workspace?.integrations?.calendar?.nylasGrantId
+          ?? process.env.NYLAS_GRANT_ID; // fallback to env for dev/testing
+
+        if (!calendarGrantId) {
+          throw new Error(
+            `[BookerConfirmJob] No calendar integration found for workspace ${workspaceId}. ` +
+            `User must connect their calendar in Settings → Integrations.`
+          );
+        }
+
+        // 4. Run Phase 2 — classify reply + book the chosen slot
         const result = await bookerAgent.confirmBooking({
             leadId,
             workspaceId,
@@ -106,10 +118,10 @@ export const bookerConfirmWorker = new Worker<BookerConfirmJobData>(
                 fromName: process.env.FROM_NAME!,
             },
             calendar: {
-                grantId: process.env.NYLAS_GRANT_ID!,
+                grantId: calendarGrantId,
                 calendarId: bookerMeta.calendarId || "primary",
                 meetingDuration: bookerMeta.durationMins || 30,
-                timezone: "Asia/Kolkata",
+                timezone: workspace?.settings?.timezone ?? "Asia/Kolkata",
             },
         });
 

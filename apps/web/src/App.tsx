@@ -20,6 +20,7 @@ import { DashboardLayout } from "./components/layout/DashboardLayout";
 import AnalyticsPage from "./app/(dashboard)/analytics/main/page";
 import SettingsPage from "./app/(settings)/settings/page";
 import WorkflowBuilderPage from "./app/(dashboard)/agents/builder/[workflowId]/page";
+import IntegrationsCallbackPage from "./app/(auth)/integrations/callback/page";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
       {/* Accessible to anyone, logged in or not */}
       <Route path="/" element={<Home />} />
       <Route path="/invite/:token" element={<InviteAcceptPage />} />
+      {/* Nylas OAuth callback — must be public so Nylas can redirect here */}
+      <Route path="/integrations/callback" element={<IntegrationsCallbackPage />} />
 
       {/* 2. AUTH-ONLY ROUTES */}
       {/* Kicks logged-in users to the dashboard */}

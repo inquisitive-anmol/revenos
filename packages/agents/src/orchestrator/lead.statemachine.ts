@@ -13,6 +13,10 @@ const VALID_TRANSITIONS: Record<LeadStatus, LeadStatus[]> = {
   follow_up_sent: ["reply_received", "follow_up_scheduled", "max_followups_reached"],
   max_followups_reached: [],
   meeting_booked: [],
+  prospecting: ["qualifying"],
+  contacted: ["opened", "reply_received"],
+  opened: ["reply_received"],
+  closed: [],
 };
 
 export const TERMINAL_STATUSES: LeadStatus[] = [
@@ -20,6 +24,7 @@ export const TERMINAL_STATUSES: LeadStatus[] = [
   "not_interested",
   "max_followups_reached",
   "meeting_booked",
+  "closed",
 ];
 
 export async function transitionLead(
